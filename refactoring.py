@@ -3,21 +3,13 @@ from sklearn.model_selection import RepeatedKFold
 from dataclasses import dataclass
 from quippy import descriptors
 import ase
+from ase.geometry.analysis import Analysis
 import subprocess
 from pathlib import Path
 import os
 import pickle as pkl
 from random import sample, shuffle, choice, choices
 import numpy as np
-from collections import defaultdict
-from sklearn.preprocessing import MinMaxScaler
-from tensorflow.keras import layers, optimizers, Model, backend
-from tensorflow.keras.layers import Input, Dense
-from tensorflow.keras.callbacks import EarlyStopping
-from scipy.stats import pearsonr
-from sklearn.preprocessing import LabelEncoder
-from sklearn.metrics import mean_squared_error
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 
 @dataclass
@@ -74,6 +66,7 @@ class GeneParameters:
     max_cutoff: int
     min_sigma: float
     max_sigma: float
+    message_steps: int
 
     def make_gene_set(self):
         """ Generates a random set of genes in the form of a GeneSet class
@@ -88,7 +81,7 @@ class GeneParameters:
         l_max = np.random.randint(self.lower, self.upper)
         n_max = np.random.randint(self.lower, self.upper)
         sigma = round(np.random.uniform(self.min_sigma, self.max_sigma), 2)
-        return GeneSet(self, cutoff, l_max, n_max, sigma)
+        return GeneSet(self, cutoff, l_max, n_max, sigma, self.message_steps)
 
 
 class GeneSet:
@@ -119,12 +112,13 @@ class GeneSet:
         Returns a string that can be used as an input to generate SOAPs
     """
 
-    def __init__(self, gene_parameters, cutoff, l_max, n_max, sigma):
+    def __init__(self, gene_parameters, cutoff, l_max, n_max, sigma, message_steps):
         self.gene_parameters = gene_parameters
         self.cutoff = cutoff
         self.l_max = l_max
         self.n_max = n_max
         self.sigma = sigma
+        self.message_steps = message_steps
 
     def __str__(self):
         return f"[{self.cutoff}, {self.l_max}, {self.n_max}, {self.sigma}]"
@@ -173,12 +167,20 @@ class GeneSet:
         num_neighbour_atoms = sum(n.strip().isdigit() for n in
                                   self.gene_parameters.neighbours[
                                   1:-1].split(','))
-        return "soap average cutoff={cutoff} l_max={l_max} n_max={n_max} " \
-               "atom_sigma={sigma} n_Z={0} Z={centres} " \
-               "n_species={1} species_Z={neighbours} mu={mu} mu_hat={" \
-               "mu_hat} nu={nu} nu_hat={nu_hat}".format(
-                num_centre_atoms, num_neighbour_atoms,
-                **{**vars(self.gene_parameters), **vars(self)})
+        if self.message_steps == 0:
+            return "soap average cutoff={cutoff} l_max={l_max} n_max={n_max} " \
+                   "atom_sigma={sigma} n_Z={0} Z={centres} " \
+                   "n_species={1} species_Z={neighbours} mu={mu} mu_hat={" \
+                   "mu_hat} nu={nu} nu_hat={nu_hat}".format(
+                    num_centre_atoms, num_neighbour_atoms,
+                    **{**vars(self.gene_parameters), **vars(self)})
+        elif self.message_steps > 0:
+            return "soap cutoff={cutoff} l_max={l_max} n_max={n_max} " \
+                   "atom_sigma={sigma} n_Z={0} Z={centres} " \
+                   "n_species={1} species_Z={neighbours} mu={mu} mu_hat={" \
+                   "mu_hat} nu={nu} nu_hat={nu_hat}".format(
+                    num_centre_atoms, num_neighbour_atoms,
+                    **{**vars(self.gene_parameters), **vars(self)})
 
 
 class Individual:
@@ -212,7 +214,7 @@ class Individual:
                                  gene_set_list]
         self.soaps = None
         self.targets = None
-        self.results_dictionary = defaultdict(list)
+        self.message_steps = gene_set_list[0].message_steps
 
     def __str__(self):
         return f"Individual(" \
@@ -249,14 +251,11 @@ class Individual:
         attribute.
         """
         # Actual function commented out while testing
-        # self.score = self.gene_set_list[0].cutoff + self.gene_set_list[
-        #     1].cutoff
-        conf_s, data = get_conf()
-        self.comp_soaps(conf_s, data)
-        # Add to parameter file
-        splits = 5
-        repeats = 1
-        self.cv_split(splits, repeats)
+        self.score = self.gene_set_list[0].cutoff + self.gene_set_list[
+            1].cutoff
+        # soaps, target_dataframe = comp_soaps(self.soap_string_list,
+        # conf_s, target_dataframe)
+        # self.score = comp_score(soaps, targets)
 
     def check_same_gene_parameters(self, other):
         """Checks if other is an Individual created from the same gene parameters
@@ -283,60 +282,76 @@ class Individual:
         """
         soap_array = []
         targets = np.array(data["Target"])
-        for mol in conf_s:
-            print(f"Getting soap for {mol}")
-            soap = []
-            for parameter_string in self.soap_string_list:
-                soap += list(descriptors.Descriptor(parameter_string).calc(
-                mol)['data'][0])
-            soap_array.append(soap)
+
+        if self.message_steps > 0:
+            try:
+                for mol in conf_s:
+                    # print(f"Getting soap for {mol}")
+                    soap = []
+                    for parameter_string in self.soap_string_list:
+                        # print(parameter_string)
+                        a_soap = descriptors.Descriptor(parameter_string).calc(
+                                 mol)['data']
+                        # print(a_soap.shape)
+                        # print(mpMatN(mol,self.message_steps).shape)
+                        mp_soap = np.mean(mpMatN(mol,self.message_steps)@a_soap, axis=0)
+                        soap += list(mp_soap)
+                    soap_array.append(soap)
+            except:
+                soap = []
+                for parameter_string in self.soap_string_list:
+                    try:
+                        a_soap = descriptors.Descriptor(parameter_string).calc(
+                                mol)['data']
+                        mp_soap = np.mean(mpMatN(mol,self.message_steps)@a_soap, axis=0)
+                        soap += list(mp_soap)
+                    except:
+                        a_soap = descriptors.Descriptor(parameter_string).calc(
+                                mol)['data']
+                        mp_matrix = mpMatN(mol,self.message_steps)
+                        print("Mismatch in MP and SOAP matrix shapes for: ",mol)
+                        print("SOAP shape of: {}".format(a_soap.shape))
+                        print("MP matrix shape of: {}".format(mp_matrix.shape))
+                        print("The SOAP string is: {}".format(parameter_string))
+        else:
+            for mol in conf_s:
+                print(f"Getting soap for {mol}")
+                soap = []
+                for parameter_string in self.soap_string_list:
+                    soap += list(descriptors.Descriptor(parameter_string).calc(
+                    mol)['data'][0])
+                soap_array.append(soap)
         self.soaps = np.array(soap_array)
         self.targets = np.array(targets)
 
-    def add_to_results_dictionary(self, results):
-        for k, v in results:
-            self.results_dictionary[k].append(v)
 
-    def cv_split(self, splits, repeats, random_state=999,
-                 regression=True):
-        """
-        Returns split indices for train and test sets
-        """
-        cv = RepeatedKFold(n_splits=splits, n_repeats=repeats,
-                           random_state=random_state)
-        if regression:
-            for train_index, test_index in cv.split(self.soaps):
-                res = self.get_scores_regression(train_index,
-                                            test_index)
-                self.add_to_results_dictionary(res)
-        else:
-            encoder = LabelEncoder()
-            individual.targets = encoder.fit_transform(self.targets)
-            for train_index, test_index in cv.split(self.soaps):
-                res = self.get_scores_classification(train_index,
-                                                test_index, encoder=encoder)
-                self.add_to_results_dictionary(res)
+# Get matrix for a single message pass, input has to be an ase object
+def mpMat(mol):
+    # A = upper tri mat of adjacency matrix
+    A=Analysis(mol).adjacency_matrix
 
-    def get_scores_regression(self, train_index, test_index, **kwargs):
-        estimator = build_model(self.soaps)
-        X_train, X_test, X_scaler = scaleData(self.soaps[train_index],
-                                              self.soaps[test_index])
-        y_train, y_test, y_scaler = scaleData(
-            self.targets[train_index].reshape(-1, 1),
-            self.targets[test_index].reshape(-1, 1))
-        res = scorer_NN_regression(estimator, X_train, X_test, y_train,
-                                   y_test, y_scaler)
-        self.add_to_results_dictionary(res)
+    # A_ = adj matrix with self connections for each atom
+    A_=np.tril(np.transpose(A[0].toarray()),-1)+A[0].toarray()
 
-    def get_scores_classification(self, train_index, test_index,
-                                  **kwargs):
-        estimator = build_model(individual.soaps)
-        X_train, X_test, X_scaler = scaleData(individual.soaps[train_index],
-                                              individual.soaps[test_index])
-        encoder.transform(Y)
-        res = scorer_NN_class(estimator, X_train, X_test, y_train, y_test,
-                                 y_scaler)
-        self.add_to_results_dictionary(res)
+    # A_avg = matrix that averages the atomic features
+    D=np.zeros_like(A_)
+    np.fill_diagonal(D,A_.sum(axis=1))
+    A_avg=np.linalg.inv(D)@A_
+    return A_avg
+
+
+# Get matrix for N message passes
+def mpMatN(mol,N):
+    return np.linalg.matrix_power(mpMat(mol),N)
+
+
+# Return descriptor for molecule using average of atomic features
+def mol_descriptor(mol,N):
+    atom_features=[]
+    for atom in m.GetAtoms():
+        atom_features.append(atom_featurizer.encode(atom))
+    atom_features=np.array(atom_features)
+    return np.mean(mpMatN(mol,N)@atom_features,axis=0)
 
 
 class Population:
@@ -624,7 +639,8 @@ def breed_genes(gene_set_one, gene_set_two):
     n_max = choice([gene_set_one.n_max, gene_set_two.n_max])
     sigma = choice([gene_set_one.sigma, gene_set_two.sigma])
     new_gene_set = GeneSet(gene_set_one.gene_parameters, cutoff,
-                           l_max, n_max, sigma)
+                           l_max, n_max, sigma,
+                           gene_set_one.message_steps)
     new_gene_set.mutate_gene()
     return new_gene_set
 
@@ -716,54 +732,3 @@ def get_conf():
         print(f"saving conf to {path}conf_s.pkl")
         pkl.dump([conf_s, names_and_targets], open(path + 'conf_s.pkl', 'wb'))
         return [conf_s, names_and_targets]
-
-def scorer_NN_regression(estimator, X_train, X_test, y_train, y_test, y_scaler):
-    """ Scoring function for use with NN regressor. Added by Matt. """
-
-    callback = EarlyStopping(monitor='val_loss', patience=50)
-    estimator.fit(X_train, y_train, callbacks=[callback], validation_split=0.1, epochs=200, verbose=False)
-    y_test_pred, y_train_pred = estimator.predict(X_test, verbose=False), estimator.predict(X_train, verbose=False)
-    y_test_pred, y_train_pred = y_scaler.inverse_transform(y_test_pred), y_scaler.inverse_transform(y_train_pred)
-    y_test = np.ravel(y_test)
-    y_train = np.ravel(y_train)
-    testCorr = pearsonr(y_test, y_test_pred)[0]
-    trainCorr = pearsonr(y_train, y_train_pred)[0]
-    testMSE = mean_squared_error(y_test, y_test_pred)
-    trainMSE =  mean_squared_error(y_train, y_train_pred)
-    score = (2 * (trainMSE * (1-trainCorr)) + (testMSE * (1-testCorr)))
-    res = [('scores', score), ('y_train_actual', y_train), ('y_test_actual', y_test), ('y_train_predictions', y_train_pred), ('y_test_predictions', y_test_pred)]
-    return res
-
-def scorer_NN_class(estimator, X_train, X_test, y_train, y_test, y_scaler):
-    """ Scoring function for use with NN classifier. Added by Trent. """
-    estimator.fit(X_train, y_train, callbacks=[callback], validation_split=0.1, epochs=200, verbose=False)
-    y_test_pred, y_train_pred = estimator.predict(X_test, verbose=False), estimator.predict(X_train, verbose=False)
-    y_test_pred, y_train_pred = y_scaler.inverse_transform(y_test_pred), y_scaler.inverse_transform(y_train_pred)
-    y_test = np.ravel(y_test)
-    y_train = np.ravel(y_train)
-    testCorr = pearsonr(y_test, y_test_pred)[0]
-    trainCorr = pearsonr(y_train, y_train_pred)[0]
-    testMSE = mean_squared_error(y_test, y_test_pred)
-    trainMSE =  mean_squared_error(y_train, y_train_pred)
-    return (2 * (trainMSE * (1-trainCorr)) + (testMSE * (1-testCorr))), \
-           X_train, X_test, y_train, y_test, y_test_pred, y_train_pred
-
-def scaleData(train, test):
-    scaler = MinMaxScaler()
-    train_scaled = scaler.fit_transform(train)
-    test_scaled = scaler.transform(test)
-
-    return train_scaled, test_scaled, scaler
-
-def build_model(X):
-    backend.clear_session()
-    input_layer = Input(X.shape[1])
-    hidden_layer = input_layer
-    for layer in [30,30,30]:
-        hidden_layer = Dense(layer, activation='relu')(hidden_layer)
-
-    output_layer = Dense(units=1, activation='linear')(hidden_layer)
-    model = Model(input_layer, output_layer)
-    model.compile(loss='mean_squared_error', optimizer=optimizers.Adam(learning_rate=0.01), metrics=['mean_squared_error'])
-
-    return model
