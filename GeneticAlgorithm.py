@@ -14,6 +14,7 @@ from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras import layers, optimizers, Model, backend
 from tensorflow.keras.layers import Input, Dense
 from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.utils import set_random_seed
 from scipy.stats import pearsonr
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import mean_squared_error
@@ -361,6 +362,7 @@ class Individual:
         y_train, y_test, y_scaler = scale_data(
             self.targets[train_index].reshape(-1, 1),
             self.targets[test_index].reshape(-1, 1))
+
         res = scorer_NN_regression(estimator, X_train, X_test, y_train,
                                    y_test, y_scaler)
         self.add_to_results_dictionary(res)
@@ -826,9 +828,10 @@ def scale_data(train, test):
 
 def build_model(X):
     backend.clear_session()
+    set_random_seed(12345)
     input_layer = Input(X.shape[1])
     hidden_layer = input_layer
-    for layer in [30,30,30]:
+    for layer in [100,100,100]:
         hidden_layer = Dense(layer, activation='relu')(hidden_layer)
 
     output_layer = Dense(units=1, activation='linear')(hidden_layer)
