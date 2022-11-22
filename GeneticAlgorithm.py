@@ -221,6 +221,7 @@ class Individual:
                                  gene_set_list]
         self.soaps = None
         self.targets = None
+        self.results_dictionary = defaultdict(list)
 
 
     def __str__(self):
@@ -343,9 +344,8 @@ class Individual:
                            random_state=random_state)
         if regression:
             for train_index, test_index in cv.split(self.soaps):
-                res = self.get_scores_regression(train_index,
+                 self.get_scores_regression(train_index,
                                             test_index)
-                self.add_to_results_dictionary(res)
         else:
             encoder = LabelEncoder()
             individual.targets = encoder.fit_transform(self.targets)
@@ -354,11 +354,11 @@ class Individual:
                                                 test_index, encoder=encoder)
                 self.add_to_results_dictionary(res)
 
-    def get_scores_regression(self, train_index, test_index, **kwargs):
+    def get_scores_regression(self, train_index, test_index):
         estimator = build_model(self.soaps)
-        X_train, X_test, X_scaler = scaleData(self.soaps[train_index],
-                                              self.soaps[test_index])
-        y_train, y_test, y_scaler = scaleData(
+        X_train, X_test, X_scaler = scale_data(self.soaps[train_index],
+                                               self.soaps[test_index])
+        y_train, y_test, y_scaler = scale_data(
             self.targets[train_index].reshape(-1, 1),
             self.targets[test_index].reshape(-1, 1))
         res = scorer_NN_regression(estimator, X_train, X_test, y_train,
@@ -368,8 +368,8 @@ class Individual:
     def get_scores_classification(self, train_index, test_index,
                                   **kwargs):
         estimator = build_model(individual.soaps)
-        X_train, X_test, X_scaler = scaleData(individual.soaps[train_index],
-                                              individual.soaps[test_index])
+        X_train, X_test, X_scaler = scale_data(individual.soaps[train_index],
+                                               individual.soaps[test_index])
         encoder.transform(Y)
         res = scorer_NN_class(estimator, X_train, X_test, y_train, y_test,
                                  y_scaler)
@@ -789,8 +789,12 @@ def scorer_NN_regression(estimator, X_train, X_test, y_train, y_test, y_scaler):
     estimator.fit(X_train, y_train, callbacks=[callback], validation_split=0.1, epochs=200, verbose=False)
     y_test_pred, y_train_pred = estimator.predict(X_test, verbose=False), estimator.predict(X_train, verbose=False)
     y_test_pred, y_train_pred = y_scaler.inverse_transform(y_test_pred), y_scaler.inverse_transform(y_train_pred)
+    y_test = y_scaler.inverse_transform(y_test.reshape(-1, 1))
+    y_train = y_scaler.inverse_transform(y_train.reshape(-1, 1))
     y_test = np.ravel(y_test)
     y_train = np.ravel(y_train)
+    y_train_pred = y_train_pred.ravel()
+    y_test_pred = y_test_pred.ravel()
     testCorr = pearsonr(y_test, y_test_pred)[0]
     trainCorr = pearsonr(y_train, y_train_pred)[0]
     testMSE = mean_squared_error(y_test, y_test_pred)
@@ -813,7 +817,7 @@ def scorer_NN_class(estimator, X_train, X_test, y_train, y_test, y_scaler):
     return (2 * (trainMSE * (1-trainCorr)) + (testMSE * (1-testCorr))), \
            X_train, X_test, y_train, y_test, y_test_pred, y_train_pred
 
-def scaleData(train, test):
+def scale_data(train, test):
     scaler = MinMaxScaler()
     train_scaled = scaler.fit_transform(train)
     test_scaled = scaler.transform(test)
