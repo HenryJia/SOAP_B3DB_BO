@@ -356,7 +356,6 @@ class Individual:
         """
         cv = RepeatedKFold(n_splits=splits, n_repeats=repeats,
                            random_state=random_state)
-        print(regression)
         if regression is not None:
             if regression:
                 for train_index, test_index in cv.split(self.soaps):
@@ -649,6 +648,7 @@ class BestHistory:
         best_score = sorted_history[0]
         if all(best_score.score - ind.score <= self.early_stop for ind in
                sorted_history[:self.early_number]):
+            print("Converged")
             write_to_outfile("SOAP_GAS has converged")
             self.converged = True
 
@@ -910,6 +910,7 @@ if __name__ == '__main__':
     for gen in range(input_parameters.num_gens):
         if hist.converged:
             break
+        print(f"Generation {gen}")
         write_to_outfile(f"Generation {gen}")
         pop.next_generation()
         hist.append(pop)
