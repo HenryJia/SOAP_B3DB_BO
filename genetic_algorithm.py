@@ -303,7 +303,7 @@ class Individual:
         Function to compute the Soaps, maybe add to the Individual class?
         """
         soap_array = []
-        targets = np.array(data["Target"])
+        targets = data.iloc[:, 1].values
 
         if self.gene_set_list[0].gene_parameters.message_steps > 0:
             try:
@@ -785,7 +785,8 @@ def scorer_NN_regression(estimator, X_train, X_test, y_train, y_test, y_scaler):
     """ Scoring function for use with NN regressor. Added by Matt. """
 
     callback = EarlyStopping(monitor='val_loss', patience=50)
-    estimator.fit(X_train, y_train, callbacks=[callback], validation_split=0.1, epochs=200, verbose=False)
+    estimator.fit(X_train, y_train, callbacks=[callback], validation_data =
+    (X_test, y_test), epochs=200, verbose=False)
     y_test_pred, y_train_pred = estimator.predict(X_test, verbose=False), estimator.predict(X_train, verbose=False)
     y_test_pred, y_train_pred = y_scaler.inverse_transform(y_test_pred), y_scaler.inverse_transform(y_train_pred)
     y_test = y_scaler.inverse_transform(y_test.reshape(-1, 1))
@@ -805,13 +806,14 @@ def scorer_NN_regression(estimator, X_train, X_test, y_train, y_test, y_scaler):
 def scorer_NN_class(estimator, X_train, X_test, y_train, y_test):
     """ Scoring function for use with NN classifier. Added by Trent. """
     callback = EarlyStopping(monitor='val_loss', patience=50)
-    estimator.fit(X_train, y_train, callbacks=[callback], validation_split=0.1, epochs=200, verbose=True)
     y_train = np.argmax(y_train, axis=1)
     y_test = np.argmax(y_test, axis=1)
+    estimator.fit(X_train, y_train, callbacks=[callback], validation_data=(
+        X_test, y_test), epochs=200, verbose=True)
     y_test_pred = estimator.predict(X_test)
     y_train_pred = estimator.predict(X_train)
-    test_accuracy, test_error = estimator.evaluate(X_test, y_test_pred)
-    train_accuracy, train_error = estimator.evaluate(X_train, y_train_pred)
+    _, test_accuracy = estimator.evaluate(X_test, y_test_pred)
+    _, train_accuracy = estimator.evaluate(X_train, y_train_pred)
     y_test_pred = np.argmax(y_test_pred, axis=1)
     y_train_pred = np.argmax(y_train_pred, axis=1)
     score = -1 * (test_accuracy + (0.5 * train_accuracy))
