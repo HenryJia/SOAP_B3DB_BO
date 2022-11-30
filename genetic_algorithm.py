@@ -726,7 +726,8 @@ def get_conf():
     -------
 
     """
-    path = str(os.path.dirname(os.path.abspath(__file__))) + "/EXAMPLES/"
+    path = str(os.path.dirname(os.path.abspath(__file__))) + \
+           "/EXAMPLES/Classification/"
     if os.path.isfile(path + "conf_s.pkl"):
         # print("conf_s file exists")
         return [*pkl.load(open(path + "conf_s.pkl", "rb"))]
@@ -806,19 +807,19 @@ def scorer_NN_regression(estimator, X_train, X_test, y_train, y_test, y_scaler):
 def scorer_NN_class(estimator, X_train, X_test, y_train, y_test):
     """ Scoring function for use with NN classifier. Added by Trent. """
     callback = EarlyStopping(monitor='val_loss', patience=50)
-    y_train = np.argmax(y_train, axis=1)
-    y_test = np.argmax(y_test, axis=1)
     estimator.fit(X_train, y_train, callbacks=[callback], validation_data=(
         X_test, y_test), epochs=200, verbose=True)
     y_test_pred = estimator.predict(X_test)
     y_train_pred = estimator.predict(X_train)
-    _, test_accuracy = estimator.evaluate(X_test, y_test_pred)
-    _, train_accuracy = estimator.evaluate(X_train, y_train_pred)
+    _, test_accuracy = estimator.evaluate(X_test, y_test)
+    _, train_accuracy = estimator.evaluate(X_train, y_train)
     y_test_pred = np.argmax(y_test_pred, axis=1)
     y_train_pred = np.argmax(y_train_pred, axis=1)
+    y_test_actual = np.argmax(y_test, axis=1)
+    y_train_actual = np.argmax(y_train, axis=1)
     score = -1 * (test_accuracy + (0.5 * train_accuracy))
-    res = [('scores', score), ('y_train_actual', y_train), \
-          ('y_test_actual', y_test), ('y_train_predictions', y_train_pred),
+    res = [('scores', score), ('y_train_actual', y_train_actual), \
+          ('y_test_actual', y_test_actual), ('y_train_predictions', y_train_pred),
                ('y_test_predictions', y_test_pred)]
     return res
 
