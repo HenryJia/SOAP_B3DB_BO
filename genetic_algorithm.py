@@ -753,15 +753,28 @@ def get_conf():
         pkl.dump([conf_s, names_and_targets], open(path + 'conf_s.pkl', 'wb'))
         return [conf_s, names_and_targets]
 
+
+# get adjacency matrix, input has to be ase object
+# selfconnect = False, returns adjacency matrix
+# selfconnect = True, returns adjacency matrix with self connections
+def adjmat(aseobj,selfconnect=False):
+    from ase import neighborlist
+    na=len(aseobj)
+    nl=neighborlist.build_neighbor_list(aseobj)
+    conmat=nl.get_connectivity_matrix(sparse=False)
+    adj=np.triu(conmat,1)+np.tril(conmat,-1)
+    if selfconnect:
+        adj=adj+np.transpose(adj)+np.eye(na).astype(int)
+    if not selfconnect:
+        adj=adj+np.transpose(adj)
+    return adj
+
+
 # Get matrix for a single message pass, input has to be an ase object
 def message_passing_matrix(mol):
-    # A = upper tri mat of adjacency matrix
-    upper_triangular = Analysis(mol).adjacency_matrix
-
-    # A_ = adj matrix with self connections for each atom
-    adjacency_matrix = np.tril(np.transpose(upper_triangular[0].toarray()), -1)+upper_triangular[0].toarray()
-
-    # A_avg = matrix that averages the atomic features
+    # adjacency with self connections
+    adjacency_matrix = adjmat(mol,selfconnect=True)
+    # matrix that averages the atomic features
     diagonal_matrix = np.zeros_like(adjacency_matrix)
     np.fill_diagonal(diagonal_matrix, adjacency_matrix.sum(axis=1))
     averaged_adjacency_matrix = np.linalg.inv(diagonal_matrix)@adjacency_matrix
@@ -921,6 +934,3 @@ if __name__ == '__main__':
     pkl.dump(hist, open(str(os.path.dirname(os.path.abspath(__file__))) +
              "/history_{}.pkl".format(input_file_name), 'wb'))
     write_to_outfile("History has been saved")
-
-
-
