@@ -11,9 +11,9 @@ ase = "~=3.22.1"
 quippy-ase = "*"
 notebook = "*"
 scikit-learn = "*"
+tqdm = "*"
 
 [dev-packages]
 
 [requires]
 python_version = "3.9"
-python_full_version = "3.9.6"
