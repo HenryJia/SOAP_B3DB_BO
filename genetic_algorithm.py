@@ -486,7 +486,7 @@ class Population:
                              gene_parameters in self.list_of_gene_parameters]
             self.population.add(Individual(gene_set_list))
         self.get_population_scores()
-        write_to_outfile(f"Initial population of size {self.population_size} generated")
+        # write_to_outfile(f"Initial population of size {self.population_size} generated")
 
     def next_generation(self):
         """Updates the class with a new random population
@@ -553,11 +553,11 @@ class Population:
         """
         counter = 1
         for individual in self.population:
-            write_to_outfile(f"Getting score for individual {counter} of "
-                  f"{self.population_size}")
+            # write_to_outfile(f"Getting score for individual {counter} of "
+            #       f"{self.population_size}")
             counter += 1
             individual.get_score()
-            write_to_outfile(f"Score: {individual.score}")
+            # write_to_outfile(f"Score: {individual.score}")
 
     def sort_population(self):
         """Sorts the population
@@ -631,7 +631,7 @@ class BestHistory:
         population.sort_population()
         best_ind = population.population[0]
         self.history.append(best_ind)
-        write_to_outfile(f"Best Individual {str(best_ind)} with a score of {best_ind.score} added to history")
+        # write_to_outfile(f"Best Individual {str(best_ind)} with a score of {best_ind.score} added to history")
         self._check_if_converged(population.maximise_scores)
 
     def _check_if_converged(self, maximise_scores):
@@ -649,7 +649,7 @@ class BestHistory:
         if all(best_score.score - ind.score <= self.early_stop for ind in
                sorted_history[:self.early_number]):
             print("Converged")
-            write_to_outfile("SOAP_GAS has converged")
+            # write_to_outfile("SOAP_GAS has converged")
             self.converged = True
 
 
@@ -726,7 +726,8 @@ def get_conf():
     -------
 
     """
-    path = str(os.path.dirname(os.path.abspath(__file__))) + "/EXAMPLES/"
+    path = str(os.path.dirname(os.path.abspath(__file__))) + \
+           "/EXAMPLES/Classification/"
     if os.path.isfile(path + "conf_s.pkl"):
         # print("conf_s file exists")
         return [*pkl.load(open(path + "conf_s.pkl", "rb"))]
@@ -752,15 +753,28 @@ def get_conf():
         pkl.dump([conf_s, names_and_targets], open(path + 'conf_s.pkl', 'wb'))
         return [conf_s, names_and_targets]
 
+
+# get adjacency matrix, input has to be ase object
+# selfconnect = False, returns adjacency matrix
+# selfconnect = True, returns adjacency matrix with self connections
+def adjmat(aseobj,selfconnect=False):
+    from ase import neighborlist
+    na=len(aseobj)
+    nl=neighborlist.build_neighbor_list(aseobj)
+    conmat=nl.get_connectivity_matrix(sparse=False)
+    adj=np.triu(conmat,1)+np.tril(conmat,-1)
+    if selfconnect:
+        adj=adj+np.transpose(adj)+np.eye(na).astype(int)
+    if not selfconnect:
+        adj=adj+np.transpose(adj)
+    return adj
+
+
 # Get matrix for a single message pass, input has to be an ase object
 def message_passing_matrix(mol):
-    # A = upper tri mat of adjacency matrix
-    upper_triangular = Analysis(mol).adjacency_matrix
-
-    # A_ = adj matrix with self connections for each atom
-    adjacency_matrix = np.tril(np.transpose(upper_triangular[0].toarray()), -1)+upper_triangular[0].toarray()
-
-    # A_avg = matrix that averages the atomic features
+    # adjacency with self connections
+    adjacency_matrix = adjmat(mol,selfconnect=True)
+    # matrix that averages the atomic features
     diagonal_matrix = np.zeros_like(adjacency_matrix)
     np.fill_diagonal(diagonal_matrix, adjacency_matrix.sum(axis=1))
     averaged_adjacency_matrix = np.linalg.inv(diagonal_matrix)@adjacency_matrix
@@ -806,19 +820,19 @@ def scorer_NN_regression(estimator, X_train, X_test, y_train, y_test, y_scaler):
 def scorer_NN_class(estimator, X_train, X_test, y_train, y_test):
     """ Scoring function for use with NN classifier. Added by Trent. """
     callback = EarlyStopping(monitor='val_loss', patience=50)
-    y_train = np.argmax(y_train, axis=1)
-    y_test = np.argmax(y_test, axis=1)
     estimator.fit(X_train, y_train, callbacks=[callback], validation_data=(
         X_test, y_test), epochs=200, verbose=True)
     y_test_pred = estimator.predict(X_test)
     y_train_pred = estimator.predict(X_train)
-    _, test_accuracy = estimator.evaluate(X_test, y_test_pred)
-    _, train_accuracy = estimator.evaluate(X_train, y_train_pred)
+    _, test_accuracy = estimator.evaluate(X_test, y_test)
+    _, train_accuracy = estimator.evaluate(X_train, y_train)
     y_test_pred = np.argmax(y_test_pred, axis=1)
     y_train_pred = np.argmax(y_train_pred, axis=1)
+    y_test_actual = np.argmax(y_test, axis=1)
+    y_train_actual = np.argmax(y_train, axis=1)
     score = -1 * (test_accuracy + (0.5 * train_accuracy))
-    res = [('scores', score), ('y_train_actual', y_train), \
-          ('y_test_actual', y_test), ('y_train_predictions', y_train_pred),
+    res = [('scores', score), ('y_train_actual', y_train_actual), \
+          ('y_test_actual', y_test_actual), ('y_train_predictions', y_train_pred),
                ('y_test_predictions', y_test_pred)]
     return res
 
@@ -920,6 +934,3 @@ if __name__ == '__main__':
     pkl.dump(hist, open(str(os.path.dirname(os.path.abspath(__file__))) +
              "/history_{}.pkl".format(input_file_name), 'wb'))
     write_to_outfile("History has been saved")
-
-
-
