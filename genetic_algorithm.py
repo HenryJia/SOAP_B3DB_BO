@@ -486,7 +486,7 @@ class Population:
                              gene_parameters in self.list_of_gene_parameters]
             self.population.add(Individual(gene_set_list))
         self.get_population_scores()
-        write_to_outfile(f"Initial population of size {self.population_size} generated")
+        # write_to_outfile(f"Initial population of size {self.population_size} generated")
 
     def next_generation(self):
         """Updates the class with a new random population
@@ -553,11 +553,11 @@ class Population:
         """
         counter = 1
         for individual in self.population:
-            write_to_outfile(f"Getting score for individual {counter} of "
-                  f"{self.population_size}")
+            # write_to_outfile(f"Getting score for individual {counter} of "
+            #       f"{self.population_size}")
             counter += 1
             individual.get_score()
-            write_to_outfile(f"Score: {individual.score}")
+            # write_to_outfile(f"Score: {individual.score}")
 
     def sort_population(self):
         """Sorts the population
@@ -631,7 +631,7 @@ class BestHistory:
         population.sort_population()
         best_ind = population.population[0]
         self.history.append(best_ind)
-        write_to_outfile(f"Best Individual {str(best_ind)} with a score of {best_ind.score} added to history")
+        # write_to_outfile(f"Best Individual {str(best_ind)} with a score of {best_ind.score} added to history")
         self._check_if_converged(population.maximise_scores)
 
     def _check_if_converged(self, maximise_scores):
@@ -649,7 +649,7 @@ class BestHistory:
         if all(best_score.score - ind.score <= self.early_stop for ind in
                sorted_history[:self.early_number]):
             print("Converged")
-            write_to_outfile("SOAP_GAS has converged")
+            # write_to_outfile("SOAP_GAS has converged")
             self.converged = True
 
 
