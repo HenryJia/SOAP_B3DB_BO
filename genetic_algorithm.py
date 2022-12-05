@@ -42,13 +42,9 @@ class GeneParameters:
     neighbours : str
         A string of the format '{a, b, c}' where a, b and c are all
         chemical symbols that represent the species to be used as neighbours
-    mu : int
+    nu_S : int
         Compression parameter
-    mu_hat : int
-        Compression parameter
-    nu : int
-        Compression parameter
-    nu_hat : int
+    nu_R : int
         Compression parameter
     mutation_chance : float
         Probability of a gene mutating after breeding
@@ -70,10 +66,8 @@ class GeneParameters:
     upper: int
     centres: str
     neighbours: str
-    mu: int
-    mu_hat: int
-    nu: int
-    nu_hat: int
+    nu_R: int
+    nu_S: int
     mutation_chance: float
     min_cutoff: int
     max_cutoff: int
@@ -182,15 +176,15 @@ class GeneSet:
         if self.gene_parameters.message_steps==0:
             return "soap average cutoff={cutoff} l_max={l_max} " \
                    "n_max={n_max} atom_sigma={sigma} n_Z={0} Z={centres} " \
-                   "n_species={1} species_Z={neighbours} mu={mu} mu_hat={" \
-                   "mu_hat} nu={nu} nu_hat={nu_hat}".format(
+                   "n_species={1} species_Z={neighbours} nu_R={nu_R} " \
+                   "nu_S={nu_S}".format(
                     num_centre_atoms, num_neighbour_atoms,
                     **{**vars(self.gene_parameters), **vars(self)})
         elif self.gene_parameters.message_steps > 0:
             return "soap cutoff={cutoff} l_max={l_max} n_max={n_max} " \
                    "atom_sigma={sigma} n_Z={0} Z={centres} " \
-                   "n_species={1} species_Z={neighbours} mu={mu} mu_hat={" \
-                   "mu_hat} nu={nu} nu_hat={nu_hat}".format(
+                   "n_species={1} species_Z={neighbours} nu_R={nu_R} " \
+                   "nu_S={nu_S}".format(
                     num_centre_atoms, num_neighbour_atoms,
                     **{**vars(self.gene_parameters), **vars(self)})
 
