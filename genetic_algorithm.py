@@ -249,7 +249,7 @@ class Individual:
     def __hash__(self):
         return hash(tuple(self.soap_string_list))
 
-    def get_score(self):
+    def get_score(self, df, mols):
         """Updates the Individuals score
 
         This can be computationally expensive, so this method is only
@@ -257,8 +257,7 @@ class Individual:
         This method does not return anything and instead updates the score
         attribute.
         """
-        conf_s, data = get_conf()
-        column_names = data.columns
+        column_names = df.columns
         try:
             if column_names[1].upper().strip() == 'TARGET':
                 self.regression = True
@@ -267,7 +266,7 @@ class Individual:
         except:
             raise TypeError("Your database.csv file isc not of the correct "
                              "format. Please read the docs.")
-        self.comp_soaps(conf_s, data)
+        self.comp_soaps(mols, df)
         # Add to parameter file
         splits = 5
         repeats = 1
@@ -292,7 +291,7 @@ class Individual:
                 return False
         return True
 
-    def comp_soaps(self, conf_s, data):
+    def comp_soaps(self, mols, data):
         """
         Function to compute the Soaps, maybe add to the Individual class?
         """
@@ -301,7 +300,7 @@ class Individual:
 
         if self.gene_set_list[0].gene_parameters.message_steps > 0:
             try:
-                for mol in conf_s:
+                for mol in mols:
                     soap = []
                     for parameter_string in self.soap_string_list:
                         a_soap = descriptors.Descriptor(parameter_string).calc(
@@ -329,7 +328,7 @@ class Individual:
                         print("The SOAP string is: {}".format(
                             parameter_string))
         else:
-            for mol in conf_s:
+            for mol in mols:
                 soap = []
                 for parameter_string in self.soap_string_list:
                     soap += list(descriptors.Descriptor(
@@ -481,7 +480,7 @@ class Population:
         self.get_population_scores()
         # write_to_outfile(f"Initial population of size {self.population_size} generated")
 
-    def next_generation(self):
+    def next_generation(self, df, mols):
         """Updates the class with a new random population
 
         This is done by breeding a set of Individuals comprised of a
@@ -533,9 +532,9 @@ class Population:
                 except StopIteration:
                     break
         shuffle(next_generation_parents)
-        self.get_population_scores()
+        self.get_population_scores(df, mols)
 
-    def get_population_scores(self):
+    def get_population_scores(self, df, mols):
         """Gets the scores for all the Individuals in the population
 
 
@@ -549,7 +548,7 @@ class Population:
             # write_to_outfile(f"Getting score for individual {counter} of "
             #       f"{self.population_size}")
             counter += 1
-            individual.get_score()
+            individual.get_score(df, mols)
             # write_to_outfile(f"Score: {individual.score}")
 
     def sort_population(self):
@@ -708,7 +707,7 @@ def breed_individuals(individual_one, individual_two):
         new_gene_set_list.append(breed_genes(genes[0], genes[1]))
     return Individual(new_gene_set_list)
 
-def get_conf():
+def read_dataset(df, xyz_folder_path):
     """Function to get the inputs required to get SOAP arrays
 
     This function checks if the conf_s file exists, returns the ase
@@ -719,32 +718,16 @@ def get_conf():
     -------
 
     """
-    path = str(os.path.dirname(os.path.abspath(__file__))) + \
-           "/EXAMPLES/Classification/"
-    if os.path.isfile(path + "conf_s.pkl"):
-        # print("conf_s file exists")
-        return [*pkl.load(open(path + "conf_s.pkl", "rb"))]
-    else:
-        try:
-            csv_path = Path(path + "database.csv").resolve(strict=True)
-            xyz_folder_path = Path(path + "xyz/").resolve(strict=True)
-        except FileExistsError:
-            print("Please make sure the xyz folder and database.csv file "
-                  "exist. Read the docs for more information.")
-        print("Generating conf")
-        names_and_targets = pd.read_csv(csv_path)
-        conf_s = []
-        for index, row in names_and_targets.iterrows():
-            xyz_name = str(xyz_folder_path) + '/' + row['Name'] + '.xyz'
-            subprocess.call(
-                "sed 's/CL/Cl/g' " + xyz_name + " | sed 's/LP/X/g' > tmp.xyz",
-                shell=True)
-            conf = ase.io.read("tmp.xyz")
-            conf_s.append(conf)
-        subprocess.call("rm tmp.xyz", shell=True)
-        #print(f"saving conf to {path}conf_s.pkl")
-        #pkl.dump([conf_s, names_and_targets], open(path + 'conf_s.pkl', 'wb'))
-        return [conf_s, names_and_targets]
+    mols = []
+    for idx, row in df.iterrows():
+        xyz_name = str(xyz_folder_path) + '/' + row['Name'] + '.xyz'
+        subprocess.call(
+            "sed 's/CL/Cl/g' " + xyz_name + " | sed 's/LP/X/g' > tmp.xyz",
+            shell=True)
+        mol = ase.io.read("tmp.xyz")
+        mols.append(mol)
+    subprocess.call("rm tmp.xyz", shell=True)
+    return mols
 
 
 # get adjacency matrix, input has to be ase object
