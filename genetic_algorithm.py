@@ -330,7 +330,6 @@ class Individual:
                             parameter_string))
         else:
             for mol in conf_s:
-                # print(f"Getting soap for {mol}")
                 soap = []
                 for parameter_string in self.soap_string_list:
                     soap += list(descriptors.Descriptor(
@@ -743,8 +742,8 @@ def get_conf():
             conf = ase.io.read("tmp.xyz")
             conf_s.append(conf)
         subprocess.call("rm tmp.xyz", shell=True)
-        print(f"saving conf to {path}conf_s.pkl")
-        pkl.dump([conf_s, names_and_targets], open(path + 'conf_s.pkl', 'wb'))
+        #print(f"saving conf to {path}conf_s.pkl")
+        #pkl.dump([conf_s, names_and_targets], open(path + 'conf_s.pkl', 'wb'))
         return [conf_s, names_and_targets]
 
 
