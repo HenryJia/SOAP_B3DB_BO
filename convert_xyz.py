@@ -18,7 +18,8 @@ parser.add_argument('--output_df', help='output dataframe')
 args = parser.parse_args()
 
 df = pd.read_csv(args.input)
-df_out = pd.DataFrame(columns=df.columns)
+df_out = pd.DataFrame(columns=['Name', 'ChemName', 'Smiles', 'Class'])
+print(df.head())
 
 for i, row in tqdm(df.iterrows(), total=df.shape[0]):
     try:
@@ -33,8 +34,10 @@ for i, row in tqdm(df.iterrows(), total=df.shape[0]):
         with open(os.path.join(args.output, str(row['num']) + '.xyz'), 'w') as f:
             f.write(out)
 
-        df_out = pd.concat([df_out, row.to_frame().T])
-    except:
+        row_out = pd.DataFrame({'Name': row['num'], 'ChemName': row['name'], 'Smiles': row['smiles'], 'Class': row['p_np']}, index=[0])
+        df_out = pd.concat([df_out, row_out])
+    except Exception as e:
         print('Embedding failed for {} {}'.format(row['name'], row['smiles']))
+        print(e)
 
 df_out.to_csv(args.output_df, index=False)

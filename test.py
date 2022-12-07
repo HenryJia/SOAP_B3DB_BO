@@ -3,9 +3,10 @@ import pandas as pd
 from genetic_algorithm import Individual, GeneParameters, read_dataset
 input_parameters = __import__('input')
 
-df = pd.read_csv('EXAMPLES/Classification/database.csv')
+df = pd.read_csv('BBBP/BBBP_clean.csv')
+df['Name'] = df['Name'].astype(str)
 print(df.head())
-xyz_path = 'EXAMPLES/Classification/xyz/'
+xyz_path = 'BBBP/xyz/'
 
 print('Reading dataset')
 mols = read_dataset(df, xyz_path)
