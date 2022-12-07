@@ -249,7 +249,7 @@ class Individual:
     def __hash__(self):
         return hash(tuple(self.soap_string_list))
 
-    def get_score(self, df, mols):
+    def get_score(self, df):
         """Updates the Individuals score
 
         This can be computationally expensive, so this method is only
@@ -266,7 +266,7 @@ class Individual:
         except:
             raise TypeError("Your database.csv file isc not of the correct "
                              "format. Please read the docs.")
-        self.comp_soaps(mols, df)
+        self.comp_soaps(df)
         # Add to parameter file
         splits = 5
         repeats = 1
@@ -291,7 +291,7 @@ class Individual:
                 return False
         return True
 
-    def comp_soaps(self, mols, data):
+    def comp_soaps(self, data):
         """
         Function to compute the Soaps, maybe add to the Individual class?
         """
@@ -300,11 +300,11 @@ class Individual:
 
         if self.gene_set_list[0].gene_parameters.message_steps > 0:
             try:
-                for mol in mols:
+                for i, row in data.iterrows():
                     soap = []
                     for parameter_string in self.soap_string_list:
                         a_soap = descriptors.Descriptor(parameter_string).calc(
-                                 mol)['data']
+                                 row['Mol'])['data']
                         mp_soap = np.mean(multiple_message_passes(mol, self.gene_set_list[0].gene_parameters.message_steps) @ a_soap, axis=0)
                         soap += list(mp_soap)
                     soap_array.append(soap)
@@ -328,11 +328,11 @@ class Individual:
                         print("The SOAP string is: {}".format(
                             parameter_string))
         else:
-            for mol in mols:
+            for i, row in data.iterrows():
                 soap = []
                 for parameter_string in self.soap_string_list:
                     soap += list(descriptors.Descriptor(
-                        parameter_string).calc(mol)['data'][0])
+                        parameter_string).calc(row['Mol'])['data'][0])
                 soap_array.append(soap)
         self.soaps = np.array(soap_array)
         self.targets = np.array(targets)
@@ -548,7 +548,7 @@ class Population:
             # write_to_outfile(f"Getting score for individual {counter} of "
             #       f"{self.population_size}")
             counter += 1
-            individual.get_score(df, mols)
+            individual.get_score(df)
             # write_to_outfile(f"Score: {individual.score}")
 
     def sort_population(self):
@@ -719,6 +719,7 @@ def read_dataset(df, xyz_folder_path):
 
     """
     mols = []
+    df_out = df.copy()
     for idx, row in df.iterrows():
         xyz_name = str(xyz_folder_path) + '/' + row['Name'] + '.xyz'
         subprocess.call(
@@ -726,8 +727,9 @@ def read_dataset(df, xyz_folder_path):
             shell=True)
         mol = ase.io.read("tmp.xyz")
         mols.append(mol)
-    subprocess.call("rm tmp.xyz", shell=True)
-    return mols
+        subprocess.call("rm tmp.xyz", shell=True)
+    df_out['Mol'] = mols
+    return df_out
 
 
 # get adjacency matrix, input has to be ase object

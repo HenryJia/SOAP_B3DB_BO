@@ -8,7 +8,8 @@ print(df.head())
 xyz_path = 'EXAMPLES/Classification/xyz/'
 
 print('Reading dataset')
-mols = read_dataset(df, xyz_path)
+df = read_dataset(df, xyz_path)
+print(df.head())
 
 print('Making gene parameters')
 gene_parameters = [GeneParameters(**params) for params in input_parameters.descList]
@@ -22,6 +23,6 @@ print('Making individual')
 example_individual = Individual(example_gene_set)
 
 print('Getting score')
-print(example_individual.get_score(df, mols))
+print(example_individual.get_score(df))
 
 print(example_individual.score)
