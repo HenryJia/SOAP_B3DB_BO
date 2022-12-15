@@ -257,12 +257,13 @@ class Individual:
         This method does not return anything and instead updates the score
         attribute.
         """
-        column_names = df.columns
         try:
-            if column_names[1].upper().strip() == 'TARGET':
+            if 'Target' in df:
                 self.regression = True
-            elif column_names[1].upper().strip() == 'CLASS':
+                self.targets = np.array(df['Target'])
+            elif 'Class' in df:
                 self.regression = False
+                self.targets = np.array(df['Class'])
         except:
             raise TypeError("Your database.csv file isc not of the correct "
                              "format. Please read the docs.")
@@ -296,7 +297,6 @@ class Individual:
         Function to compute the Soaps, maybe add to the Individual class?
         """
         soap_array = []
-        targets = data.iloc[:, 1].values
 
         if self.gene_set_list[0].gene_parameters.message_steps > 0:
             try:
@@ -330,12 +330,12 @@ class Individual:
         else:
             for i, row in data.iterrows():
                 soap = []
+                # print(row['Smiles'] file=sys.stderr)
                 for parameter_string in self.soap_string_list:
                     soap += list(descriptors.Descriptor(
                         parameter_string).calc(row['Mol'])['data'][0])
                 soap_array.append(soap)
         self.soaps = np.array(soap_array)
-        self.targets = np.array(targets)
 
     def add_to_results_dictionary(self, results):
         for k, v in results:
@@ -380,6 +380,10 @@ class Individual:
         encoder.fit(Y)
         encoded_Y = encoder.transform(Y)
         y = to_categorical(encoded_Y)
+
+        # TODO: Clean the data so that it is not necessary to do this
+        # Replace NaN values with 0
+        self.soaps = np.nan_to_num(self.soaps)
 
         X_train, X_test, X_scaler = scale_data(self.soaps[train_index],
                                                self.soaps[test_index])
@@ -722,12 +726,12 @@ def read_dataset(df, xyz_folder_path):
     df_out = df.copy()
     for idx, row in df.iterrows():
         xyz_name = str(xyz_folder_path) + '/' + row['Name'] + '.xyz'
-        subprocess.call(
-            "sed 's/CL/Cl/g' " + xyz_name + " | sed 's/LP/X/g' > tmp.xyz",
-            shell=True)
-        mol = ase.io.read("tmp.xyz")
+        # subprocess.call(
+        #     "sed 's/CL/Cl/g' " + xyz_name + " | sed 's/LP/X/g' > tmp.xyz",
+        #     shell=True)
+        mol = ase.io.read(xyz_name)
         mols.append(mol)
-        subprocess.call("rm tmp.xyz", shell=True)
+        # subprocess.call("rm tmp.xyz", shell=True)
     df_out['Mol'] = mols
     return df_out
 
@@ -835,7 +839,7 @@ def build_model(X, regression=None):
             model = Model(input_layer, output_layer)
             model.compile(loss='mean_squared_error', optimizer=optimizers.Adam(learning_rate=0.01), metrics=['mean_squared_error'])
         elif not regression:
-            output_layer = Dense(units=3, activation='softmax')(hidden_layer)
+            output_layer = Dense(units=2, activation='softmax')(hidden_layer)
             model = Model(input_layer, output_layer)
             model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
         return model

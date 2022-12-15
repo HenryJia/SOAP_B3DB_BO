@@ -12,6 +12,7 @@ quippy-ase = "*"
 notebook = "*"
 scikit-learn = "*"
 tqdm = "*"
+pyqt5 = "*"
 
 [dev-packages]
 
