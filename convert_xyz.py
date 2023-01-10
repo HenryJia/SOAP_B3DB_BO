@@ -5,6 +5,7 @@ warnings.filterwarnings("error")
 
 from rdkit import Chem
 from rdkit.Chem import AllChem
+from rdkit.Chem.SaltRemover import SaltRemover
 
 import pandas as pd
 
@@ -21,9 +22,17 @@ df = pd.read_csv(args.input)
 df_out = pd.DataFrame(columns=['Name', 'ChemName', 'Smiles', 'Class'])
 print(df.head())
 
+remover = SaltRemover(defnData="[Cl,Na]")
+
 for i, row in tqdm(df.iterrows(), total=df.shape[0]):
+    #if row['num'] != 61:
+        #continue
     try:
         mol = Chem.MolFromSmiles(row['smiles'])
+        #print('Before remover', mol)
+        mol = remover.StripMol(mol)
+        #print('After remover', mol)
+
         mol = Chem.AddHs(mol)
         success = AllChem.EmbedMolecule(mol, randomSeed=0xf00d)
         out = Chem.MolToXYZBlock(mol)

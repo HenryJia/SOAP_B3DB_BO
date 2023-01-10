@@ -257,6 +257,9 @@ class Individual:
         This method does not return anything and instead updates the score
         attribute.
         """
+
+        self.df = df
+
         try:
             if 'Target' in df:
                 self.regression = True
@@ -383,7 +386,8 @@ class Individual:
 
         # TODO: Clean the data so that it is not necessary to do this
         # Replace NaN values with 0
-        self.soaps = np.nan_to_num(self.soaps)
+        #self.soaps = np.nan_to_num(self.soaps)
+        import pdb; pdb.set_trace()
 
         X_train, X_test, X_scaler = scale_data(self.soaps[train_index],
                                                self.soaps[test_index])

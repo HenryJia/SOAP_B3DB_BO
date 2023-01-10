@@ -305,7 +305,7 @@ Name,ChemName,Smiles,Class
 308,methotrexate,CN(Cc1cnc2nc(N)nc(N)c2n1)c3ccc(cc3)C(=O)N[C@@H](CCC(O)=O)C(O)=O,0
 309,Methyclothiazide,CN1C(CCl)Nc2cc(Cl)c(cc2[S]1(=O)=O)[S](N)(=O)=O,0
 310,methyldopa,C[C@](N)(Cc1ccc(O)c(O)c1)C(O)=O,0
-311,Icotidine,[Cl-].[Cl-].[Cl-].COc1cccnc1CCCCNC2=NC=C(Cc3ccc(C)nc3)C(=O)N2.[H+].[H+].[H+],0
+311,Icotidine,CC1=NC=C(C=C1)CC2=CN=C(NC2=O)NCCCCC3=C(C=CC=N3)OC,0
 312,L-663581,CC(C)c1onc(n1)c2ncn3c2CN(C)C(=O)c4c(Cl)cccc34,1
 313,Lupitidine,Cc1ccc(CC2=CN=C(NCCSCc3oc(cc3)C(C)(C)N)NC2=O)cn1,0
 314,Mianserin,CN1CCN2C(C1)c3ccccc3Cc4ccccc24,1
@@ -853,7 +853,6 @@ Name,ChemName,Smiles,Class
 865,mecillinam,CC1(C)S[C@@H]2[C@H](N=CN3CCCCCC3)C(=O)N2[C@H]1C(O)=O,0
 866,mecloxamine,CC(CN(C)C)OC(C)(c1ccccc1)c2ccc(Cl)cc2,0
 867,medorubicin,CC1OC(CC(N)C1O)OC2CC(O)(Cc3c(O)c4C(=O)c5ccccc5C(=O)c4c(O)c23)C(=O)CO,0
-868,meropenem,O.O.O.C[C@H](O)C1C2[C@@H](C)C(=C(N2C1=O)C(O)=O)S[C@@H]3CN[C@@H](C3)C(=O)N(C)C,0
 869,metampicillin,CC1(C)SC2C(NC(=O)C(N=C)c3ccccc3)C(=O)N2C1C(O)=O,0
 870,methacycline,CN(C)[C@H]1[C@@H]2[C@@H](O)[C@@H]3C(=C)c4cccc(O)c4C(=C3C(=O)[C@]2(O)C(=O)\C(=C(N)/O)C1=O)O,0
 871,methoxyphedrine,CNC(C)C(=O)c1ccc(OC)cc1,0

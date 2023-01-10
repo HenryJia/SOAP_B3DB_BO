@@ -308,7 +308,7 @@ num,name,p_np,smiles
 308,methotrexate,0,CN(Cc1cnc2nc(N)nc(N)c2n1)c3ccc(cc3)C(=O)N[C@@H](CCC(O)=O)C(O)=O
 309,Methyclothiazide,0,CN1C(CCl)Nc2cc(Cl)c(cc2[S]1(=O)=O)[S](N)(=O)=O
 310,methyldopa,0,C[C@](N)(Cc1ccc(O)c(O)c1)C(O)=O
-311,Icotidine,0,[Cl-].[Cl-].[Cl-].COc1cccnc1CCCCNC2=NC=C(Cc3ccc(C)nc3)C(=O)N2.[H+].[H+].[H+]
+311,Icotidine,0,CC1=NC=C(C=C1)CC2=CN=C(NC2=O)NCCCCC3=C(C=CC=N3)OC
 312,L-663581,1,CC(C)c1onc(n1)c2ncn3c2CN(C)C(=O)c4c(Cl)cccc34
 313,Lupitidine,0,Cc1ccc(CC2=CN=C(NCCSCc3oc(cc3)C(C)(C)N)NC2=O)cn1
 314,Mianserin,1,CN1CCN2C(C1)c3ccccc3Cc4ccccc24
@@ -865,7 +865,7 @@ num,name,p_np,smiles
 865,mecillinam,0,CC1(C)S[C@@H]2[C@H](N=CN3CCCCCC3)C(=O)N2[C@H]1C(O)=O
 866,mecloxamine,0,CC(CN(C)C)OC(C)(c1ccccc1)c2ccc(Cl)cc2
 867,medorubicin,0,CC1OC(CC(N)C1O)OC2CC(O)(Cc3c(O)c4C(=O)c5ccccc5C(=O)c4c(O)c23)C(=O)CO
-868,meropenem,0,O.O.O.C[C@H](O)C1C2[C@@H](C)C(=C(N2C1=O)C(O)=O)S[C@@H]3CN[C@@H](C3)C(=O)N(C)C
+868,meropenem,0,C[C@@H]1[C@@H]2[C@H](C(=O)N2C(=C1S[C@H]3C[C@H](NC3)C(=O)N(C)C)C(=O)O)[C@@H](C)O+
 869,metampicillin,0,CC1(C)SC2C(NC(=O)C(N=C)c3ccccc3)C(=O)N2C1C(O)=O
 870,methacycline,0,CN(C)[C@H]1[C@@H]2[C@@H](O)[C@@H]3C(=C)c4cccc(O)c4C(=C3C(=O)[C@]2(O)C(=O)\C(=C(N)/O)C1=O)O
 871,methoxyphedrine,0,CNC(C)C(=O)c1ccc(OC)cc1
