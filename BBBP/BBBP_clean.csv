@@ -53,12 +53,13 @@ Name,ChemName,Smiles,Class
 52,38480,c1(ccccc1)CC,1
 53,17,c1ccc(cc1N)c1csc(n1)N=C(N)N,1
 54,vinblastine,CC[C@]1(O)C[C@H]2CN(CCc3c([nH]c4ccccc34)[C@@](C2)(C(=O)OC)c5cc6c(cc5OC)N(C)[C@H]7[C@](O)([C@H](OC(C)=O)[C@]8(CC)C=CCN9CC[C@]67[C@H]89)C(=O)OC)C1,1
-55,Bacitracin,c1(c(cc(NC(CCC)=O)cc1)C(C)=O)OCC(CNC(C)C)O,1
+55,Acebutolol,c1(c(cc(NC(CCC)=O)cc1)C(C)=O)OCC(CNC(C)C)O,1
 56,Nor-2-chlorpromazine,ClC1=CC=C(SC(C=CC=C2)=C2N3CCCN)C3=C1,1
 57,compound 36,CN(C)Cc1ccc(CSCCNC2=C([N+]([O-])=O)C(Cc3ccccc3)=CN2)o1,1
 58,19,CNC(=NC#N)Nc1cccc(c1)c1csc(n1)N=C(N)N,0
 59,Y-G 14,n(ccc1)c(c1)CCNC,1
 61,sertraline,[Cl-].CN[C@H]1CC[C@@H](c2ccc(Cl)c(Cl)c2)c3ccccc13.[H+],1
+62,22767,C/N=C(/NCCSCc1csc(n1)N=C(N)N)\NC#N ,1
 64,vincristine,CC[C@]1(O)C[C@H]2CN(CCc3c([nH]c4ccccc34)[C@@](C2)(C(=O)OC)c5cc6c(cc5OC)N(C=O)[C@H]7[C@](O)([C@H](OC(C)=O)[C@]8(CC)C=CCN9CC[C@]67[C@H]89)C(=O)OC)C1,1
 65,SB-222200,CCC(NC(=O)c1c(c(nc2c1cccc2)c1ccccc1)C)c1ccccc1,1
 66,SB-656104-A,ClC1=CC=CC(OC2CCN(CCC3CCCN3S(C4=CC(N([H])C=C5)=C5C=C4)(=O)=O)CC2)=C1,1
@@ -197,6 +198,7 @@ Name,ChemName,Smiles,Class
 199,Atovaquone,OC1=C(C2CCC(CC2)c3ccc(Cl)cc3)C(=O)C(=O)c4ccccc14,0
 200,Azelaicacid,OC(=O)CCCCCCCC(O)=O,0
 201,Azithromycin,CC[C@H]1OC(=O)[C@H](C)[C@@H](O[C@H]2C[C@@](C)(OC)[C@@H](O)[C@H](C)O2)C(C)[C@@H](O[C@@H]3O[C@H](C)C[C@@H]([C@H]3O)N(C)C)[C@](C)(O)C[C@@H](C)CN(C)[C@H](C)[C@@H](O)[C@]1(C)O,0
+202,Bacitracin,CCC(C)C1C(=O)NC(C(=O)NC(C(=O)NC(C(=O)NC(C(=O)NCCCCC(C(=O)NC(C(=O)N1)CCCN)NC(=O)C(C(C)CC)NC(=O)C(CCC(=O)O)NC(=O)C(CC(C)C)NC(=O)C2CSC(=N2)C(C(C)CC)N)CC(=O)N)CC(=O)O)CC3=CN=CN3)CC4=CC=CC=C4,0
 203,Bethanechol,[Cl-].CC(C[N+](C)(C)C)OC(N)=O,0
 204,Bretyliumtosilate,CC[N+](C)(C)Cc1ccccc1Br.Cc2ccc(cc2)[S]([O-])(=O)=O,0
 205,Bromocriptine,CC(C)C[C@@H]1N2C(=O)[C@](NC(=O)[C@H]3CN(C)[C@@H]4Cc5c(Br)[nH]c6cccc(C4=C3)c56)(O[C@@]2(O)[C@@H]7CCCN7C1=O)C(C)C,0
@@ -387,6 +389,7 @@ Name,ChemName,Smiles,Class
 390,"""2,2-dimethylbutane""",CCC(C)(C)C,1
 391,Vidarabine,Nc1ncnc2n(cnc12)C3OC(CO)C(O)C3O,1
 392,Bis-hydroxylated-L-663581,c12c(C(N(Cc3n1cnc3c1noc(n1)C(CO)(CO)C)C)=O)c(ccc2)Cl,0
+393,ICI17148,CC1=CSC(=N1)N=C(N)N,1
 394,Mono-hydroxylated-L-663581,c12c(C(N(Cc3n1cnc3c1noc(n1)C(O)(C)C)C)=O)c(ccc2)Cl,0
 395,Thioperamide,S=C(NC1CCCCC1)N2CCC(CC2)c3[nH]cnc3,1
 396,rifampin,CC1C=CC=C(C(=O)NC2=C(C3=C(C(=C4C(=C3C(=O)C2=CNN5CCN(CC5)C)C(=O)C(O4)(OC=CC(C(C(C(C(C(C1O)C)O)C)OC(=O)C)C)OC)C)C)O)O)C,0
@@ -636,8 +639,14 @@ Name,ChemName,Smiles,Class
 641,haloperidol,OC1(CCN(CCCC(=O)c2ccc(F)cc2)CC1)c3ccc(Cl)cc3,1
 642,harmalol,CC1=C2NC3=CC(=O)C=CC3=C2C=CN1,1
 643,harman,Cc1nccc2c1[nH]c3ccccc23,1
+644,12,CC/N=C(/NCCSCc1c(cccn1)Br)\NC#N,0
 645,14,c1cc(ncc1)CSCCNc1c(cc[nH]1)[N+](=O)[O-],1
 646,15,c1(cc(nc(c1C)C)C(SC(CNc1c(cc[nH]1)[N+](=O)[O-])(C)C)(C)C)C,1
+647,16,c1ccc(cc1)c2csc(n2)N=C(N)N,1
+648,17,c1cc(cc(c1)N)c2csc(n2)N=C(N)N,0
+649,18,CC(=O)Nc1cccc(c1)c2csc(n2)NC(=N)N,0
+650,19,C/N=C(\NC#N)/NC1=CC=CC(=C1)C2=CSC(=N2)N=C(N)N,0
+651,2,Cc1csc(n1)N=C(N)N,1
 652,22,c1(c(oc(c1C)C(N(C(C)(N)C)C(N)(C)C)(C)C)C)C.C[NH+]O.[OH-],1
 653,23,[NH]C(CC(C)C([N@@](C(C)(C)C)C(N)(C)N)(C)C)c1c(c(c[nH+][o+]1)C)[O-],1
 654,tamitinol,CCNCc1c(O)c(C)ncc1CSC,1
@@ -853,6 +862,7 @@ Name,ChemName,Smiles,Class
 865,mecillinam,CC1(C)S[C@@H]2[C@H](N=CN3CCCCCC3)C(=O)N2[C@H]1C(O)=O,0
 866,mecloxamine,CC(CN(C)C)OC(C)(c1ccccc1)c2ccc(Cl)cc2,0
 867,medorubicin,CC1OC(CC(N)C1O)OC2CC(O)(Cc3c(O)c4C(=O)c5ccccc5C(=O)c4c(O)c23)C(=O)CO,0
+868,meropenem,C[C@@H]1[C@@H]2[C@H](C(=O)N2C(=C1S[C@H]3C[C@H](NC3)C(=O)N(C)C)C(=O)O)[C@@H](C)O,0
 869,metampicillin,CC1(C)SC2C(NC(=O)C(N=C)c3ccccc3)C(=O)N2C1C(O)=O,0
 870,methacycline,CN(C)[C@H]1[C@@H]2[C@@H](O)[C@@H]3C(=C)c4cccc(O)c4C(=C3C(=O)[C@]2(O)C(=O)\C(=C(N)/O)C1=O)O,0
 871,methoxyphedrine,CNC(C)C(=O)c1ccc(OC)cc1,0
@@ -1984,6 +1994,7 @@ Name,ChemName,Smiles,Class
 1999,seproxetine,NCCC(Oc1ccc(cc1)C(F)(F)F)c2ccccc2,1
 2000,setoperone,C4=C(C(C3CCN(CCC1=C(N=C2N(C1=O)CCS2)C)CC3)=O)C=CC(=C4)F,1
 2001,sipatrigine,C3=C(C2=C(N=C(N1CCN(C)CC1)N=C2)N)C(=C(C=C3Cl)Cl)Cl,1
+2002,spiclamine,C1C[C@@H]2C[C@H]1[C@H]([C@@]23CCC(=N3)N4CCOCC4)C5=CC=C(C=C5)Cl,1
 2003,spiroxatrine,C1=CC=CC=C1N2C5(C(NC2)=O)CCN(CC4OC3=C(C=CC=C3)OC4)CC5,1
 2004,sulazepam,C1=C(Cl)C=CC2=C1C(=NCC(=S)N2C)C3=CC=CC=C3,1
 2005,sulfonethylmethane,C(C([S](CC)(=O)=O)([S](CC)(=O)=O)C)C,1
