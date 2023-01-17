@@ -22,6 +22,8 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import mean_squared_error
 from ase.geometry.analysis import Analysis
 
+from data import SOAPDataset
+
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 # TODO: Make number of message steps global, not a GeneParameter input
