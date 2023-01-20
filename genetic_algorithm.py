@@ -1,4 +1,5 @@
 import warnings
+from abc import abstractmethod
 import pandas as pd
 from sklearn.model_selection import RepeatedKFold
 from dataclasses import dataclass
@@ -13,19 +14,12 @@ from random import sample, shuffle, choice, choices
 import numpy as np
 from collections import defaultdict
 from sklearn.preprocessing import MinMaxScaler
-import tensorflow
-from tensorflow.keras import layers, optimizers, Model, backend
-from tensorflow.keras.layers import Input, Dense
-from tensorflow.keras.callbacks import EarlyStopping
-from tensorflow.keras.utils import to_categorical
 from scipy.stats import pearsonr
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import mean_squared_error
 from ase.geometry.analysis import Analysis
 
 from data import SOAPDataset
-
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 # TODO: Make number of message steps global, not a GeneParameter input
 @dataclass
@@ -257,7 +251,7 @@ class Individual:
     def __hash__(self):
         return hash(tuple(self.soap_string_list))
 
-    def get_score(self, df):
+    def get_score(self, splits=5, repeats=1, random_state=999): # Add to parameter file
         """Updates the Individuals score
 
         This can be computationally expensive, so this method is only
@@ -266,23 +260,42 @@ class Individual:
         attribute.
         """
 
-        self.df = df
+        if self.gene_set_list[0].gene_parameters.message_steps > 0:
+            raise NotImplementedError("Message passing is not implemented yet")
 
-        try:
-            if 'Target' in df:
-                self.regression = True
-                self.targets = np.array(df['Target'])
-            elif 'Class' in df:
-                self.regression = False
-                self.targets = np.array(df['Class'])
-        except:
-            raise TypeError("Your database.csv file isc not of the correct "
-                             "format. Please read the docs.")
-        self.comp_soaps(df)
-        # Add to parameter file
-        splits = 5
-        repeats = 1
-        self.cv_split(splits, repeats, regression=self.regression)
+        self.dataset.calc_soaps(self.soap_string_list)
+
+        cv = RepeatedKFold(n_splits=splits, n_repeats=repeats, random_state=random_state)
+
+        for train_index, test_index in cv.split(np.arange(len(self.dataset))):
+            results = type(self).get_model_score(self.dataset, train_index, test_index)
+
+        for k in results:
+            self.results_dictionary[k].append(results[k])
+
+        self.score = np.mean(self.results_dictionary["train_scores"])
+
+    @abstractmethod
+    def get_model_score(dataset, train_index, test_index):
+        """Calculates the score of the model on the training and test set
+
+        This is a static method since the model should be same for all
+        The model should not be allowed to make changes to the class while running
+
+        Parameters
+        ----------
+        train_index : list[int]
+            A list of indices that are used to train the model
+        test_index : list[int]
+            A list of indices that are used to test the model
+
+        Returns
+        -------
+        dict
+            A dictionary containing the score of the model on the training and test set
+            This should be in the format of {"train_scores": float, "test_scores": float}
+        """
+        raise NotImplementedError("This function should be implemented in the child class")
 
     def check_same_gene_parameters(self, other):
         """Checks if other is an Individual created from the same gene parameters
@@ -307,10 +320,11 @@ class Individual:
         """
         Function to compute the Soaps, maybe add to the Individual class?
         """
+
+        raise Exception("This function is deprecated, use SOAPDataset.calc_soaps instead")
         soap_array = []
 
         if self.gene_set_list[0].gene_parameters.message_steps > 0:
-            raise NotImplementedError("Message passing is not implemented yet")
             try:
                 for i, row in data.iterrows():
                     soap = []
@@ -339,65 +353,6 @@ class Individual:
                             mp_matrix.shape))
                         print("The SOAP string is: {}".format(
                             parameter_string))
-        else:
-            self.dataset.calc_soaps(self.soap_string_list)
-
-        #import pdb; pdb.set_trace()
-
-    def add_to_results_dictionary(self, results):
-        for k, v in results:
-            self.results_dictionary[k].append(v)
-
-    def cv_split(self, splits, repeats, random_state=999,
-                 regression=None):
-        """
-        Returns split indices for train and test sets
-        """
-        cv = RepeatedKFold(n_splits=splits, n_repeats=repeats,
-                           random_state=random_state)
-        if regression is not None:
-            if regression:
-                for train_index, test_index in cv.split(self.soaps):
-                     self.get_scores_regression(train_index,
-                                                test_index)
-            elif not regression:
-                # encoder = LabelEncoder()
-                # self.targets = encoder.fit_transform(self.targets)
-                for train_index, test_index in cv.split(self.soaps):
-                    self.get_scores_classification(train_index,
-                                                    test_index)
-            self.score = np.average(self.results_dictionary["scores"])
-
-    def get_scores_regression(self, train_index, test_index):
-        estimator = build_model(self.soaps, regression=True)
-        X_train, X_test, X_scaler = scale_data(self.soaps[train_index],
-                                               self.soaps[test_index])
-        y_train, y_test, y_scaler = scale_data(
-            self.targets[train_index].reshape(-1, 1),
-            self.targets[test_index].reshape(-1, 1))
-
-        res = scorer_NN_regression(estimator, X_train, X_test, y_train,
-                                   y_test, y_scaler)
-        self.add_to_results_dictionary(res)
-
-    def get_scores_classification(self, train_index, test_index):
-        estimator = build_model(self.soaps, regression=False)
-        Y = self.targets
-        encoder = LabelEncoder()
-        encoder.fit(Y)
-        encoded_Y = encoder.transform(Y)
-        y = to_categorical(encoded_Y)
-
-        # TODO: Clean the data so that it is not necessary to do this
-        # Replace NaN values with 0
-        self.soaps = np.nan_to_num(self.soaps)
-        #import pdb; pdb.set_trace()
-
-        X_train, X_test, X_scaler = scale_data(self.soaps[train_index],
-                                               self.soaps[test_index])
-        y_train, y_test = y[train_index], y[test_index]
-        res = scorer_NN_class(estimator, X_train, X_test, y_train, y_test)
-        self.add_to_results_dictionary(res)
 
 class Population:
     """
@@ -785,46 +740,6 @@ def mol_descriptor(mol, N):
     atom_features = np.array(atom_features)
     return np.mean(multiple_message_passes(mol, N) @ atom_features, axis=0)
 
-def scorer_NN_regression(estimator, X_train, X_test, y_train, y_test, y_scaler):
-    """ Scoring function for use with NN regressor. Added by Matt. """
-
-    callback = EarlyStopping(monitor='val_loss', patience=50)
-    estimator.fit(X_train, y_train, callbacks=[callback], validation_data =
-    (X_test, y_test), epochs=200, verbose=False)
-    y_test_pred, y_train_pred = estimator.predict(X_test, verbose=False), estimator.predict(X_train, verbose=False)
-    y_test_pred, y_train_pred = y_scaler.inverse_transform(y_test_pred), y_scaler.inverse_transform(y_train_pred)
-    y_test = y_scaler.inverse_transform(y_test.reshape(-1, 1))
-    y_train = y_scaler.inverse_transform(y_train.reshape(-1, 1))
-    y_test = np.ravel(y_test)
-    y_train = np.ravel(y_train)
-    y_train_pred = y_train_pred.ravel()
-    y_test_pred = y_test_pred.ravel()
-    testCorr = pearsonr(y_test, y_test_pred)[0]
-    trainCorr = pearsonr(y_train, y_train_pred)[0]
-    testMSE = mean_squared_error(y_test, y_test_pred)
-    trainMSE = mean_squared_error(y_train, y_train_pred)
-    score = (2 * (trainMSE * (1-trainCorr)) + (testMSE * (1-testCorr)))
-    res = [('scores', score), ('y_train_actual', y_train), ('y_test_actual', y_test), ('y_train_predictions', y_train_pred), ('y_test_predictions', y_test_pred)]
-    return res
-
-def scorer_NN_class(estimator, X_train, X_test, y_train, y_test):
-    """ Scoring function for use with NN classifier. Added by Trent. """
-    callback = EarlyStopping(monitor='val_loss', patience=50)
-    estimator.fit(X_train, y_train, callbacks=[callback], validation_data=(
-        X_test, y_test), epochs=200, verbose=True)
-    y_test_pred = estimator.predict(X_test)
-    y_train_pred = estimator.predict(X_train)
-    _, test_accuracy = estimator.evaluate(X_test, y_test)
-    _, train_accuracy = estimator.evaluate(X_train, y_train)
-    y_test_pred = np.argmax(y_test_pred, axis=1)
-    y_train_pred = np.argmax(y_train_pred, axis=1)
-    y_test_actual = np.argmax(y_test, axis=1)
-    y_train_actual = np.argmax(y_train, axis=1)
-    score = -1 * (test_accuracy + (0.5 * train_accuracy))
-    res = [('scores', score), ('y_train_actual', y_train_actual), \
-          ('y_test_actual', y_test_actual), ('y_train_predictions', y_train_pred),
-               ('y_test_predictions', y_test_pred)]
-    return res
 
 def scale_data(train, test):
     scaler = MinMaxScaler()
@@ -832,95 +747,3 @@ def scale_data(train, test):
     test_scaled = scaler.transform(test)
 
     return train_scaled, test_scaled, scaler
-
-
-def build_model(X, regression=None):
-    backend.clear_session()
-    tensorflow.random.set_seed(12345)
-    input_layer = Input(X.shape[1])
-    hidden_layer = input_layer
-    for layer in [100,100,100]:
-        hidden_layer = Dense(layer, activation='relu')(hidden_layer)
-    if regression is not None:
-        if regression:
-            output_layer = Dense(units=1, activation='linear')(hidden_layer)
-            model = Model(input_layer, output_layer)
-            model.compile(loss='mean_squared_error', optimizer=optimizers.Adam(learning_rate=0.01), metrics=['mean_squared_error'])
-        elif not regression:
-            output_layer = Dense(units=2, activation='softmax')(hidden_layer)
-            model = Model(input_layer, output_layer)
-            model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-        return model
-    else:
-        raise ValueError("Regression or classification can not be determined")
-
-
-if __name__ == '__main__':
-    def check_outfile_exists(file_path):
-        if os.path.exists(file_path):
-            print("Making Backup for {}".format(file_path))
-            numb = 1
-            while True:
-                new_path = "{}-Backup{}.pkl".format(file_path[:-4], numb)
-                if os.path.exists(new_path):
-                    numb += 1
-                else:
-                    break
-            os.rename(file_path, new_path)
-            print("Backed up {} to {}".format(file_path, new_path))
-            return
-
-    def write_to_outfile(words):
-        outputFile = str(os.path.dirname(
-            os.path.abspath(__file__))) + "/out_{}.txt".format(sys.argv[1])
-        with open(outputFile, 'a+') as f:
-            f.write(words)
-            f.write('\n')
-        return
-
-
-    input_file_name = sys.argv[1]
-
-    check_outfile_exists(str(os.path.dirname(os.path.abspath(__file__))) +
-               "/history_{}.pkl".format(input_file_name))
-    check_outfile_exists(str(os.path.dirname(os.path.abspath(__file__))) +
-               "/out_{}.txt".format(input_file_name))
-
-    input_parameters = __import__(input_file_name)
-
-    write_to_outfile("Starting genetic algorithm with the following "
-                     "parameters:")
-    write_to_outfile(str(input_parameters.population_parameters))
-    write_to_outfile(str(input_parameters.history_parameters))
-    write_to_outfile("The GA will run for a maximum of "
-                       f"{input_parameters.num_gens} generations")
-    conf_s, data = get_conf()
-    column_names = data.columns
-    try:
-        if column_names[1].upper().strip() == 'TARGET':
-            write_to_outfile("Type of machine learning: Regression")
-        elif column_names[1].upper().strip() == 'CLASS':
-            write_to_outfile("Type of machine learning: Classification")
-    except:
-        write_to_outfile("Error with database.csv")
-        raise ValueError("Your database.csv file is not of the correct "
-                         "format. Please read the docs.")
-
-    gene_parameters = [GeneParameters(**params) for params in
-                       input_parameters.descList]
-    pop = Population(**input_parameters.population_parameters,
-                     list_of_gene_parameters=gene_parameters)
-    hist = BestHistory(**input_parameters.history_parameters)
-
-    pop.initialise_population()
-    for gen in range(input_parameters.num_gens):
-        if hist.converged:
-            break
-        print(f"Generation {gen}")
-        write_to_outfile(f"Generation {gen}")
-        pop.next_generation()
-        hist.append(pop)
-        write_to_outfile("-------")
-    pkl.dump(hist, open(str(os.path.dirname(os.path.abspath(__file__))) +
-             "/history_{}.pkl".format(input_file_name), 'wb'))
-    write_to_outfile("History has been saved")

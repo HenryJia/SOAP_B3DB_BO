@@ -2,10 +2,27 @@ import pandas as pd
 
 import numpy as np
 from sklearn.metrics import roc_auc_score, matthews_corrcoef, confusion_matrix, ConfusionMatrixDisplay
+from sklearn.ensemble import RandomForestClassifier
 
 from genetic_algorithm import Individual, GeneParameters, read_dataset
 
 import matplotlib.pyplot as plt
+
+class RandomForestIndividual(Individual):
+    def get_model_score(dataset, train_idx, test_idx):
+        X, y = dataset.to_numpy()
+
+        clf = RandomForestClassifier(n_estimators=100)
+        clf.fit(X[train_idx], y[train_idx])
+
+        pred_train = clf.predict(X[train_idx])
+        pred_test = clf.predict(X[test_idx])
+
+        mcc_train = matthews_corrcoef(y[train_idx], pred_train)
+        mcc_test = matthews_corrcoef(y[test_idx], pred_test)
+
+        return {'train_scores': mcc_train, 'test_scores': mcc_test}
+
 
 input_parameters = __import__('input')
 
@@ -27,35 +44,13 @@ example_gene_set = [params.make_gene_set() for params in gene_parameters]
 example_gene_set[0].cutoff = 5
 
 print('Making individual')
-example_individual = Individual(example_gene_set, df, xyz_path, target_col='Class')
+example_individual = RandomForestIndividual(example_gene_set, df, xyz_path, target_col='Class')
 
 print('Getting score')
-example_individual.get_score(df)
+example_individual.get_score()
 
 result_dict = example_individual.results_dictionary
 
-y_test = []
-pred_test = []
-for y, p in zip(result_dict['y_test_actual'], result_dict['y_test_predictions']):
-    y_test.append(y)
-    pred_test.append(p)
+mcc = np.mean(result_dict['test_scores'])
 
-y_test = np.concatenate(y_test)
-pred_test = np.concatenate(pred_test)
-
-# Calculate ROC AUC
-roc_auc = roc_auc_score(y_test, pred_test)
-
-# Calculate Matthews Correlation Coefficient
-mcc = matthews_corrcoef(y_test, pred_test)
-
-# Calculate confusion matrix
-cm = confusion_matrix(y_test, pred_test, normalize='true')
-
-print('ROC AUC: {}'.format(roc_auc))
 print('MCC: {}'.format(mcc))
-
-# Plot confusion matrix
-disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=['BBBP-', 'BBBP+'])
-disp.plot(cmap='Blues')
-plt.savefig('confusion_matrix.png')

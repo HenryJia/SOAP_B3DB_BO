@@ -34,6 +34,12 @@ class SOAPDataset(object):
         
         self.df['SOAP'] = self.df['SOAP'].apply(lambda x: np.nan_to_num(x))
 
+    def to_numpy(self):
+        soaps = []
+        for idx, row in self.df.iterrows():
+            soaps.append(row['SOAP'])
+        return np.array(soaps), self.df[self.target_col].to_numpy()
+
     def __getitem__(self, index):
         return self.df.iloc[index]['SOAP'], self.df.iloc[index][self.target_col]
 
