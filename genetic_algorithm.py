@@ -1,3 +1,4 @@
+import warnings
 import pandas as pd
 from sklearn.model_selection import RepeatedKFold
 from dataclasses import dataclass
@@ -215,11 +216,16 @@ class Individual:
         Checks if other is an Individual created from the same gene parameters
     """
 
-    def __init__(self, gene_set_list):
+    def __init__(self, gene_set_list, df, xyz_path, target_col):
         self.gene_set_list = gene_set_list
+
+        self.dataset = SOAPDataset(df.copy(), target_col)
+        self.dataset.read_molecules(xyz_path)
+
         self.score = 0
         self.soap_string_list = [gene_set.get_soap_string() for gene_set in
                                  gene_set_list]
+
         self.soaps = None
         self.targets = None
         self.regression = None
@@ -304,6 +310,7 @@ class Individual:
         soap_array = []
 
         if self.gene_set_list[0].gene_parameters.message_steps > 0:
+            raise NotImplementedError("Message passing is not implemented yet")
             try:
                 for i, row in data.iterrows():
                     soap = []
@@ -333,14 +340,9 @@ class Individual:
                         print("The SOAP string is: {}".format(
                             parameter_string))
         else:
-            for i, row in data.iterrows():
-                soap = []
-                # print(row['Smiles'] file=sys.stderr)
-                for parameter_string in self.soap_string_list:
-                    soap += list(descriptors.Descriptor(
-                        parameter_string).calc(row['Mol'])['data'][0])
-                soap_array.append(soap)
-        self.soaps = np.array(soap_array)
+            self.dataset.calc_soaps(self.soap_string_list)
+
+        #import pdb; pdb.set_trace()
 
     def add_to_results_dictionary(self, results):
         for k, v in results:

@@ -22,7 +22,7 @@ df = pd.read_csv(args.input)
 df_out = pd.DataFrame(columns=['Name', 'ChemName', 'Smiles', 'Class'])
 print(df.head())
 
-remover = SaltRemover(defnData="[Cl,Na]")
+remover = SaltRemover(defnData="[Cl,Na,O]")
 
 for i, row in tqdm(df.iterrows(), total=df.shape[0]):
     #if row['num'] != 61:

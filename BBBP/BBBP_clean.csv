@@ -101,7 +101,6 @@ Name,ChemName,Smiles,Class
 102,acetylsalicylate,CC(=O)Oc1ccccc1C(O)=O,0
 103,allopurinol,O=C1N=CN=C2NNC=C12,0
 104,Alprostadil,CCCCC[C@H](O)/C=C/[C@H]1[C@H](O)CC(=O)[C@@H]1CCCCCCC(O)=O,0
-105,aminophylline,CN1C(=O)N(C)c2nc[nH]c2C1=O.CN3C(=O)N(C)c4nc[nH]c4C3=O.NCCN,0
 106,Amiodarone,CCCCc1oc2ccccc2c1C(=O)c3cc(I)c(OCCN(CC)CC)c(I)c3,0
 107,amoxicillin,O.O.O.CC1(C)S[C@@H]2[C@H](NC(=O)[C@H](N)c3ccc(O)cc3)C(=O)N2[C@H]1C(O)=O,0
 108,ampicillin,CC1(C)S[C@@H]2[C@H](NC(=O)[C@H](N)c3ccccc3)C(=O)N2[C@H]1C(O)=O,0
@@ -381,7 +380,7 @@ Name,ChemName,Smiles,Class
 382,puromycin,COc1ccc(C[C@H](N)C(=O)NC2[C@@H](O)[C@@H](O[C@@H]2CO)n3cnc4c(ncnc34)N(C)C)cc1,0
 383,ribavirin,NC(=O)c1ncn(n1)[C@@H]2O[C@H](CO)[C@@H](O)[C@H]2O,0
 384,Tiotidine,CN=C(NCCSCc1csc(N=C(N)N)n1)NC#N,1
-385,Zolantidine,OC(=O)\C=C/C(O)=O.OC(=O)\C=C/C(O)=O.C1CCN(CC1)Cc2cccc(OCCCNc3sc4ccccc4n3)c2,1
+385,Zolantidine,C1CCN(CC1)CC2=CC(=CC=C2)OCCCNC3=NC4=CC=CC=C4S3,1
 386,1-hydroxymidazolam,OCc1ncc2CN=C(c3ccccc3F)c4cc(Cl)ccc4n12,1
 387,111-trichloroethane,CC(Cl)(Cl)Cl,1
 388,111-trifluoro-2-chloroethane,C(CCl)(F)(F)F,1
@@ -655,7 +654,6 @@ Name,ChemName,Smiles,Class
 657,U50488,CN(C1CCCC[C@H]1N2CCCC2)C(=O)Cc3ccc(Cl)c(Cl)c3,1
 658,heroin,CN1CC[C@]23[C@H]4Oc5c(OC(C)=O)ccc(C[C@@H]1[C@@H]2C=C[C@@H]4OC(C)=O)c35,1
 659,hexapropymate,NC(=O)OC1(CCCCC1)CC#C,1
-660,homophenazine,[H+].[H+].[Cl-].[Cl-].OCCN1CCCN(CCCN2c3ccccc3Sc4cc(ccc24)C(F)(F)F)CC1,1
 661,hydrocodone,COc1ccc2C[C@@H]3[C@@H]4CCC(=O)[C@@H]5Oc1c2[C@]45CCN3C,1
 662,hydroxyphenamate,CCC(O)(COC(N)=O)c1ccccc1,1
 663,hydroxyzine,OCCOCCN1CCN(CC1)C(c2ccccc2)c3ccc(Cl)cc3,1
@@ -1831,7 +1829,7 @@ Name,ChemName,Smiles,Class
 1836,fludiazepam,C1=C(Cl)C=CC2=C1C(=NCC(=O)N2C)C3=CC=CC=C3F,1
 1837,flumethasone(flumetasoneanddiflorasone),[C@H]23[C@@]([C@@]1(C(=CC(=O)C=C1)[C@H](C2)F)C)([C@H](C[C@]4([C@H]3C[C@@H](C)[C@@]4(C(CO)=O)O)C)O)F,1
 1838,flumethasone21pivalate(flumetasone-pivalate),[C@]12(F)[C@H](CC4([C@H](C1C[C@@H](C3=CC(=O)C=CC23C)F)C[C@H]([C@]4(O)C(=O)COC(=O)C(C)(C)C)C)C)O,1
-1839,flunisolide,[C@]14(C([C@H]3[C@H]([C@@H](O)C1)C2(C(=CC(=O)C=C2)[C@@H](F)C3)C)C[C@H]5OC(O[C@@]45C(=O)CO)(C)C)C.[C@]69(C([C@H]8[C@H]([C@@H](O)C6)C7(C(=CC(=O)C=C7)[C@@H](F)C8)C)C[C@H]%10OC(O[C@@]9%10C(=O)CO)(C)C)C.O,1
+1839,flunisolide,C[C@]12C[C@@H]([C@H]3[C@H]([C@@H]1C[C@@H]4[C@]2(OC(O4)(C)C)C(=O)CO)C[C@@H](C5=CC(=O)C=C[C@]35C)F)O,1
 1840,flunisolide-acetate,[C@]12(OC(O[C@@H]1CC3C2(CC(O)[C@H]4C3C[C@H](F)C5=CC(=O)C=CC45C)C)(C)C)C(=O)COC(=O)C,1
 1841,fluocinolone,[C@H]2(C1=CC(=O)C=C[C@@]1([C@@]4([C@@H](C2)[C@@H]3C[C@@H](O)[C@]([C@@]3(C)C[C@@H]4O)(O)C(=O)CO)F)C)F,1
 1842,fluocinolone-acetonide,[C@@]45([C@@]3([C@H]([C@H]2[C@]([C@@]1(C(=CC(=O)C=C1)[C@H](C2)F)C)(F)[C@H](C3)O)C[C@H]4OC(O5)(C)C)C)C(CO)=O,1

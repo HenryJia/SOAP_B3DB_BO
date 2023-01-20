@@ -27,7 +27,7 @@ example_gene_set = [params.make_gene_set() for params in gene_parameters]
 example_gene_set[0].cutoff = 5
 
 print('Making individual')
-example_individual = Individual(example_gene_set)
+example_individual = Individual(example_gene_set, df, xyz_path, target_col='Class')
 
 print('Getting score')
 example_individual.get_score(df)
