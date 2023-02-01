@@ -1,31 +1,40 @@
 import warnings
-import pandas as pd
+import multiprocessing as mp
+from multiprocessing import Pool
+from multiprocessing.pool import ThreadPool
+
 import numpy as np
 from quippy import descriptors
 import ase
 import os
 import numpy as np
 
+def _calc_soap(mol, parameter_strings):
+    soap = []
+    for ps in parameter_strings:
+        soap += list(descriptors.Descriptor(ps).calc(mol)['data'][0])
+    return np.array(soap)
 
 class SOAPDataset(object):
-    def __init__(self, df, target_col) -> None:
+    def __init__(self, df, target_col, workers=16) -> None:
         self.df = df
         self.target_col = target_col
+        self.workers = workers
+
+        #self.pool = ThreadPool(self.workers)
 
     def read_molecules(self, xyz_path):
         mol = []
         for idx, row in self.df.iterrows():
             mol.append(ase.io.read(
                 os.path.join(xyz_path, row['Name'] + '.xyz')))
-        self.df['mol'] = mol
+        self.df['Mol'] = mol
 
     def calc_soaps(self, parameter_strings):
-        soaps = []
-        for idx, row in self.df.iterrows():
-            soaps.append([])
-            for ps in parameter_strings:
-                soaps[-1] += list(descriptors.Descriptor(ps).calc(row['Mol'])['data'][0])
-            soaps[-1] = np.array(soaps[-1])
+        #soaps = self.pool.starmap(
+            #_calc_soap, [(row['Mol'], parameter_strings) for idx, row in self.df.iterrows()])
+        soaps = [_calc_soap(row['Mol'], parameter_strings) for idx, row in self.df.iterrows()]
+
         self.df['SOAP'] = soaps
 
         for idx, row in self.df.iterrows():

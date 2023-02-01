@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.metrics import roc_auc_score, matthews_corrcoef, confusion_matrix, ConfusionMatrixDisplay
 from sklearn.ensemble import RandomForestClassifier
 
-from genetic_algorithm import Individual, GeneParameters, read_dataset
+from genetic_algorithm import Individual, Population, GeneParameters
 
 import matplotlib.pyplot as plt
 
@@ -12,7 +12,7 @@ class RandomForestIndividual(Individual):
     def get_model_score(dataset, train_idx, test_idx):
         X, y = dataset.to_numpy()
 
-        clf = RandomForestClassifier(n_estimators=100)
+        clf = RandomForestClassifier(n_estimators=100, max_depth=5, random_state=0)
         clf.fit(X[train_idx], y[train_idx])
 
         pred_train = clf.predict(X[train_idx])
@@ -31,12 +31,11 @@ df['Name'] = df['Name'].astype(str)
 print(df.head())
 xyz_path = 'BBBP/xyz/'
 
-print('Reading dataset')
-df = read_dataset(df, xyz_path)
 print(df.head())
 
-print('Making gene parameters')
+print('Making parameters')
 gene_parameters = [GeneParameters(**params) for params in input_parameters.descList]
+population_parameters = input_parameters.population_parameters
 
 print('Making gene set')
 example_gene_set = [params.make_gene_set() for params in gene_parameters]
@@ -54,3 +53,13 @@ result_dict = example_individual.results_dictionary
 mcc = np.mean(result_dict['test_scores'])
 
 print('MCC: {}'.format(mcc))
+
+pop = Population(
+    lambda gene_set: RandomForestIndividual(gene_set, df, xyz_path, target_col='Class'),
+    population_parameters['best_sample'], population_parameters['lucky_few'],
+    population_parameters['population_size'], population_parameters['number_of_children'],
+    gene_parameters, maximise_scores=True, verbose=True)
+
+pop.initialise_population()
+
+pop.print_population()

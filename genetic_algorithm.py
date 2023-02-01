@@ -1,23 +1,16 @@
-import warnings
 from abc import abstractmethod
-import pandas as pd
+
+import multiprocessing as mp
+from multiprocessing import Pool
+from multiprocessing.pool import ThreadPool
+
 from sklearn.model_selection import RepeatedKFold
 from dataclasses import dataclass
 from quippy import descriptors
-import ase
-import sys
-import subprocess
-from pathlib import Path
-import os
-import pickle as pkl
 from random import sample, shuffle, choice, choices
 import numpy as np
 from collections import defaultdict
 from sklearn.preprocessing import MinMaxScaler
-from scipy.stats import pearsonr
-from sklearn.preprocessing import LabelEncoder
-from sklearn.metrics import mean_squared_error
-from ase.geometry.analysis import Analysis
 
 from data import SOAPDataset
 
@@ -397,16 +390,21 @@ class Population:
         Sorts the population attribute based on best score
     """
 
-    def __init__(self, best_sample, lucky_few, population_size,
+    def __init__(self, init_individual, best_sample, lucky_few, population_size,
                  number_of_children, list_of_gene_parameters,
-                 maximise_scores=False, **kwargs):
+                 maximise_scores=False, workers=16, verbose=False):
+        self.init_individual = init_individual
         self.best_sample = best_sample
         self.lucky_few = lucky_few
         self.number_of_children = number_of_children
         self.population_size = population_size
         self.list_of_gene_parameters = list_of_gene_parameters
         self.maximise_scores = maximise_scores
+        self.workers = workers
+        self.verbose = verbose
+
         self.population = set()
+        self.pool = ThreadPool(self.workers)
 
     def __repr__(self):
         return f"Population({self.best_sample}, {self.lucky_few}, " \
@@ -439,11 +437,26 @@ class Population:
         reaches the specified size. This method does not return anything
         and instead modifies the population attribute.
         """
-        self.population = set()
-        while len(self.population) < self.population_size:
+        if self.verbose:
+            print(f"Initialising population of size {self.population_size}")
+
+        def _init_population(idx):
             gene_set_list = [gene_parameters.make_gene_set() for
                              gene_parameters in self.list_of_gene_parameters]
-            self.population.add(Individual(gene_set_list))
+            return self.init_individual(gene_set_list)
+
+        self.population = set(self.pool.map(_init_population, range(self.population_size)))
+        #self.population = set(map(_init_population, range(self.population_size)))
+
+        # self.population = set()
+        # while len(self.population) < self.population_size:
+        #     gene_set_list = [gene_parameters.make_gene_set() for
+        #                      gene_parameters in self.list_of_gene_parameters]
+        #     self.population.add(self.init_individual(gene_set_list))
+
+        if self.verbose:
+            print(f"Initial population of size {self.population_size} generated")
+            print(f"Getting initial population scores")
         self.get_population_scores()
         # write_to_outfile(f"Initial population of size {self.population_size} generated")
 
@@ -501,7 +514,7 @@ class Population:
         shuffle(next_generation_parents)
         self.get_population_scores(df, mols)
 
-    def get_population_scores(self, df, mols):
+    def get_population_scores(self):
         """Gets the scores for all the Individuals in the population
 
 
@@ -510,13 +523,9 @@ class Population:
         performed when necessary. Ths method does not return anything and
         instead updates the population attribute.
         """
-        counter = 1
+        #self.pool.map(lambda individual: individual.get_score(), self.population)
         for individual in self.population:
-            # write_to_outfile(f"Getting score for individual {counter} of "
-            #       f"{self.population_size}")
-            counter += 1
-            individual.get_score(df)
-            # write_to_outfile(f"Score: {individual.score}")
+            individual.get_score()
 
     def sort_population(self):
         """Sorts the population
@@ -673,31 +682,6 @@ def breed_individuals(individual_one, individual_two):
                      individual_two.gene_set_list):
         new_gene_set_list.append(breed_genes(genes[0], genes[1]))
     return Individual(new_gene_set_list)
-
-def read_dataset(df, xyz_folder_path):
-    """Function to get the inputs required to get SOAP arrays
-
-    This function checks if the conf_s file exists, returns the ase
-    objects and a dataframe of targets if conf_s exists.
-    If it does not exist, creates the conf_s file and returns the same thing.
-
-    Returns
-    -------
-
-    """
-    mols = []
-    df_out = df.copy()
-    for idx, row in df.iterrows():
-        xyz_name = str(xyz_folder_path) + '/' + row['Name'] + '.xyz'
-        # subprocess.call(
-        #     "sed 's/CL/Cl/g' " + xyz_name + " | sed 's/LP/X/g' > tmp.xyz",
-        #     shell=True)
-        mol = ase.io.read(xyz_name)
-        mols.append(mol)
-        # subprocess.call("rm tmp.xyz", shell=True)
-    df_out['Mol'] = mols
-    return df_out
-
 
 # get adjacency matrix, input has to be ase object
 # selfconnect = False, returns adjacency matrix
