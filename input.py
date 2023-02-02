@@ -16,8 +16,7 @@ descDict1 = {'lower': 2,
 population_parameters = {'best_sample': 6,
                          'lucky_few': 2,
                          'population_size': 20,
-                         'number_of_children': 5,
-                         'maximise_scores': False}
+                         'number_of_children': 5}
 
 
 history_parameters = {'early_stop': 0.03,

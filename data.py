@@ -25,28 +25,28 @@ class SOAPDataset(object):
 
     def read_molecules(self, xyz_path):
         mol = []
-        for idx, row in self.df.iterrows():
+        for row in self.df.itertuples():
             mol.append(ase.io.read(
-                os.path.join(xyz_path, row['Name'] + '.xyz')))
+                os.path.join(xyz_path, row.Name + '.xyz')))
         self.df['Mol'] = mol
 
     def calc_soaps(self, parameter_strings):
         #soaps = self.pool.starmap(
-            #_calc_soap, [(row['Mol'], parameter_strings) for idx, row in self.df.iterrows()])
-        soaps = [_calc_soap(row['Mol'], parameter_strings) for idx, row in self.df.iterrows()]
+            #_calc_soap, [(row.Mol, parameter_strings) for row in self.df.itertuples()])
+        soaps = [_calc_soap(row.Mol, parameter_strings) for row in self.df.itertuples()]
 
         self.df['SOAP'] = soaps
 
-        for idx, row in self.df.iterrows():
-            if np.isnan(row['SOAP']).any():
+        for row in self.df.itertuples():
+            if np.isnan(row.SOAP).any():
                 warnings.warn("NaN detected in molecule:\n{}".format(row))
         
         self.df['SOAP'] = self.df['SOAP'].apply(lambda x: np.nan_to_num(x))
 
     def to_numpy(self):
         soaps = []
-        for idx, row in self.df.iterrows():
-            soaps.append(row['SOAP'])
+        for row in self.df.itertuples():
+            soaps.append(row.SOAP)
         return np.array(soaps), self.df[self.target_col].to_numpy()
 
     def __getitem__(self, index):

@@ -70,7 +70,7 @@ pop.initialise_population()
 pop.print_population()
 
 num_gens = 5
-early_stop = 2
+early_stop = 3
 early_number = 3
 min_generations = 5
 
