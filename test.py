@@ -4,15 +4,17 @@ import numpy as np
 from sklearn.metrics import roc_auc_score, matthews_corrcoef, confusion_matrix, ConfusionMatrixDisplay
 from sklearn.ensemble import RandomForestClassifier
 
-from genetic_algorithm import Individual, Population, GeneParameters
+from genetic_algorithm import Individual, Population, BestHistory, GeneParameters
 
 import matplotlib.pyplot as plt
+
 
 class RandomForestIndividual(Individual):
     def get_model_score(dataset, train_idx, test_idx):
         X, y = dataset.to_numpy()
 
-        clf = RandomForestClassifier(n_estimators=100, max_depth=5, random_state=0)
+        clf = RandomForestClassifier(
+            n_estimators=100, max_depth=5, random_state=0)
         clf.fit(X[train_idx], y[train_idx])
 
         pred_train = clf.predict(X[train_idx])
@@ -26,15 +28,16 @@ class RandomForestIndividual(Individual):
 
 input_parameters = __import__('input')
 
-df = pd.read_csv('BBBP/BBBP_clean.csv')
+df = pd.read_csv('/home/nvme/BBBP/BBBP_clean.csv')
 df['Name'] = df['Name'].astype(str)
 print(df.head())
-xyz_path = 'BBBP/xyz/'
+xyz_path = '/home/nvme/BBBP/xyz/'
 
 print(df.head())
 
 print('Making parameters')
-gene_parameters = [GeneParameters(**params) for params in input_parameters.descList]
+gene_parameters = [GeneParameters(**params)
+                   for params in input_parameters.descList]
 population_parameters = input_parameters.population_parameters
 
 print('Making gene set')
@@ -43,7 +46,8 @@ example_gene_set = [params.make_gene_set() for params in gene_parameters]
 example_gene_set[0].cutoff = 5
 
 print('Making individual')
-example_individual = RandomForestIndividual(example_gene_set, df, xyz_path, target_col='Class')
+example_individual = RandomForestIndividual(
+    example_gene_set, df, xyz_path, target_col='Class')
 
 print('Getting score')
 example_individual.get_score()
@@ -55,7 +59,8 @@ mcc = np.mean(result_dict['test_scores'])
 print('MCC: {}'.format(mcc))
 
 pop = Population(
-    lambda gene_set: RandomForestIndividual(gene_set, df, xyz_path, target_col='Class'),
+    lambda gene_set: RandomForestIndividual(
+        gene_set, df, xyz_path, target_col='Class'),
     population_parameters['best_sample'], population_parameters['lucky_few'],
     population_parameters['population_size'], population_parameters['number_of_children'],
     gene_parameters, maximise_scores=True, verbose=True)
@@ -63,3 +68,19 @@ pop = Population(
 pop.initialise_population()
 
 pop.print_population()
+
+num_gens = 5
+early_stop = 2
+early_number = 3
+min_generations = 5
+
+hist = BestHistory(early_stop, early_number, min_generations)
+
+for gen in range(num_gens):
+    if hist.converged:
+        break
+    print(f"Generation {gen}")
+    pop.next_generation()
+    hist.append(pop)
+    for ind in pop.population:
+        print(f"{ind} has a MCC of: {np.mean(ind.results_dictionary['test_scores'])}")

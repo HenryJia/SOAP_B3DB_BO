@@ -448,19 +448,75 @@ class Population:
         self.population = set(self.pool.map(_init_population, range(self.population_size)))
         #self.population = set(map(_init_population, range(self.population_size)))
 
-        # self.population = set()
-        # while len(self.population) < self.population_size:
-        #     gene_set_list = [gene_parameters.make_gene_set() for
-        #                      gene_parameters in self.list_of_gene_parameters]
-        #     self.population.add(self.init_individual(gene_set_list))
-
         if self.verbose:
             print(f"Initial population of size {self.population_size} generated")
             print(f"Getting initial population scores")
         self.get_population_scores()
         # write_to_outfile(f"Initial population of size {self.population_size} generated")
 
-    def next_generation(self, df, mols):
+    @staticmethod
+    def breed_genes(gene_set_one, gene_set_two):
+        """Function to breed two GeneSets
+
+        Breeds two GeneSet instances with each other to create a new GeneSet
+        instance that is a combination of both the parents.
+
+        Parameters
+        ----------
+        gene_set_one : GeneSet
+            The first GeneSet instance to be used for breeding
+        gene_set_two : GeneSet
+            The second GeneSet instance to be used for breeding
+
+        Returns
+        -------
+        GeneSet
+            A GeneSet instance that is a combination of both parents
+
+        Raises
+        ------
+        TypeError
+            If two GeneSets that were created using different GeneParameter
+            values, they will not be able to breed with each other
+        """
+        if gene_set_one.gene_parameters != gene_set_two.gene_parameters:
+            raise TypeError("Trying to breed genes with different "
+                            "gene parameters")
+
+        cutoff = choice([gene_set_one.cutoff, gene_set_two.cutoff])
+        l_max = choice([gene_set_one.l_max, gene_set_two.l_max])
+        n_max = choice([gene_set_one.n_max, gene_set_two.n_max])
+        sigma = choice([gene_set_one.sigma, gene_set_two.sigma])
+        new_gene_set = GeneSet(gene_set_one.gene_parameters, cutoff,
+                            l_max, n_max, sigma)
+        new_gene_set.mutate_gene()
+        return new_gene_set
+
+    def breed_individuals(self, individual_one, individual_two):
+        """Function to breed two Individuals
+
+        Breeds two Individual instances with each other to create a new Individual
+        instance that is a combination of both the parents.
+
+        Parameters
+        ----------
+        individual_one : Individual
+            The first GeneSet instance to be used for breeding
+        individual_two : Individual
+            The second GeneSet instance to be used for breeding
+
+        Returns
+        -------
+        Individual
+            An Individual instance that is a combination of both parents
+        """
+        new_gene_set_list = []
+        for genes in zip(individual_one.gene_set_list,
+                        individual_two.gene_set_list):
+            new_gene_set_list.append(Population.breed_genes(genes[0], genes[1]))
+        return self.init_individual(new_gene_set_list)
+
+    def next_generation(self):
         """Updates the class with a new random population
 
         This is done by breeding a set of Individuals comprised of a
@@ -492,6 +548,7 @@ class Population:
         creation of a new individual, computational power would be wasted
         on duplicate Individuals.
         """
+
         sorted_population = sorted(self.population,
                                    reverse=self.maximise_scores)
         best_individuals = sorted_population[:self.best_sample]
@@ -499,20 +556,26 @@ class Population:
                                    self.lucky_few)
         next_generation_parents = best_individuals + lucky_individuals
         self.population = set()
-        for _ in range(self.number_of_children):
+        for idx in range(self.number_of_children):
+            if self.verbose:
+                print(f"Breeding child {idx}")
+
             it = iter(next_generation_parents)
             while True:
                 try:
                     parent_one = next(it)
                     parent_two = next(it)
-                    child = breed_individuals(parent_one, parent_two)
+                    child = self.breed_individuals(parent_one, parent_two)
                     while child in self.population:
-                        child = breed_individuals(parent_one, parent_two)
+                        child = self.breed_individuals(parent_one, parent_two)
                     self.population.add(child)
                 except StopIteration:
                     break
         shuffle(next_generation_parents)
-        self.get_population_scores(df, mols)
+
+        if self.verbose:
+            print(f"Getting population scores")
+        self.get_population_scores()
 
     def get_population_scores(self):
         """Gets the scores for all the Individuals in the population
@@ -619,69 +682,6 @@ class BestHistory:
             print("Converged")
             # write_to_outfile("SOAP_GAS has converged")
             self.converged = True
-
-
-def breed_genes(gene_set_one, gene_set_two):
-    """Function to breed two GeneSets
-
-    Breeds two GeneSet instances with each other to create a new GeneSet
-    instance that is a combination of both the parents.
-
-    Parameters
-    ----------
-    gene_set_one : GeneSet
-        The first GeneSet instance to be used for breeding
-    gene_set_two : GeneSet
-        The second GeneSet instance to be used for breeding
-
-    Returns
-    -------
-    GeneSet
-        A GeneSet instance that is a combination of both parents
-
-    Raises
-    ------
-    TypeError
-        If two GeneSets that were created using different GeneParameter
-        values, they will not be able to breed with each other
-    """
-    if gene_set_one.gene_parameters != gene_set_two.gene_parameters:
-        raise TypeError("Trying to breed genes with different "
-                        "gene parameters")
-
-    cutoff = choice([gene_set_one.cutoff, gene_set_two.cutoff])
-    l_max = choice([gene_set_one.l_max, gene_set_two.l_max])
-    n_max = choice([gene_set_one.n_max, gene_set_two.n_max])
-    sigma = choice([gene_set_one.sigma, gene_set_two.sigma])
-    new_gene_set = GeneSet(gene_set_one.gene_parameters, cutoff,
-                           l_max, n_max, sigma)
-    new_gene_set.mutate_gene()
-    return new_gene_set
-
-
-def breed_individuals(individual_one, individual_two):
-    """Function to breed two Individuals
-
-    Breeds two Individual instances with each other to create a new Individual
-    instance that is a combination of both the parents.
-
-    Parameters
-    ----------
-    individual_one : Individual
-        The first GeneSet instance to be used for breeding
-    individual_two : Individual
-        The second GeneSet instance to be used for breeding
-
-    Returns
-    -------
-    Individual
-        An Individual instance that is a combination of both parents
-    """
-    new_gene_set_list = []
-    for genes in zip(individual_one.gene_set_list,
-                     individual_two.gene_set_list):
-        new_gene_set_list.append(breed_genes(genes[0], genes[1]))
-    return Individual(new_gene_set_list)
 
 # get adjacency matrix, input has to be ase object
 # selfconnect = False, returns adjacency matrix
