@@ -14,6 +14,7 @@ from sklearn.preprocessing import MinMaxScaler
 
 from data import SOAPDataset
 
+
 # TODO: Make number of message steps global, not a GeneParameter input
 @dataclass
 class GeneParameters:
@@ -29,9 +30,6 @@ class GeneParameters:
     centres : str
         A string of the format '{a, b, c}' where a, b and c are all
         chemical symbols that represent the species to be used as centres
-    neighbours : str
-        A string of the format '{a, b, c}' where a, b and c are all
-        chemical symbols that represent the species to be used as neighbours
     nu_S : int
         Compression parameter
     nu_R : int
@@ -46,7 +44,6 @@ class GeneParameters:
         Lower bound for sigma
     max_sigma : float
         Upper bound for sigma
-
     Methods
     -------
     make_gene_set()
@@ -54,8 +51,7 @@ class GeneParameters:
     """
     lower: int
     upper: int
-    centres: str
-    neighbours: str
+    centres: list
     nu_R: int
     nu_S: int
     mutation_chance: float
@@ -67,19 +63,21 @@ class GeneParameters:
 
     def make_gene_set(self):
         """ Generates a random set of genes in the form of a GeneSet class
-
         Returns
         -------
         GeneSet
             A GeneSet class that has been generated using random values
             within the bounds stipulated in this GeneParameter class
         """
+
+        num_centres = np.random.randint(0, len(self.centres) + 1)
+        centres = np.random.choice(self.centres, num_centres, replace=True).tolist()
+
         cutoff = np.random.randint(self.min_cutoff, self.max_cutoff)
         l_max = np.random.randint(self.lower, self.upper)
         n_max = np.random.randint(self.lower, self.upper)
         sigma = round(np.random.uniform(self.min_sigma, self.max_sigma), 2)
-        return GeneSet(self, cutoff, l_max, n_max, sigma)
-
+        return GeneSet(self, centres, cutoff, l_max, n_max, sigma)
 
 class GeneSet:
     """
@@ -109,19 +107,13 @@ class GeneSet:
         Returns a string that can be used as an input to generate SOAPs
     """
 
-    def __init__(self, gene_parameters, cutoff, l_max, n_max, sigma):
+    def __init__(self, gene_parameters, centres, cutoff, l_max, n_max, sigma):
         self.gene_parameters = gene_parameters
+        self.centres = centres
         self.cutoff = cutoff
         self.l_max = l_max
         self.n_max = n_max
         self.sigma = sigma
-
-    def __str__(self):
-        return f"[{self.cutoff}, {self.l_max}, {self.n_max}, {self.sigma}]"
-
-    def __repr__(self):
-        return f"GeneSet({self.cutoff}, {self.l_max}, " \
-               f"{self.n_max}, {self.sigma})"
 
     def mutate_gene(self):
         """ Mutates the GeneSet instance
@@ -134,6 +126,9 @@ class GeneSet:
         new_mutation = self.gene_parameters.make_gene_set()
         weights = [1 - self.gene_parameters.mutation_chance,
                    self.gene_parameters.mutation_chance]
+
+        self.centres = choices([self.centres, new_mutation.centres],
+                              weights=weights, k=1)[0]
         self.cutoff = choices([self.cutoff, new_mutation.cutoff],
                               weights=weights, k=1)[0]
         self.l_max = choices([self.l_max, new_mutation.l_max],
@@ -156,26 +151,22 @@ class GeneSet:
             A string that contains all the parameters required to create a
             SOAP descriptor array
         """
-        num_centre_atoms = sum(c.strip().isdigit() for c in
-                               self.gene_parameters.centres[
-                               1:-1].split(','))
+        num_centre_atoms = len(self.centres)
+        centres_string = "{" + ", ".join([str(c) for c in self.centres]) + "}"
 
-        num_neighbour_atoms = sum(n.strip().isdigit() for n in
-                                  self.gene_parameters.neighbours[
-                                  1:-1].split(','))
         if self.gene_parameters.message_steps==0:
             return "soap average cutoff={cutoff} l_max={l_max} " \
-                   "n_max={n_max} atom_sigma={sigma} n_Z={0} Z={centres} " \
-                   "n_species={1} species_Z={neighbours} nu_R={nu_R} " \
+                   "n_max={n_max} atom_sigma={sigma} n_Z={0} Z={1} " \
+                   "nu_R={nu_R} " \
                    "nu_S={nu_S}".format(
-                    num_centre_atoms, num_neighbour_atoms,
+                    num_centre_atoms, centres_string,
                     **{**vars(self.gene_parameters), **vars(self)})
         elif self.gene_parameters.message_steps > 0:
             return "soap cutoff={cutoff} l_max={l_max} n_max={n_max} " \
-                   "atom_sigma={sigma} n_Z={0} Z={centres} " \
-                   "n_species={1} species_Z={neighbours} nu_R={nu_R} " \
+                   "atom_sigma={sigma} n_Z={0} Z={1} " \
+                   "nu_R={nu_R} " \
                    "nu_S={nu_S}".format(
-                    num_centre_atoms, num_neighbour_atoms,
+                    num_centre_atoms, centres_string,
                     **{**vars(self.gene_parameters), **vars(self)})
 
 
@@ -483,11 +474,12 @@ class Population:
             raise TypeError("Trying to breed genes with different "
                             "gene parameters")
 
+        centres = choice([gene_set_one.centres, gene_set_two.centres])
         cutoff = choice([gene_set_one.cutoff, gene_set_two.cutoff])
         l_max = choice([gene_set_one.l_max, gene_set_two.l_max])
         n_max = choice([gene_set_one.n_max, gene_set_two.n_max])
         sigma = choice([gene_set_one.sigma, gene_set_two.sigma])
-        new_gene_set = GeneSet(gene_set_one.gene_parameters, cutoff,
+        new_gene_set = GeneSet(gene_set_one.gene_parameters, centres, cutoff,
                             l_max, n_max, sigma)
         new_gene_set.mutate_gene()
         return new_gene_set

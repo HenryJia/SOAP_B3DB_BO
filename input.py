@@ -1,11 +1,10 @@
 # Input parameters for gene sets, read docs for information on what they do
 descDict1 = {'lower': 2,
              'upper': 10,
-             'centres': '{8, 7, 6, 1, 16, 17, 9, 35, 11, 15, 5}',
-             'neighbours': '{8, 7, 6, 1, 16, 17, 9, 35, 11, 15, 5}',
+             'centres': [8, 7, 6, 1, 16, 17, 9, 35, 11, 15, 5],
              'nu_R': 1,
              'nu_S': 0,
-             'mutation_chance': 0.50,
+             'mutation_chance': 0.20,
              'min_cutoff': 5,
              'max_cutoff': 20,
              'min_sigma': 0.1,
