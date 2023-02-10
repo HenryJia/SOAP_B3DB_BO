@@ -8,7 +8,10 @@ from sklearn.model_selection import RepeatedKFold
 from dataclasses import dataclass
 from quippy import descriptors
 from random import sample, shuffle, choice, choices
+
 import numpy as np
+import scipy as sp
+
 from collections import defaultdict
 from sklearn.preprocessing import MinMaxScaler
 
@@ -71,7 +74,7 @@ class GeneParameters:
         """
 
         num_centres = np.random.randint(0, len(self.centres) + 1)
-        centres = np.random.choice(self.centres, num_centres, replace=True).tolist()
+        centres = np.random.choice(self.centres, num_centres, replace=False).tolist()
 
         cutoff = np.random.randint(self.min_cutoff, self.max_cutoff)
         l_max = np.random.randint(self.lower, self.upper)
@@ -114,6 +117,9 @@ class GeneSet:
         self.l_max = l_max
         self.n_max = n_max
         self.sigma = sigma
+
+    def __repr__(self):
+        return self.get_soap_string()
 
     def mutate_gene(self):
         """ Mutates the GeneSet instance
@@ -381,13 +387,9 @@ class Population:
         Sorts the population attribute based on best score
     """
 
-    def __init__(self, init_individual, best_sample, lucky_few, population_size,
-                 number_of_children, list_of_gene_parameters,
+    def __init__(self, init_individual, population_size, list_of_gene_parameters,
                  maximise_scores=False, workers=16, verbose=False):
         self.init_individual = init_individual
-        self.best_sample = best_sample
-        self.lucky_few = lucky_few
-        self.number_of_children = number_of_children
         self.population_size = population_size
         self.list_of_gene_parameters = list_of_gene_parameters
         self.maximise_scores = maximise_scores
@@ -541,29 +543,32 @@ class Population:
         on duplicate Individuals.
         """
 
-        sorted_population = sorted(self.population,
-                                   reverse=self.maximise_scores)
-        best_individuals = sorted_population[:self.best_sample]
-        lucky_individuals = sample(sorted_population[self.best_sample:],
-                                   self.lucky_few)
-        next_generation_parents = best_individuals + lucky_individuals
-        self.population = set()
-        for idx in range(self.number_of_children):
-            if self.verbose:
-                print(f"Breeding child {idx}")
 
-            it = iter(next_generation_parents)
-            while True:
-                try:
-                    parent_one = next(it)
-                    parent_two = next(it)
-                    child = self.breed_individuals(parent_one, parent_two)
-                    while child in self.population:
-                        child = self.breed_individuals(parent_one, parent_two)
-                    self.population.add(child)
-                except StopIteration:
-                    break
-        shuffle(next_generation_parents)
+        # Alright, screw Trent's code. I'm going to try to do this using some more
+        # reinforcement learning style techniques
+
+        # Instead of breeding the best individuals with each other, we're going to
+        # sample them via a softmax distribution. The higher the score, the more
+        # likely it is to be sampled. This should help to prevent the algorithm
+        # from getting stuck in local minima, and also help it converge faster
+        population_scores = np.array([individual.score for individual in self.population])
+
+        if not self.maximise_scores: # If we're minimising the score, we need to flip the sign
+            population_scores = -population_scores
+
+        population_scores = sp.special.softmax(population_scores)
+
+        # The new population will have half the old individuals, and half the new ones
+        parents = np.random.choice(
+            list(self.population), size=self.population_size//2, p=population_scores, replace=False)
+
+        self.population = set(parents)
+        idx = 0
+        while len(self.population) < self.population_size:
+            print(f"Breeding child {idx}")
+            child = self.breed_individuals(choice(parents), choice(parents))
+            self.population.add(child)
+            idx += 1
 
         if self.verbose:
             print(f"Getting population scores")
