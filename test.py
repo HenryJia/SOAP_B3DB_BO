@@ -43,10 +43,10 @@ class RFIndividual(Individual):
 
 input_parameters = __import__('input')
 
-df = pd.read_csv('/home/nvme/BBBP/BBBP_clean.csv')
+df = pd.read_csv('./BBBP/BBBP_clean.csv')
 df['Name'] = df['Name'].astype(str)
 print(df.head())
-xyz_path = '/home/nvme/BBBP/xyz/'
+xyz_path = './BBBP/xyz/'
 
 print(df.head())
 
