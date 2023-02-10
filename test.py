@@ -76,8 +76,7 @@ print('MCC: {}'.format(mcc))
 pop = Population(
     lambda gene_set: RFIndividual(
         gene_set, df, xyz_path, target_col='Class'),
-    population_parameters['best_sample'], population_parameters['lucky_few'],
-    population_parameters['population_size'], population_parameters['number_of_children'],
+    population_parameters['population_size'],
     gene_parameters, maximise_scores=True, verbose=True)
 
 pop.initialise_population()
