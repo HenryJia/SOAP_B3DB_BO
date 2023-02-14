@@ -551,16 +551,21 @@ class Population:
         # sample them via a softmax distribution. The higher the score, the more
         # likely it is to be sampled. This should help to prevent the algorithm
         # from getting stuck in local minima, and also help it converge faster
-        population_scores = np.array([individual.score for individual in self.population])
+        population_list = list(self.population)
+        population_scores = [individual.score for individual in population_list]
 
         if not self.maximise_scores: # If we're minimising the score, we need to flip the sign
             population_scores = -population_scores
 
-        population_scores = sp.special.softmax(population_scores)
+        # The new population will have half the old individuals, and half the new ones, with the best individual always being included
+        population_scores, population_list = zip(*sorted(zip(population_scores, population_list), reverse=True))
+        parents = [population_list[0]]
+        population_scores = population_scores[1:]
+        population_list = population_list[1:]
 
-        # The new population will have half the old individuals, and half the new ones
-        parents = np.random.choice(
-            list(self.population), size=self.population_size//2, p=population_scores, replace=False)
+        population_scores = sp.special.softmax(np.array(population_scores))
+
+        parents += np.random.choice(population_list, size=len(self.population)//2-1, p=population_scores, replace=False).tolist()
 
         self.population = set(parents)
         idx = 0

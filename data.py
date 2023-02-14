@@ -1,19 +1,10 @@
 import warnings
-import multiprocessing as mp
-from multiprocessing import Pool
-from multiprocessing.pool import ThreadPool
 
 import numpy as np
 from quippy import descriptors
 import ase
 import os
 import numpy as np
-
-def _calc_soap(mol, parameter_strings):
-    soap = []
-    for ps in parameter_strings:
-        soap += list(descriptors.Descriptor(ps).calc(mol)['data'][0])
-    return np.array(soap)
 
 class SOAPDataset(object):
     def __init__(self, df, target_col, workers=16) -> None:
@@ -30,10 +21,17 @@ class SOAPDataset(object):
                 os.path.join(xyz_path, row.Name + '.xyz')))
         self.df['Mol'] = mol
 
+    # Whilst this function does exist, works and is tested, it is not used
+    # This function is quite slow all things considered. It doesn't take advantage of
+    # Any multiprocessing, since we can't pickle this member function.
+    # This function is best used for debugging purposes.
     def calc_soaps(self, parameter_strings):
-        #soaps = self.pool.starmap(
-            #_calc_soap, [(row.Mol, parameter_strings) for row in self.df.itertuples()])
-        soaps = [_calc_soap(row.Mol, parameter_strings) for row in self.df.itertuples()]
+        soaps = []
+        for row in self.df.itertuples():
+            soap = []
+            for ps in parameter_strings:
+                soap += list(descriptors.Descriptor(ps).calc(row.Mol)['data'][0])
+            soaps += [np.array(soap)]
 
         self.df['SOAP'] = soaps
 

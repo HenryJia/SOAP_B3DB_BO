@@ -30,7 +30,7 @@ class RFIndividual(Individual):
         X, y = dataset.to_numpy()
 
         clf = RandomForestClassifier(
-            n_estimators=100, max_depth=5, random_state=0)
+            n_estimators=100, max_depth=3, random_state=0)
         clf.fit(X[train_idx], y[train_idx])
 
         pred_train = clf.predict(X[train_idx])
@@ -83,18 +83,8 @@ pop.initialise_population()
 
 pop.print_population()
 
-num_gens = 5
-early_stop = 3
-early_number = 3
-min_generations = 5
-
-hist = BestHistory(early_stop, early_number, min_generations)
-
-for gen in range(num_gens):
-    if hist.converged:
-        break
+for gen in range(10):
     print(f"Generation {gen}")
     pop.next_generation()
-    hist.append(pop)
     for ind in pop.population:
-        print(f"{ind} has a MCC of: {np.mean(ind.results_dictionary['test_scores'])}")
+        print(f"{ind} has a MCC and score of: {np.mean(ind.results_dictionary['test_scores'])}, {ind.score}")
