@@ -45,6 +45,7 @@ class RFIndividual(Individual):
 
 if __name__ == '__main__':
     # Note: This is absolutely necessary or quippy will get stuck for some reason
+    # Idea from: https://github.com/isl-org/Open3D/issues/1552
     mp.set_start_method('forkserver')
 
     input_parameters = __import__('input')
