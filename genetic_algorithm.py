@@ -1,4 +1,5 @@
 from abc import abstractmethod
+import multiprocessing as mp
 
 from sklearn.model_selection import RepeatedKFold
 from dataclasses import dataclass
@@ -12,6 +13,7 @@ from collections import defaultdict
 from sklearn.preprocessing import MinMaxScaler
 
 from data import MoleculeDataset
+from soap_worker import soap_worker
 
 
 # TODO: Make number of message steps global, not a GeneParameter input
@@ -196,10 +198,10 @@ class Individual:
         Checks if other is an Individual created from the same gene parameters
     """
 
-    def __init__(self, gene_set_list, df, xyz_path, target_col):
+    def __init__(self, gene_set_list, df, xyz_path):
         self.gene_set_list = gene_set_list
 
-        self.dataset = MoleculeDataset(df.copy(), target_col)
+        self.dataset = MoleculeDataset(df.copy())
         self.dataset.read_molecules(xyz_path)
 
         self.score = 0
@@ -237,7 +239,7 @@ class Individual:
     def __hash__(self):
         return hash(tuple(self.soap_string_list))
 
-    def comp_soaps(self, splits=5, repeats=1, random_state=999, soap_worker=None):
+    def comp_soaps(self, pool=None):
         """Updates the Individuals score
 
         This can be computationally expensive, so this method is only
@@ -249,13 +251,15 @@ class Individual:
         if self.gene_set_list[0].gene_parameters.message_steps > 0:
             raise NotImplementedError("Message passing is not implemented yet")
 
-        if soap_worker:
-            self.dataset.df['SOAP'] = soap_pool(self.soap_string_list)
+        if pool:
+            return pool.apply_async(soap_worker, (self.dataset, self.soap_string_list))
         else:
             self.dataset.calc_soaps(self.soap_string_list)
 
+    def evaluate_model(self, getter=None, splits=5, repeats=1, random_state=999):
 
-    def get_model_score(self, splits=5, repeats=1, random_state=999):
+        if getter:
+            self.dataset.df['SOAP'] = getter.get()
         cv = RepeatedKFold(n_splits=splits, n_repeats=repeats, random_state=random_state)
 
         for train_index, test_index in cv.split(np.arange(len(self.dataset))):
@@ -308,7 +312,7 @@ class Individual:
         return True
 
     '''
-    Some old code that might be useful later
+    Some old message passing code that might be useful later
 
         soap_array = []
 
@@ -387,13 +391,14 @@ class Population:
     """
 
     def __init__(self, init_individual, population_size, list_of_gene_parameters,
-                 maximise_scores=False, workers=16, verbose=False):
+                 maximise_scores=False, workers=mp.cpu_count(), verbose=False):
         self.init_individual = init_individual
         self.population_size = population_size
         self.list_of_gene_parameters = list_of_gene_parameters
         self.maximise_scores = maximise_scores
-        self.workers = workers
         self.verbose = verbose
+
+        self.pool = mp.Pool(workers)
 
         self.population = set()
 
@@ -436,8 +441,7 @@ class Population:
                              gene_parameters in self.list_of_gene_parameters]
             return self.init_individual(gene_set_list)
 
-        self.population = set(self.pool.map(_init_population, range(self.population_size)))
-        #self.population = set(map(_init_population, range(self.population_size)))
+        self.population = set(map(_init_population, range(self.population_size)))
 
         if self.verbose:
             print(f"Initial population of size {self.population_size} generated")
@@ -586,9 +590,12 @@ class Population:
         performed when necessary. Ths method does not return anything and
         instead updates the population attribute.
         """
-        #self.pool.map(lambda individual: individual.get_score(), self.population)
+        soap_getters = []
         for individual in self.population:
-            individual.co
+            soap_getters.append(individual.comp_soaps(self.pool))
+
+        for individual, sg in zip(self.population, soap_getters):
+            individual.evaluate_model(sg)
 
     def sort_population(self):
         """Sorts the population

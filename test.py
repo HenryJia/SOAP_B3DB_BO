@@ -1,3 +1,5 @@
+import multiprocessing as mp
+
 import pandas as pd
 
 import numpy as np
@@ -11,7 +13,7 @@ import matplotlib.pyplot as plt
 
 class SVCIndividual(Individual):
     def get_model_score(dataset, train_idx, test_idx):
-        X, y = dataset.to_numpy()
+        X, y = np.stack(dataset.df['SOAP'], axis=0), dataset.df['Class'].to_numpy()
 
         clf = SVC(
             kernel='rbf', random_state=0)
@@ -27,7 +29,7 @@ class SVCIndividual(Individual):
 
 class RFIndividual(Individual):
     def get_model_score(dataset, train_idx, test_idx):
-        X, y = dataset.to_numpy()
+        X, y = np.stack(dataset.df['SOAP'], axis=0), dataset.df['Class'].to_numpy()
 
         clf = RandomForestClassifier(
             n_estimators=100, max_depth=3, random_state=0)
@@ -41,50 +43,55 @@ class RFIndividual(Individual):
 
         return {'train_scores': mcc_train, 'test_scores': mcc_test}
 
-input_parameters = __import__('input')
+if __name__ == '__main__':
+    # Note: This is absolutely necessary or quippy will get stuck for some reason
+    mp.set_start_method('forkserver')
 
-df = pd.read_csv('./BBBP/BBBP_clean.csv')
-df['Name'] = df['Name'].astype(str)
-print(df.head())
-xyz_path = './BBBP/xyz/'
+    input_parameters = __import__('input')
 
-print(df.head())
+    df = pd.read_csv('./BBBP/BBBP_clean.csv')
+    df['Name'] = df['Name'].astype(str)
+    print(df.head())
+    xyz_path = './BBBP/xyz/'
 
-print('Making parameters')
-gene_parameters = [GeneParameters(**params)
-                   for params in input_parameters.descList]
-population_parameters = input_parameters.population_parameters
+    print(df.head())
 
-print('Making gene set')
-example_gene_set = [params.make_gene_set() for params in gene_parameters]
+    print('Making parameters')
+    gene_parameters = [GeneParameters(**params)
+                    for params in input_parameters.descList]
+    population_parameters = input_parameters.population_parameters
 
-example_gene_set[0].cutoff = 5
+    print('Making gene set')
+    example_gene_set = [params.make_gene_set() for params in gene_parameters]
 
-print('Making individual')
-example_individual = RFIndividual(
-    example_gene_set, df, xyz_path, target_col='Class')
+    example_gene_set[0].cutoff = 5
 
-print('Getting score')
-example_individual.get_score()
+    print('Making individual')
+    example_individual = RFIndividual(
+        example_gene_set, df, xyz_path)
 
-result_dict = example_individual.results_dictionary
+    print('Getting score')
+    example_individual.comp_soaps()
+    example_individual.evaluate_model()
 
-mcc = np.mean(result_dict['test_scores'])
+    result_dict = example_individual.results_dictionary
 
-print('MCC: {}'.format(mcc))
+    mcc = np.mean(result_dict['test_scores'])
 
-pop = Population(
-    lambda gene_set: RFIndividual(
-        gene_set, df, xyz_path, target_col='Class'),
-    population_parameters['population_size'],
-    gene_parameters, maximise_scores=True, verbose=True)
+    print('MCC: {}'.format(mcc))
 
-pop.initialise_population()
+    pop = Population(
+        lambda gene_set: RFIndividual(
+            gene_set, df, xyz_path),
+        population_parameters['population_size'],
+        gene_parameters, maximise_scores=True, verbose=True)
 
-pop.print_population()
+    pop.initialise_population()
 
-for gen in range(10):
-    print(f"Generation {gen}")
-    pop.next_generation()
-    for ind in pop.population:
-        print(f"{ind} has a MCC and score of: {np.mean(ind.results_dictionary['test_scores'])}, {ind.score}")
+    pop.print_population()
+
+    for gen in range(10):
+        print(f"Generation {gen}")
+        pop.next_generation()
+        for ind in pop.population:
+            print(f"{ind} has a MCC and score of: {np.mean(ind.results_dictionary['test_scores'])}, {ind.score}")
