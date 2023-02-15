@@ -91,8 +91,15 @@ if __name__ == '__main__':
 
     pop.print_population()
 
-    for gen in range(10):
+    for gen in range(30):
         print(f"Generation {gen}")
         pop.next_generation()
+        mcc = []
+        score = []
+        ind_str = []
         for ind in pop.population:
-            print(f"{ind} has a MCC and score of: {np.mean(ind.results_dictionary['test_scores'])}, {ind.score}")
+            mcc.append(np.mean(ind.results_dictionary['test_scores']))
+            score.append(ind.score)
+            ind_str.append(str(ind))
+
+        print(f"Best {ind_str[np.argmax(mcc)]} has a MCC and score of: {np.max(mcc)}, {np.max(score)}")

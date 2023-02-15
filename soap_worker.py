@@ -1,26 +1,23 @@
 import warnings
 
-import multiprocessing as mp
-from multiprocessing import Process, Queue, Value, Lock
-
 import numpy as np
 
 from quippy import descriptors
 
 def soap_worker(dataset, parameter_strings):
-        soaps = []
-        for row in dataset.df.itertuples():
-            soap = []
-            for ps in parameter_strings:
-                soap += list(descriptors.Descriptor(ps).calc(row.Mol)['data'][0])
+    soaps = []
+    for row in dataset.df.itertuples():
+        soap = []
+        for ps in parameter_strings:
+            soap += list(descriptors.Descriptor(ps).calc(row.Mol)['data'][0])
 
-            soap = np.array(soap)
-            if np.isnan(soap).any():
-                warnings.warn("NaN detected in molecule:\n{}".format(row))
+        soap = np.array(soap)
+        if np.isnan(soap).any():
+            warnings.warn("NaN detected in molecule:\n{}".format(row))
 
-            soaps.append(soap)
+        soaps.append(soap)
 
-        return soaps
+    return soaps
 
 
 
