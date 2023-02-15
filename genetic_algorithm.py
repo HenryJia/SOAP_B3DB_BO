@@ -1,9 +1,5 @@
 from abc import abstractmethod
 
-import multiprocessing as mp
-from multiprocessing import Pool
-from multiprocessing.pool import ThreadPool
-
 from sklearn.model_selection import RepeatedKFold
 from dataclasses import dataclass
 from quippy import descriptors
@@ -15,7 +11,7 @@ import scipy as sp
 from collections import defaultdict
 from sklearn.preprocessing import MinMaxScaler
 
-from data import SOAPDataset
+from data import MoleculeDataset
 
 
 # TODO: Make number of message steps global, not a GeneParameter input
@@ -203,7 +199,7 @@ class Individual:
     def __init__(self, gene_set_list, df, xyz_path, target_col):
         self.gene_set_list = gene_set_list
 
-        self.dataset = SOAPDataset(df.copy(), target_col)
+        self.dataset = MoleculeDataset(df.copy(), target_col)
         self.dataset.read_molecules(xyz_path)
 
         self.score = 0
@@ -241,7 +237,7 @@ class Individual:
     def __hash__(self):
         return hash(tuple(self.soap_string_list))
 
-    def get_score(self, splits=5, repeats=1, random_state=999): # Add to parameter file
+    def comp_soaps(self, splits=5, repeats=1, random_state=999, soap_worker=None):
         """Updates the Individuals score
 
         This can be computationally expensive, so this method is only
@@ -253,8 +249,13 @@ class Individual:
         if self.gene_set_list[0].gene_parameters.message_steps > 0:
             raise NotImplementedError("Message passing is not implemented yet")
 
-        self.dataset.calc_soaps(self.soap_string_list)
+        if soap_worker:
+            self.dataset.df['SOAP'] = soap_pool(self.soap_string_list)
+        else:
+            self.dataset.calc_soaps(self.soap_string_list)
 
+
+    def get_model_score(self, splits=5, repeats=1, random_state=999):
         cv = RepeatedKFold(n_splits=splits, n_repeats=repeats, random_state=random_state)
 
         for train_index, test_index in cv.split(np.arange(len(self.dataset))):
@@ -306,12 +307,9 @@ class Individual:
                 return False
         return True
 
-    def comp_soaps(self, data):
-        """
-        Function to compute the Soaps, maybe add to the Individual class?
-        """
+    '''
+    Some old code that might be useful later
 
-        raise Exception("This function is deprecated, use SOAPDataset.calc_soaps instead")
         soap_array = []
 
         if self.gene_set_list[0].gene_parameters.message_steps > 0:
@@ -343,6 +341,7 @@ class Individual:
                             mp_matrix.shape))
                         print("The SOAP string is: {}".format(
                             parameter_string))
+    '''
 
 class Population:
     """
@@ -397,7 +396,6 @@ class Population:
         self.verbose = verbose
 
         self.population = set()
-        self.pool = ThreadPool(self.workers)
 
     def __repr__(self):
         return f"Population({self.best_sample}, {self.lucky_few}, " \
@@ -590,7 +588,7 @@ class Population:
         """
         #self.pool.map(lambda individual: individual.get_score(), self.population)
         for individual in self.population:
-            individual.get_score()
+            individual.co
 
     def sort_population(self):
         """Sorts the population

@@ -6,14 +6,29 @@ import ase
 import os
 import numpy as np
 
-class SOAPDataset(object):
-    def __init__(self, df, target_col, workers=16) -> None:
+class MoleculeDataset(object):
+    '''
+    A class to hold a dataset of molecules.
+    This class is intended to be used with the SOAPWorker class.
+
+    This is meant to be a thin wrapper around a pandas dataframe.
+    It mainly exists to provide some convenience functions for reading molecules from xyz files
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        A dataframe containing the molecules to be processed.
+        The dataframe must contain a column named 'Name' which contains the name of the molecule.
+        The dataframe will be modified to contain a column named 'Mol' which contains the molecule as an ase.Atoms object.
+    target_col : str
+        The name of the column in the dataframe which contains the target values.
+    '''
+    def __init__(self, df) -> None:
         self.df = df
-        self.target_col = target_col
-        self.workers = workers
 
-        #self.pool = ThreadPool(self.workers)
-
+    '''
+    Read the molecules from the xyz files and store them in the dataframe.
+    '''
     def read_molecules(self, xyz_path):
         mol = []
         for row in self.df.itertuples():
@@ -21,34 +36,26 @@ class SOAPDataset(object):
                 os.path.join(xyz_path, row.Name + '.xyz')))
         self.df['Mol'] = mol
 
-    # Whilst this function does exist, works and is tested, it is not used
-    # This function is quite slow all things considered. It doesn't take advantage of
-    # Any multiprocessing, since we can't pickle this member function.
-    # This function is best used for debugging purposes.
+    '''
+    Calculate the SOAP vectors for the molecules in the dataset.
+    Note that this is a very slow process and should be done in parallel using the SOAPWorker class.
+    This function is provided for testing purposes mainly.
+    '''
     def calc_soaps(self, parameter_strings):
         soaps = []
         for row in self.df.itertuples():
             soap = []
             for ps in parameter_strings:
                 soap += list(descriptors.Descriptor(ps).calc(row.Mol)['data'][0])
-            soaps += [np.array(soap)]
 
-        self.df['SOAP'] = soaps
-
-        for row in self.df.itertuples():
-            if np.isnan(row.SOAP).any():
+            soap = np.array(soap)
+            if np.isnan(soap).any():
                 warnings.warn("NaN detected in molecule:\n{}".format(row))
+
+            soaps += [soap]
         
-        self.df['SOAP'] = self.df['SOAP'].apply(lambda x: np.nan_to_num(x))
-
-    def to_numpy(self):
-        soaps = []
-        for row in self.df.itertuples():
-            soaps.append(row.SOAP)
-        return np.array(soaps), self.df[self.target_col].to_numpy()
-
-    def __getitem__(self, index):
-        return self.df.iloc[index]['SOAP'], self.df.iloc[index][self.target_col]
+        self.df['SOAP'] = soaps
+        #return np.stack(soaps, axis=0)
 
     def __len__(self):
         return len(self.df)
