@@ -7,13 +7,14 @@ from sklearn.metrics import roc_auc_score, matthews_corrcoef, confusion_matrix, 
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 
-from genetic_algorithm import Individual, Population, BestHistory, GeneParameters
+from data import read_molecules
+from genetic_algorithm import Individual, Population, GeneParameters
 
 import matplotlib.pyplot as plt
 
 class SVCIndividual(Individual):
-    def get_model_score(dataset, train_idx, test_idx):
-        X, y = np.stack(dataset.df['SOAP'], axis=0), dataset.df['Class'].to_numpy()
+    def get_model_score(df, train_idx, test_idx):
+        X, y = np.stack(df['SOAP'], axis=0), df['Class'].to_numpy()
 
         clf = SVC(
             kernel='rbf', random_state=0)
@@ -28,8 +29,8 @@ class SVCIndividual(Individual):
         return {'train_scores': mcc_train, 'test_scores': mcc_test}
 
 class RFIndividual(Individual):
-    def get_model_score(dataset, train_idx, test_idx):
-        X, y = np.stack(dataset.df['SOAP'], axis=0), dataset.df['Class'].to_numpy()
+    def get_model_score(df, train_idx, test_idx):
+        X, y = np.stack(df['SOAP'], axis=0), df['Class'].to_numpy()
 
         clf = RandomForestClassifier(
             n_estimators=100, max_depth=3, random_state=0)
@@ -55,6 +56,8 @@ if __name__ == '__main__':
     print(df.head())
     xyz_path = './BBBP/xyz/'
 
+    df['Mol'] = read_molecules(df, xyz_path)
+
     print(df.head())
 
     print('Making parameters')
@@ -69,11 +72,11 @@ if __name__ == '__main__':
 
     print('Making individual')
     example_individual = RFIndividual(
-        example_gene_set, df, xyz_path)
+        example_gene_set, df)
 
     print('Getting score')
-    example_individual.comp_soaps()
-    example_individual.evaluate_model()
+    getter = example_individual.comp_soaps()
+    example_individual.evaluate_model(getter)
 
     result_dict = example_individual.results_dictionary
 
@@ -83,7 +86,7 @@ if __name__ == '__main__':
 
     pop = Population(
         lambda gene_set: RFIndividual(
-            gene_set, df, xyz_path),
+            gene_set, df),
         population_parameters['population_size'],
         gene_parameters, maximise_scores=True, verbose=True)
 

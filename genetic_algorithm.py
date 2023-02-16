@@ -3,7 +3,6 @@ import multiprocessing as mp
 
 from sklearn.model_selection import RepeatedKFold
 from dataclasses import dataclass
-from quippy import descriptors
 from random import sample, shuffle, choice, choices
 
 import numpy as np
@@ -12,8 +11,7 @@ import scipy as sp
 from collections import defaultdict
 from sklearn.preprocessing import MinMaxScaler
 
-from data import MoleculeDataset
-from soap_worker import soap_worker
+from data import soap_worker
 
 
 # TODO: Make number of message steps global, not a GeneParameter input
@@ -198,11 +196,10 @@ class Individual:
         Checks if other is an Individual created from the same gene parameters
     """
 
-    def __init__(self, gene_set_list, df, xyz_path):
+    def __init__(self, gene_set_list, df):
         self.gene_set_list = gene_set_list
 
-        self.dataset = MoleculeDataset(df.copy())
-        self.dataset.read_molecules(xyz_path)
+        self.df = df.copy()
 
         self.score = 0
         self.soap_string_list = [gene_set.get_soap_string() for gene_set in
@@ -252,18 +249,20 @@ class Individual:
             raise NotImplementedError("Message passing is not implemented yet")
 
         if pool:
-            return pool.apply_async(soap_worker, (self.dataset, self.soap_string_list))
+            return pool.apply_async(soap_worker, (self.df, self.soap_string_list))
         else:
-            self.dataset.calc_soaps(self.soap_string_list)
+            return soap_worker(self.df, self.soap_string_list)
 
-    def evaluate_model(self, getter=None, splits=5, repeats=1, random_state=999):
+    def evaluate_model(self, getter, splits=5, repeats=1, random_state=999):
 
-        if getter:
-            self.dataset.df['SOAP'] = getter.get()
+        if hasattr(getter, "get"):
+            self.df['SOAP'] = getter.get()
+        else:
+            self.df['SOAP'] = getter
         cv = RepeatedKFold(n_splits=splits, n_repeats=repeats, random_state=random_state)
 
-        for train_index, test_index in cv.split(np.arange(len(self.dataset))):
-            results = type(self).get_model_score(self.dataset, train_index, test_index)
+        for train_index, test_index in cv.split(np.arange(len(self.df))):
+            results = type(self).get_model_score(self.df, train_index, test_index)
 
         for k in results:
             self.results_dictionary[k].append(results[k])
@@ -271,7 +270,7 @@ class Individual:
         self.score = np.mean(self.results_dictionary["train_scores"])
 
     @abstractmethod
-    def get_model_score(dataset, train_index, test_index):
+    def get_model_score(df, train_index, test_index):
         """Calculates the score of the model on the training and test set
 
         This is a static method since the model should be same for all
@@ -606,89 +605,6 @@ class Population:
         self.population = sorted(self.population,
                                  reverse=self.maximise_scores)
 
-
-class BestHistory:
-    """
-    A class that stores the best Individuals after each generation
-
-    ...
-
-    Attributes
-    ----------
-    history : list[Individual]
-        A list of the Individual with the best score after each generation
-    converged : bool
-        True if the SOAP_GAS algorithm has converged
-    early_stop : float
-        The threshold used to test convergence
-    early_number : int
-        The number of generations that must converge before stopping
-    min_generations : int
-        The minimum number of generations before stopping
-
-    Methods
-    -------
-    append()
-        Used to append the best Individual of a Population to the history
-    _check_if_converged()
-        Tests to see if the algorithm has converged (hidden method)
-    """
-
-    def __init__(self, early_stop=None, early_number=None,
-                 min_generations=None):
-        self.history = []
-        self.converged = False
-        self.early_stop = early_stop
-        self.early_number = early_number
-        self.min_generations = min_generations
-
-    def append(self, population):
-        """Method to append the best Individual of a Population to the history attribute
-
-        This method does not return anything, but it adds an Individual to the history attribute.
-
-        Raises
-        ------
-        TypeError
-            If a class that is not a Population is appended to the history attribute
-        TypeError
-            If a Population that is formed using different gene_parameters is appended to the history attribute
-        ValueError
-            If min_generations is <= early_number
-
-        @param population:
-        @return:
-        """
-        if not isinstance(population, Population):
-            raise TypeError("You can only append a Population to the "
-                            "BestHistory")
-        if self.history:
-            if not self.history[-1].check_same_gene_parameters(list(population.population)[0]):
-                raise TypeError("Trying to append population of different "
-                                "type")
-        population.sort_population()
-        best_ind = population.population[0]
-        self.history.append(best_ind)
-        # write_to_outfile(f"Best Individual {str(best_ind)} with a score of {best_ind.score} added to history")
-        self._check_if_converged(population.maximise_scores)
-
-    def _check_if_converged(self, maximise_scores):
-        if not (self.early_stop and self.early_number and
-                self.min_generations):
-            return
-        if self.min_generations <= self.early_number:
-            raise ValueError("The minimum number of 'converged' generations"
-                             " must be less than the total number "
-                             "of generations.")
-        if len(self.history) < self.min_generations:
-            return
-        sorted_history = sorted(self.history, reverse=maximise_scores)
-        best_score = sorted_history[0]
-        if all(best_score.score - ind.score <= self.early_stop for ind in
-               sorted_history[:self.early_number]):
-            print("Converged")
-            # write_to_outfile("SOAP_GAS has converged")
-            self.converged = True
 
 # get adjacency matrix, input has to be ase object
 # selfconnect = False, returns adjacency matrix
