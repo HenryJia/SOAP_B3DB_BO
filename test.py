@@ -1,4 +1,6 @@
 import multiprocessing as mp
+import warnings
+warnings.simplefilter("ignore") # Ignore warnings for now
 
 import pandas as pd
 
@@ -7,10 +9,58 @@ from sklearn.metrics import roc_auc_score, matthews_corrcoef, confusion_matrix, 
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.optim as optim
+from torch.utils.data import Dataset, DataLoader
+
+import pytorch_lightning as pl
+from pytorch_lightning import LightningModule, Trainer, callbacks
+
 from data import read_molecules
 from genetic_algorithm import Individual, Population, GeneParameters
+from modules import MLP, SimpleResNetBlock, SimpleResNet
 
 import matplotlib.pyplot as plt
+
+
+class NNIndividual(Individual):
+    def get_model_score(df, train_index, test_index):
+        X, y = np.stack(df['SOAP'], axis=0), df['Class'].to_numpy()
+        X = X.astype(np.float32)
+
+        train_dataset = torch.utils.data.TensorDataset(
+            torch.Tensor(X[train_index]), torch.Tensor(y[train_index, None]))
+        test_dataset = torch.utils.data.TensorDataset(
+            torch.Tensor(X[test_index]), torch.Tensor(y[test_index, None]))
+
+        # Our dataset is small, so if we set num_workers > 0, we end up spending more time setting up the workers than we do actually training.
+        train_loader = DataLoader(train_dataset, batch_size=128, shuffle=True, num_workers=0)
+        test_loader = DataLoader(test_dataset, batch_size=128, shuffle=False, num_workers=0)
+
+        model = SimpleResNet(input_dim=X.shape[-1], layer_size=128, depth=16)
+        trainer = Trainer(
+            max_epochs=200,
+            accelerator='gpu',
+            devices=[0],
+            callbacks=[callbacks.EarlyStopping(monitor='val_loss', patience=5)],
+            check_val_every_n_epoch=1,
+            logger=False,
+            enable_progress_bar=False,
+            enable_model_summary=False,
+        )
+        trainer.fit(model, train_loader, test_loader)
+
+        model.eval()
+
+        pred_train = model(torch.Tensor(X[train_index])).detach().numpy().squeeze()
+        pred_test = model(torch.Tensor(X[test_index])).detach().numpy().squeeze()
+
+        mcc_train = matthews_corrcoef(y[train_index], pred_train > 0.5)
+        mcc_test = matthews_corrcoef(y[test_index], pred_test > 0.5)
+
+        return {'train_scores': mcc_train, 'test_scores': mcc_test}
 
 class SVCIndividual(Individual):
     def get_model_score(df, train_idx, test_idx):
@@ -71,7 +121,7 @@ if __name__ == '__main__':
     example_gene_set[0].cutoff = 5
 
     print('Making individual')
-    example_individual = RFIndividual(
+    example_individual = NNIndividual(
         example_gene_set, df)
 
     print('Getting score')
@@ -85,7 +135,7 @@ if __name__ == '__main__':
     print('MCC: {}'.format(mcc))
 
     pop = Population(
-        lambda gene_set: RFIndividual(
+        lambda gene_set: NNIndividual(
             gene_set, df),
         population_parameters['population_size'],
         gene_parameters, maximise_scores=True, verbose=True)

@@ -69,7 +69,7 @@ class GeneParameters:
             within the bounds stipulated in this GeneParameter class
         """
 
-        num_centres = np.random.randint(0, len(self.centres) + 1)
+        num_centres = np.random.randint(1, len(self.centres) + 1)
         centres = np.random.choice(self.centres, num_centres, replace=False).tolist()
 
         cutoff = np.random.randint(self.min_cutoff, self.max_cutoff)
