@@ -1,6 +1,7 @@
 import multiprocessing as mp
 import warnings
 warnings.simplefilter("ignore") # Ignore warnings for now
+import argparse
 
 import pandas as pd
 
@@ -110,26 +111,58 @@ if __name__ == '__main__':
     # Idea from: https://github.com/isl-org/Open3D/issues/1552
     mp.set_start_method('forkserver')
 
-    input_parameters = __import__('input')
+    # Argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--csv', type=str, help='CSV file to use', required=True)
+    parser.add_argument('--xyz', type=str, help='Location of the folder of xyz files',required=True)
 
-    df = pd.read_csv('./BBBP/BBBP_clean.csv')
+    ga_params = parser.add_argument_group('Genetic Algorithm Parameters')
+    ga_params.add_argument('--lower', type=int, help='Lower bound of the SOAP', default=2)
+    ga_params.add_argument('--upper', type=int, help='Upper bound of the SOAP', default=10)
+    ga_params.add_argument('--centres', type=list, nargs='+', help='Centres of the SOAP', default=[8, 7, 6, 1, 16, 17, 9, 35, 11, 15, 5])
+    ga_params.add_argument('--nu_R', type=int, help='nu_R of the SOAP', default=1)
+    ga_params.add_argument('--nu_S', type=int, help='nu_S of the SOAP', default=0)
+    ga_params.add_argument('--mutation_chance', type=float, help='Mutation chance of the GA', default=0.2)
+    ga_params.add_argument('--min_cutoff', type=float, help='Minimum cutoff of the SOAP', default=5)
+    ga_params.add_argument('--max_cutoff', type=float, help='Maximum cutoff of the SOAP', default=20)
+    ga_params.add_argument('--min_sigma', type=float, help='Minimum sigma of the SOAP', default=0.1)
+    ga_params.add_argument('--max_sigma', type=float, help='Maximum sigma of the SOAP', default=1.5)
+    ga_params.add_argument('--message_steps', type=int, help='Message steps of the SOAP. This does nothing for now', default=0)
+    ga_params.add_argument('--population_size', type=int, help='Population size of the GA', default=20)
+    ga_params.add_argument('--num_generations', type=int, help='Number of generations of the GA', default=30)
+
+    args = parser.parse_args()
+    print(args)
+
+    df = pd.read_csv(args.csv)
     df['Name'] = df['Name'].astype(str)
     print(df.head())
-    xyz_path = './BBBP/xyz/'
 
-    df['Mol'] = read_molecules(df, xyz_path)
+    df['Mol'] = read_molecules(df, args.xyz)
 
     print(df.head())
 
     print('Making parameters')
-    gene_parameters = [GeneParameters(**params)
-                    for params in input_parameters.descList]
-    population_parameters = input_parameters.population_parameters
+
+    # This is a tad inefficient, but it's fine
+    gene_args = {
+        'lower': args.lower,
+        'upper': args.upper,
+        'centres': args.centres,
+        'nu_R': args.nu_R,
+        'nu_S': args.nu_S,
+        'mutation_chance': args.mutation_chance,
+        'min_cutoff': args.min_cutoff,
+        'max_cutoff': args.max_cutoff,
+        'min_sigma': args.min_sigma,
+        'max_sigma': args.max_sigma,
+        'message_steps': args.message_steps
+    }
+
+    gene_parameters = [GeneParameters(**gene_args)]
 
     print('Making gene set')
-    example_gene_set = [params.make_gene_set() for params in gene_parameters]
-
-    example_gene_set[0].cutoff = 5
+    example_gene_set = [gene_parameters[0].make_gene_set()]
 
     print('Making individual')
     example_individual = NNIndividual(
@@ -148,7 +181,7 @@ if __name__ == '__main__':
     pop = Population(
         lambda gene_set: NNIndividual(
             gene_set, df),
-        population_parameters['population_size'],
+        args.population_size,
         gene_parameters, maximise_scores=True, verbose=True)
 
     pop.initialise_population()

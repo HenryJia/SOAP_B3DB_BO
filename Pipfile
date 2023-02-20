@@ -15,6 +15,7 @@ pyqt5 = "*"
 torch = "*"
 pytorch-lightning = "1.9.2"
 imbalanced-learn = "0.10.0"
+wandb = "*"
 
 [dev-packages]
 
