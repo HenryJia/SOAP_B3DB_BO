@@ -16,7 +16,9 @@ import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 
 import pytorch_lightning as pl
-from pytorch_lightning import LightningModule, Trainer, callbacks
+from pytorch_lightning import Trainer, callbacks
+
+from imblearn.over_sampling import SMOTE
 
 from data import read_molecules
 from genetic_algorithm import Individual, Population, GeneParameters
@@ -30,10 +32,19 @@ class NNIndividual(Individual):
         X, y = np.stack(df['SOAP'], axis=0), df['Class'].to_numpy()
         X = X.astype(np.float32)
 
+        sm = SMOTE(random_state=42)
+
+        X_train = X[train_index]
+        X_test = X[test_index]
+        y_train = y[train_index]
+        y_test = y[test_index]
+
+        X_train, y_train = sm.fit_resample(X_train, y_train)
+
         train_dataset = torch.utils.data.TensorDataset(
-            torch.Tensor(X[train_index]), torch.Tensor(y[train_index, None]))
+            torch.Tensor(X_train), torch.Tensor(y_train[:, None]))
         test_dataset = torch.utils.data.TensorDataset(
-            torch.Tensor(X[test_index]), torch.Tensor(y[test_index, None]))
+            torch.Tensor(X_test), torch.Tensor(y_test[:, None]))
 
         # Our dataset is small, so if we set num_workers > 0, we end up spending more time setting up the workers than we do actually training.
         train_loader = DataLoader(train_dataset, batch_size=128, shuffle=True, num_workers=0)
@@ -54,11 +65,11 @@ class NNIndividual(Individual):
 
         model.eval()
 
-        pred_train = model(torch.Tensor(X[train_index])).detach().numpy().squeeze()
-        pred_test = model(torch.Tensor(X[test_index])).detach().numpy().squeeze()
+        pred_train = model(torch.Tensor(X_train)).detach().numpy().squeeze()
+        pred_test = model(torch.Tensor(X_test)).detach().numpy().squeeze()
 
-        mcc_train = matthews_corrcoef(y[train_index], pred_train > 0.5)
-        mcc_test = matthews_corrcoef(y[test_index], pred_test > 0.5)
+        mcc_train = matthews_corrcoef(y_train, pred_train > 0.5)
+        mcc_test = matthews_corrcoef(y_test, pred_test > 0.5)
 
         return {'train_scores': mcc_train, 'test_scores': mcc_test}
 
