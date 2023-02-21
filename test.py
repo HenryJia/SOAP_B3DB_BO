@@ -27,20 +27,18 @@ from modules import MLP, SimpleResNetBlock, SimpleResNet
 
 import matplotlib.pyplot as plt
 
-
 class NNIndividual(Individual):
     def get_model_score(df, train_index, test_index):
         X, y = np.stack(df['SOAP'], axis=0), df['Class'].to_numpy()
         X = X.astype(np.float32)
-
-        sm = SMOTE(random_state=42)
 
         X_train = X[train_index]
         X_test = X[test_index]
         y_train = y[train_index]
         y_test = y[test_index]
 
-        X_train, y_train = sm.fit_resample(X_train, y_train)
+        #sm = SMOTE(random_state=42)
+        #X_train, y_train = sm.fit_resample(X_train, y_train)
 
         train_dataset = torch.utils.data.TensorDataset(
             torch.Tensor(X_train), torch.Tensor(y_train[:, None]))
@@ -51,12 +49,13 @@ class NNIndividual(Individual):
         train_loader = DataLoader(train_dataset, batch_size=128, shuffle=True, num_workers=0)
         test_loader = DataLoader(test_dataset, batch_size=128, shuffle=False, num_workers=0)
 
-        model = SimpleResNet(input_dim=X.shape[-1], layer_size=128, depth=16)
+        model = SimpleResNet(input_dim=X.shape[-1], layer_size=512, depth=16)
         trainer = Trainer(
             max_epochs=200,
             accelerator='gpu',
             devices=[0],
             callbacks=[callbacks.EarlyStopping(monitor='val_loss', patience=5)],
+            enable_checkpointing=False,
             check_val_every_n_epoch=1,
             logger=False,
             enable_progress_bar=False,
@@ -71,8 +70,13 @@ class NNIndividual(Individual):
 
         mcc_train = matthews_corrcoef(y_train, pred_train > 0.5)
         mcc_test = matthews_corrcoef(y_test, pred_test > 0.5)
+        train_cm = confusion_matrix(y_train, pred_train > 0.5, normalize='true')
+        test_cm = confusion_matrix(y_test, pred_test > 0.5, normalize='true')
 
-        return {'train_scores': mcc_train, 'test_scores': mcc_test}
+        return {
+            'train_scores': mcc_train, 'test_scores': mcc_test,
+            'train_tp': train_cm[1, 1], 'train_tn': train_cm[0, 0],
+            'test_tp': test_cm[1, 1], 'test_tn': test_cm[0, 0]}
 
 class SVCIndividual(Individual):
     def get_model_score(df, train_idx, test_idx):
@@ -107,6 +111,8 @@ class RFIndividual(Individual):
         return {'train_scores': mcc_train, 'test_scores': mcc_test}
 
 if __name__ == '__main__':
+    import wandb
+
     # Note: This is absolutely necessary or quippy will get stuck for some reason
     # Idea from: https://github.com/isl-org/Open3D/issues/1552
     mp.set_start_method('forkserver')
@@ -133,6 +139,12 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     print(args)
+
+    wandb.init(
+        # set the wandb project where this run will be logged
+        project="SOAP-GAS-TMS",
+        config = vars(args)
+    )
 
     df = pd.read_csv(args.csv)
     df['Name'] = df['Name'].astype(str)
@@ -164,6 +176,9 @@ if __name__ == '__main__':
     print('Making gene set')
     example_gene_set = [gene_parameters[0].make_gene_set()]
 
+    '''
+    # Some example code for making an individual
+
     print('Making individual')
     example_individual = NNIndividual(
         example_gene_set, df)
@@ -177,6 +192,7 @@ if __name__ == '__main__':
     mcc = np.mean(result_dict['test_scores'])
 
     print('MCC: {}'.format(mcc))
+    '''
 
     pop = Population(
         lambda gene_set: NNIndividual(
@@ -188,15 +204,40 @@ if __name__ == '__main__':
 
     pop.print_population()
 
-    for gen in range(30):
+    for gen in range(args.num_generations):
         print(f"Generation {gen}")
         pop.next_generation()
         mcc = []
         score = []
         ind_str = []
+        train_tn = []
+        train_tp = []
+        test_tn = []
+        test_tp = []
         for ind in pop.population:
             mcc.append(np.mean(ind.results_dictionary['test_scores']))
             score.append(ind.score)
             ind_str.append(str(ind))
+            train_tn.append(np.mean(ind.results_dictionary['train_tn']))
+            train_tp.append(np.mean(ind.results_dictionary['train_tp']))
+            test_tn.append(np.mean(ind.results_dictionary['test_tn']))
+            test_tp.append(np.mean(ind.results_dictionary['test_tp']))
 
-        print(f"Best {ind_str[np.argmax(mcc)]} has a MCC and score of: {np.max(mcc)}, {np.max(score)}")
+        print(f"Best {ind_str[np.argmax(mcc)]} has a MCC and score of: {np.max(mcc)}, {score[np.argmax(mcc)]}")
+        wandb.log({
+            'SOAP String': ind_str,
+            'Test MCC': mcc,
+            'Train MCC': score,
+            'Train TN': train_tn,
+            'Train TP': train_tp,
+            'Test TN': test_tn,
+            'Test TP': test_tp,
+            'Best SOAP String': ind_str[np.argmax(mcc)],
+            'Best SOAP Test MCC': np.max(mcc),
+            'Best SOAP Train MCC': score[np.argmax(mcc)],
+            'Best SOAP Train TN': train_tn[np.argmax(mcc)],
+            'Best SOAP Train TP': train_tp[np.argmax(mcc)],
+            'Best SOAP Test TN': test_tn[np.argmax(mcc)],
+            'Best SOAP Test TP': test_tp[np.argmax(mcc)],
+            'Generation': gen
+            })

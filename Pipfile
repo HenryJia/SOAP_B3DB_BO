@@ -14,8 +14,8 @@ tqdm = "*"
 pyqt5 = "*"
 torch = "*"
 pytorch-lightning = "1.9.2"
-imbalanced-learn = "0.10.0"
-wandb = "*"
+imbalanced-learn = "~=0.10.0"
+wandb = "~=0.13.10"
 
 [dev-packages]
 

@@ -264,8 +264,8 @@ class Individual:
         for train_index, test_index in cv.split(np.arange(len(self.df))):
             results = type(self).get_model_score(self.df, train_index, test_index)
 
-        for k in results:
-            self.results_dictionary[k].append(results[k])
+            for k in results:
+                self.results_dictionary[k].append(results[k])
 
         self.score = np.mean(self.results_dictionary["train_scores"])
 
