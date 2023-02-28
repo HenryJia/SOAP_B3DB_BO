@@ -37,8 +37,8 @@ class NNIndividual(Individual):
         y_train = y[train_index]
         y_test = y[test_index]
 
-        #sm = SMOTE(random_state=42)
-        #X_train, y_train = sm.fit_resample(X_train, y_train)
+        sm = SMOTE(random_state=42)
+        X_train, y_train = sm.fit_resample(X_train, y_train)
 
         train_dataset = torch.utils.data.TensorDataset(
             torch.Tensor(X_train), torch.Tensor(y_train[:, None]))
@@ -49,9 +49,9 @@ class NNIndividual(Individual):
         train_loader = DataLoader(train_dataset, batch_size=128, shuffle=True, num_workers=0)
         test_loader = DataLoader(test_dataset, batch_size=128, shuffle=False, num_workers=0)
 
-        model = SimpleResNet(input_dim=X.shape[-1], layer_size=512, depth=16)
+        model = SimpleResNet(input_dim=X.shape[-1], layer_size=64, depth=16)
         trainer = Trainer(
-            max_epochs=200,
+            max_epochs=100,
             accelerator='gpu',
             devices=[0],
             callbacks=[callbacks.EarlyStopping(monitor='val_loss', patience=5)],

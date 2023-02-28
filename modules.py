@@ -52,7 +52,7 @@ class SimpleResNetBlock(nn.Module):
             nn.Linear(dim, dim),
             nn.BatchNorm1d(dim),
             activation(),
-            nn.Dropout(0.5),
+            #nn.Dropout(0.5),
         )
 
     def forward(self, x):
