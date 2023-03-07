@@ -108,13 +108,19 @@ class RFIndividual(Individual):
             n_estimators=100, max_depth=8, random_state=0)
         clf.fit(X[train_idx], y[train_idx])
 
-        pred_train = clf.predict(X[train_idx])
-        pred_test = clf.predict(X[test_idx])
+        #pred_train = clf.predict(X[train_idx])
+        #pred_test = clf.predict(X[test_idx])
 
-        mcc_train = matthews_corrcoef(y[train_idx], pred_train)
-        mcc_test = matthews_corrcoef(y[test_idx], pred_test)
+        #mcc_train = matthews_corrcoef(y[train_idx], pred_train)
+        #mcc_test = matthews_corrcoef(y[test_idx], pred_test)
 
-        return {'train_scores': mcc_train, 'test_scores': mcc_test}
+        pred_train = clf.predict_proba(X[train_idx])[:, 1]
+        pred_test = clf.predict_proba(X[test_idx])[:, 1]
+
+        auc_train = roc_auc_score(y[train_idx], pred_train)
+        auc_test = roc_auc_score(y[test_idx], pred_test)
+
+        return {'train_scores': auc_train, 'test_scores': auc_test}
 
 if __name__ == '__main__':
     import wandb
@@ -217,9 +223,9 @@ if __name__ == '__main__':
 
     pop.print_population()
 
-    history_score = []
-    history_auc = []
-    for gen in range(args.num_generations):
+    history_score = [[ind.score for ind in pop.population]]
+    history_auc = [[np.mean(ind.results_dictionary['test_scores']) for ind in pop.population]]
+    for gen in range(1, args.num_generations+1):
         print(f"Generation {gen}")
         pop.next_generation()
         auc = []
