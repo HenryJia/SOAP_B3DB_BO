@@ -49,7 +49,7 @@ class NNIndividual(Individual):
         train_loader = DataLoader(train_dataset, batch_size=128, shuffle=True, num_workers=0)
         test_loader = DataLoader(test_dataset, batch_size=128, shuffle=False, num_workers=0)
 
-        model = MLP(layer_sizes=[X.shape[-1], 128, 128])
+        model = SimpleResNet(input_dim=X.shape[-1], depth=8, layer_size=128)
         trainer = Trainer(
             max_epochs=100,
             accelerator='gpu',
@@ -105,7 +105,7 @@ class RFIndividual(Individual):
         X, y = np.stack(df['SOAP'], axis=0), df['Class'].to_numpy()
 
         clf = RandomForestClassifier(
-            n_estimators=100, max_depth=5, random_state=0)
+            n_estimators=100, max_depth=8, random_state=0)
         clf.fit(X[train_idx], y[train_idx])
 
         pred_train = clf.predict(X[train_idx])
@@ -127,6 +127,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--csv', type=str, help='CSV file to use', required=True)
     parser.add_argument('--xyz', type=str, help='Location of the folder of xyz files',required=True)
+    parser.add_argument('--wandb_group', type=str, help='Wandb group to use', required=True)
 
     ga_params = parser.add_argument_group('Genetic Algorithm Parameters')
     ga_params.add_argument('--lower', type=int, help='Lower bound of the SOAP', default=2)
@@ -153,6 +154,7 @@ if __name__ == '__main__':
     wandb.init(
         # set the wandb project where this run will be logged
         project="SOAP-GAS-TMS",
+        group=args.wandb_group,
         config = vars(args)
     )
 
@@ -206,7 +208,7 @@ if __name__ == '__main__':
     '''
 
     pop = Population(
-        lambda gene_set: NNIndividual(
+        lambda gene_set: RFIndividual(
             gene_set, df),
         args.population_size, args.best_sample, args.lucky_few, args.num_children,
         gene_parameters, maximise_scores=True, verbose=True)
