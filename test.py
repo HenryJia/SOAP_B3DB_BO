@@ -68,13 +68,19 @@ class NNIndividual(Individual):
         pred_train = model(torch.Tensor(X_train)).detach().numpy().squeeze()
         pred_test = model(torch.Tensor(X_test)).detach().numpy().squeeze()
 
-        mcc_train = matthews_corrcoef(y_train, pred_train > 0.5)
-        mcc_test = matthews_corrcoef(y_test, pred_test > 0.5)
+        #mcc_train = matthews_corrcoef(y_train, pred_train > 0.5)
+        #mcc_test = matthews_corrcoef(y_test, pred_test > 0.5)
+
+        # Gabriele likes MCC but most other papers use AUC
+        # So we will use AUC for comparison's sake
+        auc_train = roc_auc_score(y_train, pred_train)
+        auc_test = roc_auc_score(y_test, pred_test)
+
         train_cm = confusion_matrix(y_train, pred_train > 0.5, normalize='true')
         test_cm = confusion_matrix(y_test, pred_test > 0.5, normalize='true')
 
         return {
-            'train_scores': mcc_train, 'test_scores': mcc_test,
+            'train_scores': auc_train, 'test_scores': auc_test,
             'train_tp': train_cm[1, 1], 'train_tn': train_cm[0, 0],
             'test_tp': test_cm[1, 1], 'test_tn': test_cm[0, 0]}
 
@@ -210,11 +216,11 @@ if __name__ == '__main__':
     pop.print_population()
 
     history_score = []
-    history_mcc = []
+    history_auc = []
     for gen in range(args.num_generations):
         print(f"Generation {gen}")
         pop.next_generation()
-        mcc = []
+        auc = []
         score = []
         ind_str = []
         train_tn = []
@@ -222,7 +228,7 @@ if __name__ == '__main__':
         test_tn = []
         test_tp = []
         for ind in pop.population:
-            mcc.append(np.mean(ind.results_dictionary['test_scores']))
+            auc.append(np.mean(ind.results_dictionary['test_scores']))
             score.append(ind.score)
             ind_str.append(str(ind))
             train_tn.append(np.mean(ind.results_dictionary['train_tn']))
@@ -231,29 +237,29 @@ if __name__ == '__main__':
             test_tp.append(np.mean(ind.results_dictionary['test_tp']))
 
         history_score.append(score)
-        history_mcc.append(mcc)
+        history_auc.append(auc)
 
-        print(f"Best {ind_str[np.argmax(mcc)]} has a MCC and score of: {np.max(mcc)}, {score[np.argmax(mcc)]}")
+        print(f"Best {ind_str[np.argmax(auc)]} has a AUC and score of: {np.max(auc)}, {score[np.argmax(auc)]}")
         wandb.log({
             # 'SOAP String': ind_str,
-            # 'Test MCC': mcc,
-            # 'Train MCC': score,
+            # 'Test AUC': auc,
+            # 'Train AUC': score,
             # 'Train TN': train_tn,
             # 'Train TP': train_tp,
             # 'Test TN': test_tn,
             # 'Test TP': test_tp,
-            # 'Best SOAP String': ind_str[np.argmax(mcc)],
-            'Best SOAP Test MCC': np.max(mcc),
-            'Best SOAP Train MCC': score[np.argmax(mcc)],
-            # 'Best SOAP Train TN': train_tn[np.argmax(mcc)],
-            # 'Best SOAP Train TP': train_tp[np.argmax(mcc)],
-            # 'Best SOAP Test TN': test_tn[np.argmax(mcc)],
-            # 'Best SOAP Test TP': test_tp[np.argmax(mcc)],
+            # 'Best SOAP String': ind_str[np.argmax(auc)],
+            'Best SOAP Test AUC': np.max(auc),
+            'Best SOAP Train AUC': score[np.argmax(auc)],
+            # 'Best SOAP Train TN': train_tn[np.argmax(auc)],
+            # 'Best SOAP Train TP': train_tp[np.argmax(auc)],
+            # 'Best SOAP Test TN': test_tn[np.argmax(auc)],
+            # 'Best SOAP Test TP': test_tp[np.argmax(auc)],
             'Generation': gen
             })
 
-    score_table = wandb.Table(data=[[i, s] for i, scores in enumerate(history_score) for s in scores], columns=["Generation", "Train MCC"])
-    mcc_table = wandb.Table(data=[[i, m] for i, mccs in enumerate(history_mcc) for m in mccs], columns=["Generation", "Test MCC"])
-    wandb.log({"Individual Train MCC": wandb.plot.scatter(score_table, "Generation", "Train MCC", title="Genetic Algorithm Train MCC")})
-    wandb.log({"Individual Test MCC": wandb.plot.scatter(mcc_table, "Generation", "Test MCC", title="Genetic Algorithm Test MCC")})
+    score_table = wandb.Table(data=[[i, s] for i, scores in enumerate(history_score) for s in scores], columns=["Generation", "Train AUC"])
+    auc_table = wandb.Table(data=[[i, m] for i, aucs in enumerate(history_auc) for m in aucs], columns=["Generation", "Test AUC"])
+    wandb.log({"Individual Train AUC": wandb.plot.scatter(score_table, "Generation", "Train AUC", title="Genetic Algorithm Train AUC")})
+    wandb.log({"Individual Test AUC": wandb.plot.scatter(auc_table, "Generation", "Test AUC", title="Genetic Algorithm Test AUC")})
     print('Finished')
