@@ -49,7 +49,7 @@ class NNIndividual(Individual):
         train_loader = DataLoader(train_dataset, batch_size=128, shuffle=True, num_workers=0)
         test_loader = DataLoader(test_dataset, batch_size=128, shuffle=False, num_workers=0)
 
-        model = SimpleResNet(input_dim=X.shape[-1], layer_size=64, depth=16)
+        model = MLP(layer_sizes=[X.shape[-1], 128, 128])
         trainer = Trainer(
             max_epochs=100,
             accelerator='gpu',
@@ -99,7 +99,7 @@ class RFIndividual(Individual):
         X, y = np.stack(df['SOAP'], axis=0), df['Class'].to_numpy()
 
         clf = RandomForestClassifier(
-            n_estimators=100, max_depth=3, random_state=0)
+            n_estimators=100, max_depth=5, random_state=0)
         clf.fit(X[train_idx], y[train_idx])
 
         pred_train = clf.predict(X[train_idx])
@@ -125,7 +125,8 @@ if __name__ == '__main__':
     ga_params = parser.add_argument_group('Genetic Algorithm Parameters')
     ga_params.add_argument('--lower', type=int, help='Lower bound of the SOAP', default=2)
     ga_params.add_argument('--upper', type=int, help='Upper bound of the SOAP', default=10)
-    ga_params.add_argument('--centres', type=list, nargs='+', help='Centres of the SOAP', default=[8, 7, 6, 1, 16, 17, 9, 35, 11, 15, 5])
+    ga_params.add_argument('--centres', type=list, nargs='+', help='Centres of the SOAP', default=[1, 6, 7, 8, 9, 16, 17])
+    ga_params.add_argument('--neighbours', type=list, nargs='+', help='Centres of the SOAP', default=[1, 6, 7, 8, 9, 16, 17])
     ga_params.add_argument('--nu_R', type=int, help='nu_R of the SOAP', default=1)
     ga_params.add_argument('--nu_S', type=int, help='nu_S of the SOAP', default=0)
     ga_params.add_argument('--mutation_chance', type=float, help='Mutation chance of the GA', default=0.2)
@@ -135,6 +136,9 @@ if __name__ == '__main__':
     ga_params.add_argument('--max_sigma', type=float, help='Maximum sigma of the SOAP', default=1.5)
     ga_params.add_argument('--message_steps', type=int, help='Message steps of the SOAP. This does nothing for now', default=0)
     ga_params.add_argument('--population_size', type=int, help='Population size of the GA', default=20)
+    ga_params.add_argument('--best_sample', type=int, help='Number of best samples to use for the next generation', default=6)
+    ga_params.add_argument('--lucky_few', type=int, help='Number of lucky few to use for the next generation', default=2)
+    ga_params.add_argument('--num_children', type=int, help='Number of children to create for the next generation', default=5)
     ga_params.add_argument('--num_generations', type=int, help='Number of generations of the GA', default=30)
 
     args = parser.parse_args()
@@ -161,6 +165,7 @@ if __name__ == '__main__':
         'lower': args.lower,
         'upper': args.upper,
         'centres': args.centres,
+        'neighbours': args.neighbours,
         'nu_R': args.nu_R,
         'nu_S': args.nu_S,
         'mutation_chance': args.mutation_chance,
@@ -197,13 +202,15 @@ if __name__ == '__main__':
     pop = Population(
         lambda gene_set: NNIndividual(
             gene_set, df),
-        args.population_size,
+        args.population_size, args.best_sample, args.lucky_few, args.num_children,
         gene_parameters, maximise_scores=True, verbose=True)
 
     pop.initialise_population()
 
     pop.print_population()
 
+    history_score = []
+    history_mcc = []
     for gen in range(args.num_generations):
         print(f"Generation {gen}")
         pop.next_generation()
@@ -223,21 +230,30 @@ if __name__ == '__main__':
             test_tn.append(np.mean(ind.results_dictionary['test_tn']))
             test_tp.append(np.mean(ind.results_dictionary['test_tp']))
 
+        history_score.append(score)
+        history_mcc.append(mcc)
+
         print(f"Best {ind_str[np.argmax(mcc)]} has a MCC and score of: {np.max(mcc)}, {score[np.argmax(mcc)]}")
         wandb.log({
-            'SOAP String': ind_str,
-            'Test MCC': mcc,
-            'Train MCC': score,
-            'Train TN': train_tn,
-            'Train TP': train_tp,
-            'Test TN': test_tn,
-            'Test TP': test_tp,
-            'Best SOAP String': ind_str[np.argmax(mcc)],
+            # 'SOAP String': ind_str,
+            # 'Test MCC': mcc,
+            # 'Train MCC': score,
+            # 'Train TN': train_tn,
+            # 'Train TP': train_tp,
+            # 'Test TN': test_tn,
+            # 'Test TP': test_tp,
+            # 'Best SOAP String': ind_str[np.argmax(mcc)],
             'Best SOAP Test MCC': np.max(mcc),
             'Best SOAP Train MCC': score[np.argmax(mcc)],
-            'Best SOAP Train TN': train_tn[np.argmax(mcc)],
-            'Best SOAP Train TP': train_tp[np.argmax(mcc)],
-            'Best SOAP Test TN': test_tn[np.argmax(mcc)],
-            'Best SOAP Test TP': test_tp[np.argmax(mcc)],
+            # 'Best SOAP Train TN': train_tn[np.argmax(mcc)],
+            # 'Best SOAP Train TP': train_tp[np.argmax(mcc)],
+            # 'Best SOAP Test TN': test_tn[np.argmax(mcc)],
+            # 'Best SOAP Test TP': test_tp[np.argmax(mcc)],
             'Generation': gen
             })
+
+    score_table = wandb.Table(data=[[i, s] for i, scores in enumerate(history_score) for s in scores], columns=["Generation", "Train MCC"])
+    mcc_table = wandb.Table(data=[[i, m] for i, mccs in enumerate(history_mcc) for m in mccs], columns=["Generation", "Test MCC"])
+    wandb.log({"Individual Train MCC": wandb.plot.scatter(score_table, "Generation", "Train MCC", title="Genetic Algorithm Train MCC")})
+    wandb.log({"Individual Test MCC": wandb.plot.scatter(mcc_table, "Generation", "Test MCC", title="Genetic Algorithm Test MCC")})
+    print('Finished')

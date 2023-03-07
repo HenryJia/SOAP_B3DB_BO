@@ -13,7 +13,7 @@ def read_molecules(df, xyz_path):
     mol = []
     for row in df.itertuples():
         mol.append(ase.io.read(
-            os.path.join(xyz_path, row.Name + '.xyz')))
+            os.path.join(xyz_path, str(row.Name) + '.xyz')))
     return mol
 
 def soap_worker(df, parameter_strings):

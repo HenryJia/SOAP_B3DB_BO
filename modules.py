@@ -16,7 +16,6 @@ class MLP(LightningModule):
         self.layers.append(nn.BatchNorm1d(layer_sizes[0]))
         for i, l in enumerate(layer_sizes[:-1]):
             self.layers.append(nn.Linear(l, layer_sizes[i+1]))
-            self.layers.append(nn.BatchNorm1d(layer_sizes[i+1]))
             self.layers.append(nn.ELU())
 
         self.layers.append(nn.Linear(layer_sizes[-1], 1))

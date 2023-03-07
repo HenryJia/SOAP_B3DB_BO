@@ -51,6 +51,7 @@ class GeneParameters:
     lower: int
     upper: int
     centres: list
+    neighbours: list
     nu_R: int
     nu_S: int
     mutation_chance: float
@@ -69,14 +70,16 @@ class GeneParameters:
             within the bounds stipulated in this GeneParameter class
         """
 
-        num_centres = np.random.randint(1, len(self.centres) + 1)
-        centres = np.random.choice(self.centres, num_centres, replace=False).tolist()
+        #num_centres = np.random.randint(1, len(self.centres) + 1)
+        #centres = np.random.choice(self.centres, num_centres, replace=False).tolist()
+        centres = self.centres
+        neighbours = self.neighbours
 
         cutoff = np.random.randint(self.min_cutoff, self.max_cutoff)
         l_max = np.random.randint(self.lower, self.upper)
         n_max = np.random.randint(self.lower, self.upper)
         sigma = round(np.random.uniform(self.min_sigma, self.max_sigma), 2)
-        return GeneSet(self, centres, cutoff, l_max, n_max, sigma)
+        return GeneSet(self, centres, neighbours, cutoff, l_max, n_max, sigma)
 
 class GeneSet:
     """
@@ -106,9 +109,10 @@ class GeneSet:
         Returns a string that can be used as an input to generate SOAPs
     """
 
-    def __init__(self, gene_parameters, centres, cutoff, l_max, n_max, sigma):
+    def __init__(self, gene_parameters, centres, neighbours, cutoff, l_max, n_max, sigma):
         self.gene_parameters = gene_parameters
         self.centres = centres
+        self.neighbours = neighbours
         self.cutoff = cutoff
         self.l_max = l_max
         self.n_max = n_max
@@ -129,8 +133,8 @@ class GeneSet:
         weights = [1 - self.gene_parameters.mutation_chance,
                    self.gene_parameters.mutation_chance]
 
-        self.centres = choices([self.centres, new_mutation.centres],
-                              weights=weights, k=1)[0]
+        #self.centres = choices([self.centres, new_mutation.centres],
+                              #weights=weights, k=1)[0]
         self.cutoff = choices([self.cutoff, new_mutation.cutoff],
                               weights=weights, k=1)[0]
         self.l_max = choices([self.l_max, new_mutation.l_max],
@@ -155,20 +159,24 @@ class GeneSet:
         """
         num_centre_atoms = len(self.centres)
         centres_string = "{" + ", ".join([str(c) for c in self.centres]) + "}"
+        num_neighbour_atoms = len(self.neighbours)
+        neighbours_string = "{" + ", ".join([str(c) for c in self.neighbours]) + "}"
 
         if self.gene_parameters.message_steps==0:
             return "soap average cutoff={cutoff} l_max={l_max} " \
-                   "n_max={n_max} atom_sigma={sigma} n_Z={0} Z={1} " \
+                   "n_max={n_max} atom_sigma={sigma} n_Z={0} Z={1} n_species={2} species_Z={3} " \
                    "nu_R={nu_R} " \
                    "nu_S={nu_S}".format(
                     num_centre_atoms, centres_string,
+                    num_neighbour_atoms, neighbours_string,
                     **{**vars(self.gene_parameters), **vars(self)})
         elif self.gene_parameters.message_steps > 0:
             return "soap cutoff={cutoff} l_max={l_max} n_max={n_max} " \
-                   "atom_sigma={sigma} n_Z={0} Z={1} " \
+                   "atom_sigma={sigma} n_Z={0} Z={1} n_species={2} species_Z={3} " \
                    "nu_R={nu_R} " \
                    "nu_S={nu_S}".format(
                     num_centre_atoms, centres_string,
+                    num_neighbour_atoms, neighbours_string,
                     **{**vars(self.gene_parameters), **vars(self)})
 
 
@@ -205,9 +213,6 @@ class Individual:
         self.soap_string_list = [gene_set.get_soap_string() for gene_set in
                                  gene_set_list]
 
-        self.soaps = None
-        self.targets = None
-        self.regression = None
         self.results_dictionary = defaultdict(list)
 
     def __str__(self):
@@ -389,10 +394,14 @@ class Population:
         Sorts the population attribute based on best score
     """
 
-    def __init__(self, init_individual, population_size, list_of_gene_parameters,
-                 maximise_scores=False, workers=mp.cpu_count(), verbose=False):
+    def __init__(
+        self, init_individual, population_size, best_sample, lucky_few, number_of_children,
+        list_of_gene_parameters, maximise_scores=False, workers=mp.cpu_count(), verbose=False):
         self.init_individual = init_individual
         self.population_size = population_size
+        self.best_sample = best_sample
+        self.lucky_few = lucky_few
+        self.number_of_children = number_of_children
         self.list_of_gene_parameters = list_of_gene_parameters
         self.maximise_scores = maximise_scores
         self.verbose = verbose
@@ -478,11 +487,12 @@ class Population:
                             "gene parameters")
 
         centres = choice([gene_set_one.centres, gene_set_two.centres])
+        neighbours = choice([gene_set_one.neighbours, gene_set_two.neighbours])
         cutoff = choice([gene_set_one.cutoff, gene_set_two.cutoff])
         l_max = choice([gene_set_one.l_max, gene_set_two.l_max])
         n_max = choice([gene_set_one.n_max, gene_set_two.n_max])
         sigma = choice([gene_set_one.sigma, gene_set_two.sigma])
-        new_gene_set = GeneSet(gene_set_one.gene_parameters, centres, cutoff,
+        new_gene_set = GeneSet(gene_set_one.gene_parameters, centres, neighbours, cutoff,
                             l_max, n_max, sigma)
         new_gene_set.mutate_gene()
         return new_gene_set
@@ -544,37 +554,28 @@ class Population:
         on duplicate Individuals.
         """
 
-
-        # Alright, screw Trent's code. I'm going to try to do this using some more
-        # reinforcement learning style techniques
-
-        # Instead of breeding the best individuals with each other, we're going to
-        # sample them via a softmax distribution. The higher the score, the more
-        # likely it is to be sampled. This should help to prevent the algorithm
-        # from getting stuck in local minima, and also help it converge faster
-        population_list = list(self.population)
-        population_scores = [individual.score for individual in population_list]
-
-        if not self.maximise_scores: # If we're minimising the score, we need to flip the sign
-            population_scores = -population_scores
-
-        # The new population will have half the old individuals, and half the new ones, with the best individual always being included
-        population_scores, population_list = zip(*sorted(zip(population_scores, population_list), reverse=True))
-        parents = [population_list[0]]
-        population_scores = population_scores[1:]
-        population_list = population_list[1:]
-
-        population_scores = sp.special.softmax(np.array(population_scores))
-
-        parents += np.random.choice(population_list, size=len(self.population)//2-1, p=population_scores, replace=False).tolist()
-
-        self.population = set(parents)
-        idx = 0
-        while len(self.population) < self.population_size:
-            print(f"Breeding child {idx}")
-            child = self.breed_individuals(choice(parents), choice(parents))
-            self.population.add(child)
-            idx += 1
+        sorted_population = sorted(self.population,
+                                   reverse=self.maximise_scores)
+        best_individuals = sorted_population[:self.best_sample]
+        lucky_individuals = sample(sorted_population[self.best_sample:],
+                                   self.lucky_few)
+        next_generation_parents = best_individuals + lucky_individuals
+        self.population = set()
+        for i in range(self.number_of_children):
+            if self.verbose:
+                print(f"Creating child {i+1} of {self.number_of_children}")
+            it = iter(next_generation_parents)
+            while True:
+                try:
+                    parent_one = next(it)
+                    parent_two = next(it)
+                    child = self.breed_individuals(parent_one, parent_two)
+                    while child in self.population:
+                        child = self.breed_individuals(parent_one, parent_two)
+                    self.population.add(child)
+                except StopIteration:
+                    break
+        shuffle(next_generation_parents)
 
         if self.verbose:
             print(f"Getting population scores")
@@ -590,10 +591,10 @@ class Population:
         instead updates the population attribute.
         """
         soap_getters = []
-        for individual in self.population:
+        for i, individual in enumerate(self.population):
             soap_getters.append(individual.comp_soaps(self.pool))
 
-        for individual, sg in zip(self.population, soap_getters):
+        for i, (individual, sg) in enumerate(zip(self.population, soap_getters)):
             individual.evaluate_model(sg)
 
     def sort_population(self):
