@@ -17,6 +17,7 @@ pytorch-lightning = "1.9.2"
 imbalanced-learn = "~=0.10.0"
 wandb = "~=0.13.10"
 setuptools = "~=65.6.3"
+umap-learn = "*"
 
 [dev-packages]
 
