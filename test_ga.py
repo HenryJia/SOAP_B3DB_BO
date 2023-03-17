@@ -105,7 +105,7 @@ class RFIndividual(Individual):
         X, y = np.stack(df['SOAP'], axis=0), df['Class'].to_numpy()
 
         clf = RandomForestClassifier(
-            n_estimators=100, max_depth=8, random_state=0)
+            n_estimators=100, max_depth=7, random_state=0)
         clf.fit(X[train_idx], y[train_idx])
 
         #pred_train = clf.predict(X[train_idx])
