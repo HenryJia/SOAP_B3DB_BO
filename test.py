@@ -77,30 +77,32 @@ if __name__ == '__main__':
         reducer = umap.UMAP()
         embed = reducer.fit_transform(X)
 
-        plt.figure(figsize=(16,9))
-        plt.scatter(embed[y==1, 0], embed[y==1, 1], c='green', label='BBBP+')
-        plt.scatter(embed[y==0, 0], embed[y==0, 1], c='red', label='BBBP-')
-        plt.legend()
-        plt.title('UMAP Projection of SOAP Descriptor')
-        plt.xticks([], [])
-        plt.yticks([], [])
-        plt.savefig(args.name + '_umap.png')
-        print("Done.")
+        embed = pd.DataFrame(embed, columns=['x', 'y'])
+        embed['Class'] = [['BBBP-', 'BBBP+'][i] for i in y]
+        embed['Name'] = df.Name
+        embed['Mol'] = [m.get_chemical_formula() for m in df.Mol]
+
+        fig = px.scatter(
+            embed, x='x', y='y', color='Class', color_discrete_map={'BBBP-': 'red', 'BBBP+': 'green'},
+            hover_data=['Name', 'Mol'], title='UMAP Projection of SOAP Descriptor'
+        )
+        fig.write_html(args.name + '_umap.html')
 
     if args.tsne:
         print("Plotting TSNE...")
         reducer = TSNE()
         embed = reducer.fit_transform(X)
 
-        plt.figure(figsize=(16,9))
-        plt.scatter(embed[y==1, 0], embed[y==1, 1], c='green', label='BBBP+')
-        plt.scatter(embed[y==0, 0], embed[y==0, 1], c='red', label='BBBP-')
-        plt.legend()
-        plt.title('tSNE Projection of SOAP Descriptor')
-        plt.xticks([], [])
-        plt.yticks([], [])
-        plt.savefig(args.name + '_tsne.png')
-        print("Done.")
+        embed = pd.DataFrame(embed, columns=['x', 'y'])
+        embed['Class'] = [['BBBP-', 'BBBP+'][i] for i in y]
+        embed['Name'] = df.Name
+        embed['Mol'] = [m.get_chemical_formula() for m in df.Mol]
+
+        fig = px.scatter(
+            embed, x='x', y='y', color='Class', color_discrete_map={'BBBP-': 'red', 'BBBP+': 'green'},
+            hover_data=['Name', 'Mol'], title='tSNE Projection of SOAP Descriptor'
+        )
+        fig.write_html(args.name + '_tsne.html')
 
     kf = RepeatedKFold(n_splits=args.n_fold, n_repeats=args.n_repeats, random_state=42)
     cm = np.zeros((2, 2))
