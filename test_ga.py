@@ -214,7 +214,7 @@ if __name__ == '__main__':
     '''
 
     pop = Population(
-        lambda gene_set: RFIndividual(
+        lambda gene_set: NNIndividual(
             gene_set, df),
         args.population_size, args.best_sample, args.lucky_few, args.num_children,
         gene_parameters, maximise_scores=True, verbose=True)
