@@ -48,7 +48,10 @@ class SimpleResNetBlock(nn.Module):
     def __init__(self, dim, activation=nn.ELU):
         super().__init__()
         self.block = nn.Sequential(
-            nn.Linear(dim, dim),
+            nn.Linear(dim, dim//4),
+            nn.BatchNorm1d(dim//4),
+            activation(),
+            nn.Linear(dim//4, dim),
             nn.BatchNorm1d(dim),
             activation(),
             #nn.Dropout(0.5),
