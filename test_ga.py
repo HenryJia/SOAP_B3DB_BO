@@ -134,6 +134,7 @@ if __name__ == '__main__':
     parser.add_argument('--csv', type=str, help='CSV file to use', required=True)
     parser.add_argument('--xyz', type=str, help='Location of the folder of xyz files',required=True)
     parser.add_argument('--wandb_group', type=str, help='Wandb group to use', required=True)
+    parser.add_argument('--wandb_name', type=str, help='Wandb name to use', required=False)
 
     ga_params = parser.add_argument_group('Genetic Algorithm Parameters')
     ga_params.add_argument('--lower', type=int, help='Lower bound of the SOAP', default=2)
@@ -161,6 +162,7 @@ if __name__ == '__main__':
         # set the wandb project where this run will be logged
         project="SOAP-GAS-TMS",
         group=args.wandb_group,
+        name=args.wandb_name if args.wandb_name else None,
         config = vars(args)
     )
 
