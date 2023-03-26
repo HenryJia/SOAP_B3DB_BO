@@ -28,13 +28,15 @@ from modules import MLP, SimpleResNetBlock, SimpleResNet
 import matplotlib.pyplot as plt
 
 class NNIndividual(Individual):
-    def get_model_score(df, train_index, test_index):
+    def get_model_score(df, train_index, val_index, test_index):
         X, y = np.stack(df['SOAP'], axis=0), df['Class'].to_numpy()
         X = X.astype(np.float32)
 
         X_train = X[train_index]
+        X_val = X[val_index]
         X_test = X[test_index]
         y_train = y[train_index]
+        y_val = y[val_index]
         y_test = y[test_index]
 
         #sm = SMOTE(random_state=42)
@@ -42,12 +44,15 @@ class NNIndividual(Individual):
 
         train_dataset = torch.utils.data.TensorDataset(
             torch.Tensor(X_train), torch.Tensor(y_train[:, None]))
+        val_dataset = torch.utils.data.TensorDataset(
+            torch.Tensor(X_val), torch.Tensor(y_val[:, None]))
         test_dataset = torch.utils.data.TensorDataset(
             torch.Tensor(X_test), torch.Tensor(y_test[:, None]))
 
         # Our dataset is small, so if we set num_workers > 0, we end up spending more time setting up the workers than we do actually training.
         train_loader = DataLoader(train_dataset, batch_size=128, shuffle=True, num_workers=0)
-        test_loader = DataLoader(test_dataset, batch_size=128, shuffle=False, num_workers=0)
+        val_loader = DataLoader(val_dataset, batch_size=128, shuffle=False, num_workers=0)
+        #test_loader = DataLoader(test_dataset, batch_size=128, shuffle=False, num_workers=0)
 
         model = SimpleResNet(input_dim=X.shape[-1], depth=4, layer_size=64)
         trainer = Trainer(
@@ -61,11 +66,12 @@ class NNIndividual(Individual):
             enable_progress_bar=False,
             enable_model_summary=False,
         )
-        trainer.fit(model, train_loader, test_loader)
+        trainer.fit(model, train_loader, val_loader)
 
         model.eval()
 
         pred_train = model(torch.Tensor(X_train)).detach().numpy().squeeze()
+        pred_val = model(torch.Tensor(X_val)).detach().numpy().squeeze()
         pred_test = model(torch.Tensor(X_test)).detach().numpy().squeeze()
 
         #mcc_train = matthews_corrcoef(y_train, pred_train > 0.5)
@@ -74,31 +80,18 @@ class NNIndividual(Individual):
         # Gabriele likes MCC but most other papers use AUC
         # So we will use AUC for comparison's sake
         auc_train = roc_auc_score(y_train, pred_train)
+        auc_val = roc_auc_score(y_val, pred_val)
         auc_test = roc_auc_score(y_test, pred_test)
 
         train_cm = confusion_matrix(y_train, pred_train > 0.5, normalize='true')
+        val_cm = confusion_matrix(y_val, pred_val > 0.5, normalize='true')
         test_cm = confusion_matrix(y_test, pred_test > 0.5, normalize='true')
 
         return {
-            'train_scores': auc_train, 'test_scores': auc_test,
+            'train_scores': auc_train, 'val_scores': auc_val, 'test_scores': auc_test,
             'train_tp': train_cm[1, 1], 'train_tn': train_cm[0, 0],
+            'val_tp': val_cm[1, 1], 'val_tn': val_cm[0, 0],
             'test_tp': test_cm[1, 1], 'test_tn': test_cm[0, 0]}
-
-class SVCIndividual(Individual):
-    def get_model_score(df, train_idx, test_idx):
-        X, y = np.stack(df['SOAP'], axis=0), df['Class'].to_numpy()
-
-        clf = SVC(
-            kernel='rbf', random_state=0)
-        clf.fit(X[train_idx], y[train_idx])
-
-        pred_train = clf.predict(X[train_idx])
-        pred_test = clf.predict(X[test_idx])
-
-        mcc_train = matthews_corrcoef(y[train_idx], pred_train)
-        mcc_test = matthews_corrcoef(y[test_idx], pred_test)
-
-        return {'train_scores': mcc_train, 'test_scores': mcc_test}
 
 class RFIndividual(Individual):
     def get_model_score(df, train_idx, test_idx):
@@ -225,31 +218,39 @@ if __name__ == '__main__':
 
     pop.print_population()
 
-    history_score = [[ind.score for ind in pop.population]]
-    history_auc = [[np.mean(ind.results_dictionary['test_scores']) for ind in pop.population]]
+    history_train = [[np.mean(ind.results_dictionary['train_scores']) for ind in pop.population]]
+    history_val = [[np.mean(ind.results_dictionary['val_scores']) for ind in pop.population]]
+    history_test = [[np.mean(ind.results_dictionary['test_scores']) for ind in pop.population]]
     for gen in range(1, args.num_generations+1):
         print(f"Generation {gen}")
         pop.next_generation()
-        auc = []
-        score = []
+        train_auc = []
+        val_auc = []
+        test_auc = []
         ind_str = []
         train_tn = []
         train_tp = []
+        val_tn = []
+        val_tp = []
         test_tn = []
         test_tp = []
         for ind in pop.population:
-            auc.append(np.mean(ind.results_dictionary['test_scores']))
-            score.append(ind.score)
+            train_auc.append(np.mean(ind.results_dictionary['train_scores']))
+            val_auc.append(np.mean(ind.results_dictionary['val_scores']))
+            test_auc.append(np.mean(ind.results_dictionary['test_scores']))
+
             ind_str.append(str(ind))
             train_tn.append(np.mean(ind.results_dictionary['train_tn']))
             train_tp.append(np.mean(ind.results_dictionary['train_tp']))
             test_tn.append(np.mean(ind.results_dictionary['test_tn']))
             test_tp.append(np.mean(ind.results_dictionary['test_tp']))
 
-        history_score.append(score)
-        history_auc.append(auc)
+        history_train.append(train_auc)
+        history_val.append(val_auc)
+        history_test.append(test_auc)
 
-        print(f"Best {ind_str[np.argmax(auc)]} has a AUC and score of: {np.max(auc)}, {score[np.argmax(auc)]}")
+        print(f"Best {ind_str[np.argmax(val_auc)]} has a train, val and test AUC and score of:",
+              train_auc[np.argmax(val_auc)], np.max(val_auc), test_auc[np.argmax(val_auc)])
         wandb.log({
             # 'SOAP String': ind_str,
             # 'Test AUC': auc,
@@ -259,8 +260,9 @@ if __name__ == '__main__':
             # 'Test TN': test_tn,
             # 'Test TP': test_tp,
             # 'Best SOAP String': ind_str[np.argmax(auc)],
-            'Best SOAP Test AUC': np.max(auc),
-            'Best SOAP Train AUC': score[np.argmax(auc)],
+            'Best SOAP Train AUC': train_auc[np.argmax(val_auc)],
+            'Best SOAP Val AUC': np.max(val_auc),
+            'Best SOAP Test AUC': test_auc[np.argmax(val_auc)],
             # 'Best SOAP Train TN': train_tn[np.argmax(auc)],
             # 'Best SOAP Train TP': train_tp[np.argmax(auc)],
             # 'Best SOAP Test TN': test_tn[np.argmax(auc)],
@@ -268,8 +270,10 @@ if __name__ == '__main__':
             'Generation': gen
             })
 
-    score_table = wandb.Table(data=[[i, s] for i, scores in enumerate(history_score) for s in scores], columns=["Generation", "Train AUC"])
-    auc_table = wandb.Table(data=[[i, m] for i, aucs in enumerate(history_auc) for m in aucs], columns=["Generation", "Test AUC"])
-    wandb.log({"Individual Train AUC": wandb.plot.scatter(score_table, "Generation", "Train AUC", title="Genetic Algorithm Train AUC")})
-    wandb.log({"Individual Test AUC": wandb.plot.scatter(auc_table, "Generation", "Test AUC", title="Genetic Algorithm Test AUC")})
+    train_table = wandb.Table(data=[[i, s] for i, scores in enumerate(history_train) for s in scores], columns=["Generation", "Train AUC"])
+    val_table = wandb.Table(data=[[i, s] for i, scores in enumerate(history_val) for s in scores], columns=["Generation", "Validation AUC"])
+    test_table = wandb.Table(data=[[i, m] for i, aucs in enumerate(history_test) for m in aucs], columns=["Generation", "Test AUC"])
+    wandb.log({"Individual Train AUC": wandb.plot.scatter(train_table, "Generation", "Train AUC", title="Genetic Algorithm Train AUC")})
+    wandb.log({"Individual Validation AUC": wandb.plot.scatter(val_table, "Generation", "Validation AUC", title="Genetic Algorithm Validation AUC")})
+    wandb.log({"Individual Test AUC": wandb.plot.scatter(test_table, "Generation", "Test AUC", title="Genetic Algorithm Test AUC")})
     print('Finished')

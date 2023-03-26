@@ -1,7 +1,7 @@
 from abc import abstractmethod
 import multiprocessing as mp
 
-from sklearn.model_selection import RepeatedKFold
+from sklearn.model_selection import RepeatedKFold, train_test_split
 from dataclasses import dataclass
 from random import sample, shuffle, choice, choices
 
@@ -258,7 +258,7 @@ class Individual:
         else:
             return soap_worker(self.df, self.soap_string_list)
 
-    def evaluate_model(self, getter, splits=5, repeats=1, random_state=999):
+    def evaluate_model(self, getter, splits=2, repeats=5, random_state=999):
 
         if hasattr(getter, "get"):
             self.df['SOAP'] = getter.get()
@@ -266,13 +266,15 @@ class Individual:
             self.df['SOAP'] = getter
         cv = RepeatedKFold(n_splits=splits, n_repeats=repeats, random_state=random_state)
 
-        for train_index, test_index in cv.split(np.arange(len(self.df))):
-            results = type(self).get_model_score(self.df, train_index, test_index)
+        for train_index, val_test_index in cv.split(np.arange(len(self.df))):
+            val_index, test_index = train_test_split(val_test_index, test_size=0.5, random_state=random_state)
+
+            results = type(self).get_model_score(self.df, train_index, val_index, test_index)
 
             for k in results:
                 self.results_dictionary[k].append(results[k])
 
-        self.score = np.mean(self.results_dictionary["train_scores"])
+        self.score = np.mean(self.results_dictionary["val_scores"])
 
     @abstractmethod
     def get_model_score(df, train_index, test_index):
