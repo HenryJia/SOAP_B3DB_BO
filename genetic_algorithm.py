@@ -258,7 +258,7 @@ class Individual:
         else:
             return soap_worker(self.df, self.soap_string_list)
 
-    def evaluate_model(self, getter, splits=2, repeats=5, random_state=999):
+    def evaluate_model(self, getter, splits=3, repeats=5, random_state=999):
 
         if hasattr(getter, "get"):
             self.df['SOAP'] = getter.get()
