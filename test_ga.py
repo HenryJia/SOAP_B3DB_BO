@@ -54,7 +54,7 @@ class NNIndividual(Individual):
         val_loader = DataLoader(val_dataset, batch_size=128, shuffle=False, num_workers=0)
         #test_loader = DataLoader(test_dataset, batch_size=128, shuffle=False, num_workers=0)
 
-        model = SimpleResNet(input_dim=X.shape[-1], depth=16, layer_size=64)
+        model = SimpleResNet(input_dim=X.shape[-1], depth=4, layer_size=64)
         trainer = Trainer(
             max_epochs=100,
             accelerator='gpu',
