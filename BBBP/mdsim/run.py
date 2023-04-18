@@ -17,8 +17,13 @@ parser = argparse.ArgumentParser()
 #parser.add_argument('--csv', type=str, help='CSV file containing the data')
 
 parser.add_argument('--smiles', type=str, help='SMILES')
-parser.add_argument('--mol_name', type=str, help='Molecule name')
+
+# IMPORTANT NOTE: All of our other files are hardcoded to use the name 'main' for the molecule/residue
+# Using a different name will almost certainly break things
+parser.add_argument('--mol_name', type=str, help='Molecule name', default='main')
 parser.add_argument('--working_dir', type=str, help='Working directory')
+
+parser.add_argument('--lam', type=int, help='Lambda value')
 
 parser.add_argument('--gen_mol2', action='store_true', help='Generate mol2 files')
 parser.add_argument('--charmm2gmx', action='store_true', help='Run charmm2gmx to generate topology files')
@@ -26,15 +31,19 @@ parser.add_argument('--gen_mdp', action='store_true', help='Generate mdp files')
 
 parser.add_argument('--solvate', action='store_true', help='Create the box and the solvation molecules')
 parser.add_argument('--em_steep', action='store_true', help='Run em_steep')
+parser.add_argument('--em_lbfgs', action='store_true', help='Run em_lbfgs')
 
 args = parser.parse_args()
 
 #df = pd.read_csv(args.csv)
 
-lam = np.linspace(0, 1, 32)
+lam = list(range(32))
 input_dir = os.path.join(args.working_dir, 'input_files')
 output_dir = os.path.join(args.working_dir, 'output_files')
 solvate_dir = os.path.join(output_dir, 'solvate')
+lambda_dir = os.path.join(output_dir, str(args.lam))
+em_steep_dir = os.path.join(lambda_dir, 'em_steep')
+em_lbfgs_dir = os.path.join(lambda_dir, 'em_l-bfgs')
 
 # Create input directory if it doesn't exist
 if not os.path.exists(input_dir):
@@ -174,23 +183,43 @@ if args.solvate:
 
 if args.em_steep:
     # Create directories for the lambda values
-    lambda_dir = os.path.join(output_dir, str(args.lam))
     if not os.path.exists(lambda_dir):
         os.makedirs(lambda_dir)
 
-
     # Prepare to run the energy minimization 1: steep
     # First, make the directory for it
-    em_steep_dir = os.path.join(lambda_dir, 'em_steep')
     if not os.path.exists(em_steep_dir):
         os.makedirs(em_steep_dir)
 
     # Run grompp
-    cmd = 'gmx grompp -f ' + os.path.join(lambda_dir, 'mdp', 'em_steep.mdp') + ' -c ' + os.path.join(solvate_dir, args.mol_name + '_ions.pdb')
-    cmd += ' -p ' + os.path.join(input_dir, args.mol_name + '.top') + ' -o ' + os.path.join(input_dir, args.mol_name + '.tpr')
-    p = Popen(cmd, shell=True)
-    p.wait()
+    cmd = 'gmx grompp -f ' + os.path.join(output_dir, 'mdp', 'EM_steep', 'em_steep_' + str(args.lam) + '.mdp')
+    cmd += ' -c ' + os.path.join(solvate_dir, args.mol_name + '_ions.pdb')
+    cmd += ' -p ' + os.path.join(input_dir, args.mol_name + '.top')
+    cmd += ' -o ' + os.path.join(em_steep_dir, args.mol_name + '.tpr')
+    cmd += ' -maxwarn 1' # Everyone seems to use this, even though I'm personally hesistant when it comes ignoring warnings
+    run_command(cmd)
 
     # Run mdrun
-    cmd = 'gmx mdrun -v -deffnm ' + os.path.join(input_dir, args.mol_name)
+    # Note, we need to set -deffnm to the name of the tpr file without the extension
+    cmd = 'gmx mdrun -v -deffnm ' + os.path.join(em_steep_dir, args.mol_name) + ' -pin on'
+    run_command(cmd)
 
+if args.em_lbfgs:
+    # Prepare to run the energy minimization 2: l-bfgs
+    # First, make the directory for it
+    if not os.path.exists(em_lbfgs_dir):
+        os.makedirs(em_lbfgs_dir)
+
+    # Run grompp
+    # Note: Our input gro file is the output gro file from the previous step
+    cmd = 'gmx grompp -f ' + os.path.join(output_dir, 'mdp', 'EM_l-bfgs', 'em_l-bfgs.mdp')
+    cmd += ' -c ' + os.path.join(em_steep_dir, args.mol_name + '.gro')
+    cmd += ' -p ' + os.path.join(input_dir, args.mol_name + '.top')
+    cmd += ' -o ' + os.path.join(em_lbfgs_dir, args.mol_name + '.tpr')
+    cmd += ' -maxwarn 1' # Everyone seems to use this, even though I'm personally hesistant when it comes ignoring warnings
+    run_command(cmd)
+
+    # Run mdrun
+    # Note, we need to set -deffnm to the name of the tpr file without the extension
+    cmd = 'gmx mdrun -v -deffnm ' + os.path.join(em_lbfgs_dir, args.mol_name) + ' -pin on'
+    run_command(cmd)
