@@ -1,0 +1,98 @@
+; Run control
+integrator               = steep
+nsteps                   = 200
+nstxout                  = 2000
+init_step                = 0
+
+; EM criteria and other stuff
+emtol                    = 100.0
+emstep                   = 0.002
+niter                    = 20
+nbfgscorr                = 10
+
+; Output control
+nstlog                   = 2000
+nstenergy                = 2000
+
+; Neighborsearching and short-range nonbonded interactions
+cutoff-scheme            = verlet
+nstlist                  = 20
+ns_type                  = grid
+pbc                      = xyz
+rlist                    = 1.2
+;verlet-buffer-tolerance  = -1
+
+; Electrostatics
+coulombtype              = PME
+rcoulomb                 = 1.2
+
+; van der Waals
+vdwtype                  = cutoff
+vdw-modifier             = force-switch
+rvdw-switch              = 1.0
+rvdw                     = 1.2
+
+; Apply long range dispersion corrections for Energy and Pressure
+DispCorr                  = no
+
+; Spacing for the PME/PPPM FFT grid
+fourierspacing           = 0.12
+
+; EWALD/PME/PPPM parameters
+pme_order                = 6
+ewald_rtol               = 1e-06
+epsilon_surface          = 0
+
+; Temperature and pressure coupling are off during EM
+tcoupl                   = no
+pcoupl                   = no
+
+; Free energy control stuff
+free_energy              = yes
+init_lambda_state        = 14
+delta_lambda             = 0
+calc_lambda_neighbors    = 1        ; only immediate neighboring windows
+
+; Vectors of lambda specified here
+; Each combination is an index that is retrieved from init_lambda_state for each simulation
+; init_lambda_state        0    1    2    3    4    5    6    7    8    9    10   11   12   13   14   15   16   17   18   19   20   21   22   23   24   25   26   27   28   29   30   31
+
+vdw_lambdas              = 0.000 0.063 0.125 0.188 0.250 0.313 0.375 0.438 0.500 0.563 0.625 0.688 0.750 0.813 0.875 0.938 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000
+
+coul_lambdas	           = 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.067 0.133 0.200 0.267 0.333 0.400 0.467 0.533 0.600 0.667 0.733 0.800 0.867 0.933 1.000
+
+; We are not transforming any bonded or restrained interactions
+bonded_lambdas           = 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00
+restraint_lambdas        = 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00
+
+; Masses are not changing (particle identities are the same at lambda = 0 and lambda = 1)
+mass_lambdas             = 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00
+
+; Not doing simulated temperting here
+temperature_lambdas      = 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00
+
+; Options for the decoupling
+sc-alpha                 = 0.5
+sc-coul                  = no       ; linear interpolation of Coulomb (none in this case)
+sc-power                 = 1
+sc-sigma                 = 0.3
+couple-moltype           = ABESIK
+couple-lambda0           = none      ; changed from vdw to none, turn on everything as lambda increases
+couple-lambda1           = vdw-q     ;  changed from none to vdw-q
+couple-intramol          = yes
+nstdhdl                  = 10
+
+; No velocities during EM
+gen_vel                  = no
+
+; options for bonds
+constraints              = h-bonds  ; we only have C-H bonds here
+
+; Type of constraint algorithm
+constraint-algorithm     = lincs
+
+; Do not constrain the starting configuration
+continuation             = no
+
+; Highest order in the expansion of the constraint coupling matrix
+lincs-order              = 12

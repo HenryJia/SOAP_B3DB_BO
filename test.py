@@ -13,7 +13,18 @@ from imblearn.over_sampling import SMOTE
 import umap
 from sklearn.manifold import TSNE
 
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.optim as optim
+from torch.utils.data import Dataset, DataLoader
+
+import pytorch_lightning as pl
+from pytorch_lightning import Trainer, callbacks
+
 from data import read_molecules, soap_worker
+from genetic_algorithm import Individual, Population, GeneParameters
+from modules import MLP, SimpleResNetBlock, SimpleResNet
 
 import matplotlib.pyplot as plt
 import plotly.express as px
@@ -39,8 +50,8 @@ if __name__ == '__main__':
     soap_args.add_argument('--n_max', help='maximum radial order', default=6, type=int)
     soap_args.add_argument('--cutoff', help='cutoff radius', default=5, type=int)
     soap_args.add_argument('--atom_sigma', help='sigma for atom type', default=0.5, type=float)
-    soap_args.add_argument('--centres', type=list, nargs='+', help='Centres of the SOAP', default=[1, 6, 7, 8, 9, 16, 17])
-    soap_args.add_argument('--neighbours', type=list, nargs='+', help='Number of neighbours to consider', default=[1, 6, 7, 8, 9, 16, 17])
+    soap_args.add_argument('--centres', type=list, nargs='+', help='Centres of the SOAP', default=[1, 6, 7, 8, 9, 16, 17, 35])
+    soap_args.add_argument('--neighbours', type=list, nargs='+', help='Number of neighbours to consider', default=[1, 6, 7, 8, 9, 16, 17, 35])
     soap_args.add_argument('--nu_R', type=int, default=1)
     soap_args.add_argument('--nu_S', type=int, default=0)
 
@@ -118,11 +129,31 @@ if __name__ == '__main__':
 
         print("Fold:", i, "of ", args.n_fold * args.n_repeats, "(", len(y_train), "training, ", len(y_test), "testing)")
 
-        model = RandomForestClassifier(n_estimators=args.n_estimators, max_depth=args.max_depth, verbose=args.verbose)
-        model.fit(X_train, y_train)
+        train_dataset = torch.utils.data.TensorDataset(
+            torch.Tensor(X_train), torch.Tensor(y_train[:, None]))
+        test_dataset = torch.utils.data.TensorDataset(
+            torch.Tensor(X_test), torch.Tensor(y_test[:, None]))
 
-        y_pred = model.predict(X_test)
-        y_prob = model.predict_proba(X_test)[:, 1]
+        train_loader = DataLoader(train_dataset, batch_size=128, shuffle=True, num_workers=0)
+        test_loader = DataLoader(test_dataset, batch_size=128, shuffle=False, num_workers=0)
+
+        model = SimpleResNet(input_dim=X.shape[-1], depth=4, layer_size=64)
+        trainer = Trainer(
+            max_epochs=100,
+            accelerator='gpu',
+            devices=[0],
+            callbacks=[callbacks.EarlyStopping(monitor='val_loss', patience=5)],
+            enable_checkpointing=False,
+            check_val_every_n_epoch=1,
+            logger=False,
+            enable_progress_bar=False,
+            enable_model_summary=False,
+        )
+        trainer.fit(model, train_loader, test_loader)
+
+        model.eval()
+        y_prob = model(torch.Tensor(X_test)).detach().numpy().squeeze()
+        y_pred = np.round(y_prob)
 
         mcc += matthews_corrcoef(y_test, y_pred) / (args.n_fold * args.n_repeats)
         auc += roc_auc_score(y_test, y_prob) / (args.n_fold * args.n_repeats)
