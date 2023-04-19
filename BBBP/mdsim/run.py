@@ -149,7 +149,7 @@ if args.solvate:
     # I'm not sure what value to use for -d, so I'm just going to use 1.2 for now.
     # This is the same value used in the GROMACS tutorial for free energy of solvation for ethanol
     cmd = 'gmx editconf -f ' + os.path.join(input_dir, args.mol_name + '_ini.pdb') + ' -o '
-    cmd += os.path.join(solvate_dir, args.mol_name + '_box.pdb') + ' -bt cubic -d 1.0'
+    cmd += os.path.join(solvate_dir, args.mol_name + '_box.pdb') + ' -bt cubic -d 1.2'
     print('Running command: ', cmd)
     p = Popen(cmd, shell=True)
     p.wait()
@@ -221,5 +221,6 @@ if args.em_lbfgs:
 
     # Run mdrun
     # Note, we need to set -deffnm to the name of the tpr file without the extension
-    cmd = 'gmx mdrun -v -deffnm ' + os.path.join(em_lbfgs_dir, args.mol_name) + ' -pin on'
+    # Also note, lbfgs cannot be run in parallel, so we need to set -nt to 1
+    cmd = 'gmx mdrun -nt 1 -v -deffnm ' + os.path.join(em_lbfgs_dir, args.mol_name) + ' -pin on'
     run_command(cmd)
