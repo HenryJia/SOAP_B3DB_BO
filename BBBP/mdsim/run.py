@@ -4,6 +4,7 @@ import shutil
 import subprocess
 from subprocess import Popen, PIPE
 from distutils.dir_util import copy_tree
+import multiprocessing as mp
 
 import numpy as np
 
@@ -25,6 +26,8 @@ parser.add_argument('--working_dir', type=str, help='Working directory')
 
 parser.add_argument('--lam', type=int, help='Lambda value')
 
+parser.add_argument('--ntmpi', type=int, help='Number of thread-MPI ranks to start')
+
 parser.add_argument('--gen_mol2', action='store_true', help='Generate mol2 files')
 parser.add_argument('--charmm2gmx', action='store_true', help='Run charmm2gmx to generate topology files')
 parser.add_argument('--gen_mdp', action='store_true', help='Generate mdp files')
@@ -32,6 +35,8 @@ parser.add_argument('--gen_mdp', action='store_true', help='Generate mdp files')
 parser.add_argument('--solvate', action='store_true', help='Create the box and the solvation molecules')
 parser.add_argument('--em_steep', action='store_true', help='Run em_steep')
 parser.add_argument('--em_lbfgs', action='store_true', help='Run em_lbfgs')
+parser.add_argument('--nvt', action='store_true', help='Run nvt equilibration')
+parser.add_argument('--npt', action='store_true', help='Run npt equilibration')
 
 args = parser.parse_args()
 
@@ -42,8 +47,11 @@ input_dir = os.path.join(args.working_dir, 'input_files')
 output_dir = os.path.join(args.working_dir, 'output_files')
 solvate_dir = os.path.join(output_dir, 'solvate')
 lambda_dir = os.path.join(output_dir, str(args.lam))
+
 em_steep_dir = os.path.join(lambda_dir, 'em_steep')
 em_lbfgs_dir = os.path.join(lambda_dir, 'em_l-bfgs')
+nvt_dir = os.path.join(lambda_dir, 'nvt')
+npt_dir = os.path.join(lambda_dir, 'npt')
 
 # Create input directory if it doesn't exist
 if not os.path.exists(input_dir):
@@ -212,7 +220,7 @@ if args.em_lbfgs:
 
     # Run grompp
     # Note: Our input gro file is the output gro file from the previous step
-    cmd = 'gmx grompp -f ' + os.path.join(output_dir, 'mdp', 'EM_l-bfgs', 'em_l-bfgs.mdp')
+    cmd = 'gmx grompp -f ' + os.path.join(output_dir, 'mdp', 'EM_l-bfgs', 'em_l-bfgs_' + str(args.lam) +'.mdp')
     cmd += ' -c ' + os.path.join(em_steep_dir, args.mol_name + '.gro')
     cmd += ' -p ' + os.path.join(input_dir, args.mol_name + '.top')
     cmd += ' -o ' + os.path.join(em_lbfgs_dir, args.mol_name + '.tpr')
@@ -223,4 +231,37 @@ if args.em_lbfgs:
     # Note, we need to set -deffnm to the name of the tpr file without the extension
     # Also note, lbfgs cannot be run in parallel, so we need to set -nt to 1
     cmd = 'gmx mdrun -nt 1 -v -deffnm ' + os.path.join(em_lbfgs_dir, args.mol_name) + ' -pin on'
+    run_command(cmd)
+
+if args.nvt:
+    # Prepare to run the NVT equilibration
+    # First, make the directory for it
+    if not os.path.exists(nvt_dir):
+        os.makedirs(nvt_dir)
+
+    # Run grompp
+    # Note: Our input gro file is the output gro file from the previous step
+    cmd = 'gmx grompp -f ' + os.path.join(output_dir, 'mdp', 'NVT', 'nvt_' + str(args.lam) + '.mdp')
+    cmd += ' -c ' + os.path.join(em_lbfgs_dir, args.mol_name + '.gro')
+    cmd += ' -p ' + os.path.join(input_dir, args.mol_name + '.top')
+    cmd += ' -o ' + os.path.join(nvt_dir, args.mol_name + '.tpr')
+    run_command(cmd)
+
+    # Run mdrun
+    # Note, we need to set -deffnm to the name of the tpr file without the extension
+    cmd = 'gmx mdrun -v -ntomp 1 -ntmpi ' + str(args.ntmpi) + ' -deffnm ' + os.path.join(nvt_dir, args.mol_name) + ' -pin on'
+    run_command(cmd)
+
+if args.npt:
+    # Prepare to run the NPT equilibration
+    # First, make the directory for it
+    if not os.path.exists(npt_dir):
+        os.makedirs(npt_dir)
+
+    # Run grompp
+    # Note: Our input gro file is the output gro file from the previous step
+    cmd = 'gmx grompp -f ' + os.path.join(output_dir, 'mdp', 'NPT', 'npt_' + str(args.lam) + '.mdp')
+    cmd += ' -c ' + os.path.join(nvt_dir, args.mol_name + '.gro')
+    cmd += ' -p ' + os.path.join(input_dir, args.mol_name + '.top')
+    cmd += ' -o ' + os.path.join(npt_dir, args.mol_name + '.tpr')
     run_command(cmd)
