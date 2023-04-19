@@ -26,6 +26,7 @@ parser.add_argument('--working_dir', type=str, help='Working directory')
 
 parser.add_argument('--lam', type=int, help='Lambda value')
 
+parser.add_argument('--ntomp', type=int, help='Number of OpenMP threads per MPI rank to start')
 parser.add_argument('--ntmpi', type=int, help='Number of thread-MPI ranks to start')
 
 parser.add_argument('--gen_mol2', action='store_true', help='Generate mol2 files')
@@ -37,6 +38,7 @@ parser.add_argument('--em_steep', action='store_true', help='Run em_steep')
 parser.add_argument('--em_lbfgs', action='store_true', help='Run em_lbfgs')
 parser.add_argument('--nvt', action='store_true', help='Run nvt equilibration')
 parser.add_argument('--npt', action='store_true', help='Run npt equilibration')
+parser.add_argument('--md', action='store_true', help='Run the production MD')
 
 args = parser.parse_args()
 
@@ -52,6 +54,7 @@ em_steep_dir = os.path.join(lambda_dir, 'em_steep')
 em_lbfgs_dir = os.path.join(lambda_dir, 'em_l-bfgs')
 nvt_dir = os.path.join(lambda_dir, 'nvt')
 npt_dir = os.path.join(lambda_dir, 'npt')
+md_dir = os.path.join(lambda_dir, 'md')
 
 # Create input directory if it doesn't exist
 if not os.path.exists(input_dir):
@@ -249,7 +252,7 @@ if args.nvt:
 
     # Run mdrun
     # Note, we need to set -deffnm to the name of the tpr file without the extension
-    cmd = 'gmx mdrun -v -ntomp 1 -ntmpi ' + str(args.ntmpi) + ' -deffnm ' + os.path.join(nvt_dir, args.mol_name) + ' -pin on'
+    cmd = 'gmx mdrun -v -ntomp ' + str(args.ntomp) + ' -ntmpi ' + str(args.ntmpi) + ' -deffnm ' + os.path.join(nvt_dir, args.mol_name) + ' -pin on'
     run_command(cmd)
 
 if args.npt:
@@ -263,5 +266,31 @@ if args.npt:
     cmd = 'gmx grompp -f ' + os.path.join(output_dir, 'mdp', 'NPT', 'npt_' + str(args.lam) + '.mdp')
     cmd += ' -c ' + os.path.join(nvt_dir, args.mol_name + '.gro')
     cmd += ' -p ' + os.path.join(input_dir, args.mol_name + '.top')
+    cmd += ' -t ' + os.path.join(nvt_dir, args.mol_name + '.cpt')
     cmd += ' -o ' + os.path.join(npt_dir, args.mol_name + '.tpr')
+    run_command(cmd)
+
+    # Run mdrun
+    # Note, we need to set -deffnm to the name of the tpr file without the extension
+    cmd = 'gmx mdrun -v -ntomp ' + str(args.ntomp) + ' -ntmpi ' + str(args.ntmpi) + ' -deffnm ' + os.path.join(npt_dir, args.mol_name) + ' -pin on'
+    run_command(cmd)
+
+if args.md:
+    # Prepare to run the production run
+    # First, make the directory for it
+    if not os.path.exists(md_dir):
+        os.makedirs(md_dir)
+
+    # Run grompp
+    # Note: Our input gro file is the output gro file from the previous step
+    cmd = 'gmx grompp -f ' + os.path.join(output_dir, 'mdp', 'MD', 'md_' + str(args.lam) + '.mdp')
+    cmd += ' -c ' + os.path.join(npt_dir, args.mol_name + '.gro')
+    cmd += ' -p ' + os.path.join(input_dir, args.mol_name + '.top')
+    cmd += ' -t ' + os.path.join(npt_dir, args.mol_name + '.cpt')
+    cmd += ' -o ' + os.path.join(md_dir, args.mol_name + '.tpr')
+    run_command(cmd)
+
+    # Run mdrun
+    # Note, we need to set -deffnm to the name of the tpr file without the extension
+    cmd = 'gmx mdrun -v -ntomp ' + str(args.ntomp) + ' -ntmpi ' + str(args.ntmpi) + ' -deffnm ' + os.path.join(md_dir, args.mol_name) + ' -pin on'
     run_command(cmd)
