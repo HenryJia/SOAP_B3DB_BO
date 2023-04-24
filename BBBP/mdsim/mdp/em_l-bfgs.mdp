@@ -80,7 +80,7 @@ sc-sigma                 = 0.3
 couple-moltype           = MAIN
 couple-lambda0           = none      ; changed from vdw to none, turn on everything as lambda increases
 couple-lambda1           = vdw-q     ;  changed from none to vdw-q
-couple-intramol          = yes       ; The original was no, but this seems to cause a fatal error
+couple-intramol          = no       ; The original was no, but this seems to cause a fatal error
 nstdhdl                  = 10
 
 ; No velocities during EM
