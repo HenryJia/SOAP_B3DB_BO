@@ -1,3 +1,4 @@
+#!/bin/bash
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1  # number of cores
 #SBATCH --cpus-per-task=48 # number of cpus
