@@ -75,7 +75,7 @@ sc-sigma                 = 0.3
 couple-moltype           = MAIN  ; name of moleculetype to decouple
 couple-lambda0           = none      ; changed from vdw to none, turn on everything as lambda increases
 couple-lambda1           = vdw-q     ;  changed from none to vdw-q
-couple-intramol          = yes
+couple-intramol          = no        ; Following a meeting with Gabriele, this should be set to no
 nstdhdl                  = 10
 ; Do not generate velocities
 gen_vel                  = no

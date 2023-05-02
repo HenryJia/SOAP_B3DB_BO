@@ -80,7 +80,7 @@ sc-sigma                 = 0.3
 couple-moltype           = MAIN
 couple-lambda0           = none      ; changed from vdw to none, turn on everything as lambda increases
 couple-lambda1           = vdw-q     ;  changed from none to vdw-q
-couple-intramol          = no        ; The original was no, but this seems to cause a fatal error with GROMACS 2022. Setting it to no works fine with GROMACS 2020
+couple-intramol          = no        ; Following a meeting with Gabriele, this should be set to no
 nstdhdl                  = 10
 
 ; No velocities during EM
