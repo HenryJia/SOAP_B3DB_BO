@@ -2,7 +2,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=32 # We are wasting a small amount of resources here, Avon has 48 cores per node
 #SBATCH --cpus-per-task=1
-#SBATCH --time=00:10:00 # We do not need a lot of time for each of this step. Asking for less time on the queue means we get scheduled faster
+#SBATCH --time=01:00:00 # We do not need a lot of time for each of this step. Asking for less time on the queue means we get scheduled faster
 #SBATCH --mem-per-cpu=3700 
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=h.jia.2@warwick.ac.uk
