@@ -12,8 +12,10 @@ module load GCCcore/8.3.0 Python/3.7.4 git
 module load GCC/8.3.0 OpenMPI/3.1.4
 module load GROMACS/2020
 
+mkdir -p logs
+
 for lam in {0..31}
 do
-    srun python run.py --smiles "CCC(=O)N(C1CCN(CC1)CCc2ccccc2)c3ccccc3" --mol_name 'main' --working_dir 'fentanyl/' --gen_mdp --em_steep --lam $lam --ntomp 1 --ntmpi 1 &> em_steep_$lam.log
+    srun pipenv run python run.py --smiles "CCC(=O)N(C1CCN(CC1)CCc2ccccc2)c3ccccc3" --mol_name 'main' --working_dir 'fentanyl/' --gen_mdp --em_steep --lam $lam --ntomp 1 --ntmpi 1 &> logs/em_steep_$lam.log
 done
 wait
