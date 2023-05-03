@@ -1,6 +1,5 @@
 #!/bin/bash
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=32 # We are wasting a small amount of resources here, Avon has 48 cores per node
 #SBATCH --ntasks=32
 #SBATCH --cpus-per-task=1
 #SBATCH --time=00:10:00 # We do not need a lot of time for each of this step. Asking for less time on the queue means we get scheduled faster
