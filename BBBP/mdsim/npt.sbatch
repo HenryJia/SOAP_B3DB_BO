@@ -16,6 +16,9 @@ mkdir -p logs
 
 for lam in {0..31}
 do
-    srun pipenv run python run.py --smiles "CCC(=O)N(C0CCN(CC1)CCc2ccccc2)c3ccccc3" --mol_name 'main' --working_dir 'fentanyl/' --npt --lam $lam --ntomp 0 --ntmpi 1 &> logs/npt_$lam.log
+    # Note we need to specify --exact or Slurm will think we are asking for 32 tasks even though we explicitly specify --ntasks=1
+    # This took me too bloody long to figure out
+    # Slurm is a twat sometimes
+    srun --ntasks=1 --exact pipenv run python run.py --smiles "CCC(=O)N(C0CCN(CC1)CCc2ccccc2)c3ccccc3" --mol_name 'main' --working_dir 'fentanyl/' --npt --lam $lam --ntomp 0 --ntmpi 1 &> logs/npt_$lam.log &
 done
 wait
