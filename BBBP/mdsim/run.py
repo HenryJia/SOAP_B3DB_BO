@@ -218,7 +218,7 @@ if args.em_steep:
 
     # Run mdrun
     # Note, we need to set -deffnm to the name of the tpr file without the extension
-    cmd = 'gmx mdrun -v -ntomp ' + str(args.ntomp) + ' -ntmpi ' + str(args.ntmpi) + ' -deffnm ' + os.path.join(md_dir, args.mol_name) + ' -pin on'
+    cmd = 'gmx mdrun -v -ntomp ' + str(args.ntomp) + ' -ntmpi ' + str(args.ntmpi) + ' -deffnm ' + os.path.join(em_steep_dir, args.mol_name) + ' -pin on'
     run_command(cmd)
 
 if args.em_lbfgs:
