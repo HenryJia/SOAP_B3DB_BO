@@ -1,6 +1,6 @@
 # Example:
-# python run.py --smiles "CCC(=O)N(C1CCN(CC1)CCc2ccccc2)c3ccccc3" --mol_name 'main' --working_dir 'fentanyl/' --solvate
-# python run.py --smiles "CCC(=O)N(C1CCN(CC1)CCc2ccccc2)c3ccccc3" --mol_name 'main' --working_dir 'fentanyl/' --gen_mdp --em_steep --em_lbfgs --npt --nvt --md --lam 0 --ntomp 8 --ntmpi 1
+# python run.py --smiles "CCC(=O)N(C1CCN(CC1)CCc2ccccc2)c3ccccc3" --mol_name 'main' --working_dir 'fentanyl/' --solvate --gen_mdp
+# python run.py --smiles "CCC(=O)N(C1CCN(CC1)CCc2ccccc2)c3ccccc3" --mol_name 'main' --working_dir 'fentanyl/' --em_steep --em_lbfgs --npt --nvt --md --lam 0 --ntomp 8 --ntmpi 1
 
 import argparse
 import os
@@ -64,9 +64,6 @@ md_dir = os.path.join(lambda_dir, 'md')
 if not os.path.exists(input_dir):
     os.makedirs(input_dir)
 
-# Create output directory if it doesn't exist
-if not os.path.exists(output_dir):
-    os.makedirs(output_dir)
 
 
 # Generate mol2 files
@@ -115,6 +112,10 @@ if args.charmm2gmx:
 if args.gen_mdp:
     # Copy the files we need to the output directory
     copy_tree('./charmm36-jul2021.ff', os.path.join(input_dir, 'charmm36-jul2021.ff'))
+
+    # Create output directory if it doesn't exist
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
 
     # We need to copy the mdp files to the lambda directory
     if not os.path.exists(os.path.join(output_dir, 'mdp')):
