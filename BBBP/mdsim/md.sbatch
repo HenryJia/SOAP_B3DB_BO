@@ -16,6 +16,6 @@ mkdir -p logs
 
 for lam in {0..31}
 do
-    srun pipenv run python run.py --smiles "CCC(=O)N(C1CCN(CC1)CCc2ccccc2)c3ccccc3" --mol_name 'main' --working_dir 'fentanyl/' --gen_mdp --md --lam $lam --ntomp 1 --ntmpi 1 &> logs/md_$lam.log
+    srun pipenv run python run.py --smiles "CCC(=O)N(C1CCN(CC1)CCc2ccccc2)c3ccccc3" --mol_name 'main' --working_dir 'fentanyl/' --md --lam $lam --ntomp 1 --ntmpi 1 &> logs/md_$lam.log
 done
 wait

@@ -68,8 +68,6 @@ if not os.path.exists(input_dir):
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
-# Copy the files we need to the output directory
-copy_tree('./charmm36-jul2021.ff', os.path.join(input_dir, 'charmm36-jul2021.ff'))
 
 # Generate mol2 files
 if args.gen_mol2:
@@ -115,6 +113,9 @@ if args.charmm2gmx:
 
 # Generate mdp files
 if args.gen_mdp:
+    # Copy the files we need to the output directory
+    copy_tree('./charmm36-jul2021.ff', os.path.join(input_dir, 'charmm36-jul2021.ff'))
+
     # We need to copy the mdp files to the lambda directory
     if not os.path.exists(os.path.join(output_dir, 'mdp')):
         os.makedirs(os.path.join(output_dir, 'mdp'))
