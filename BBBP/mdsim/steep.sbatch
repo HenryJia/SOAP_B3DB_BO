@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --nodes=1
-#SBATCH --ntasks=32
+#SBATCH --ntasks-per-node=32 # We are wasting a small amount of resources here, Avon has 48 cores per node
 #SBATCH --cpus-per-task=1
 #SBATCH --time=00:10:00 # We do not need a lot of time for each of this step. Asking for less time on the queue means we get scheduled faster
 #SBATCH --mem-per-cpu=3700 
@@ -16,6 +16,6 @@ mkdir -p logs
 
 for lam in {0..31}
 do
-    srun --ntasks=1 pipenv run python run.py --smiles "CCC(=O)N(C1CCN(CC1)CCc2ccccc2)c3ccccc3" --mol_name 'main' --working_dir 'fentanyl/' --em_steep --lam $lam --ntomp 1 --ntmpi 1 &> logs/em_steep_$lam.log &
+    srun --ntasks=1 --exact pipenv run python run.py --smiles "CCC(=O)N(C1CCN(CC1)CCc2ccccc2)c3ccccc3" --mol_name 'main' --working_dir 'fentanyl/' --em_steep --lam $lam --ntomp 1 --ntmpi 1 &> logs/em_steep_$lam.log &
 done
 wait
