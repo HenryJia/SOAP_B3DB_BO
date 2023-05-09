@@ -191,7 +191,8 @@ if args.solvate:
     # Note: -conc 0.1 is the default value used PX923 and http://www.mdtutorials.com/gmx/umbrella/03_solvation.html
     # Also note: -neutral is used to neutralize the system by adding the appropriate number of ions
     # This part is also interactive. So it cannot be run in parallel or headless for now
-    cmd = 'gmx genion -s ' + os.path.join(solvate_dir, args.mol_name + '_ions.tpr') + ' -o '
+    # Also note that I don't know how to automate this better than echo the solvent group to replace with ions
+    cmd = 'echo SOL | gmx genion -s ' + os.path.join(solvate_dir, args.mol_name + '_ions.tpr') + ' -o '
     cmd += os.path.join(solvate_dir, args.mol_name + '_ions.pdb') + ' -p ' + os.path.join(input_dir, args.mol_name + '.top')
     cmd += ' -pname SOD -nname CLA -neutral -conc 0.1'
     print('Running command: ', cmd)
