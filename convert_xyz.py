@@ -33,7 +33,7 @@ for i, row in tqdm(df.iterrows(), total=df.shape[0]):
         mol = remover.StripMol(mol)
         #print('After remover', mol)
 
-        smiles = Chem.MolToSmiles(mol)
+        smiles = Chem.MolToSmiles(mol, isomericSmiles=True, canonical=True, kekuleSmiles=True)
         mol = Chem.AddHs(mol)
         success = AllChem.EmbedMolecule(mol, randomSeed=0xf00d)
         out = Chem.MolToXYZBlock(mol)
