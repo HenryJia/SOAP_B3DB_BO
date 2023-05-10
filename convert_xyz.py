@@ -33,6 +33,7 @@ for i, row in tqdm(df.iterrows(), total=df.shape[0]):
         mol = remover.StripMol(mol)
         #print('After remover', mol)
 
+        smiles = Chem.MolToSmiles(mol)
         mol = Chem.AddHs(mol)
         success = AllChem.EmbedMolecule(mol, randomSeed=0xf00d)
         out = Chem.MolToXYZBlock(mol)
@@ -43,7 +44,7 @@ for i, row in tqdm(df.iterrows(), total=df.shape[0]):
         with open(os.path.join(args.output, str(row['num']) + '.xyz'), 'w') as f:
             f.write(out)
 
-        row_out = pd.DataFrame({'Name': row['num'], 'ChemName': row['name'], 'Smiles': row['smiles'], 'Class': row['p_np']}, index=[0])
+        row_out = pd.DataFrame({'Name': row['num'], 'ChemName': row['name'], 'Smiles': smiles, 'Class': row['p_np']}, index=[0])
         df_out = pd.concat([df_out, row_out])
     except Exception as e:
         print('Embedding failed for {} {}'.format(row['name'], row['smiles']))
