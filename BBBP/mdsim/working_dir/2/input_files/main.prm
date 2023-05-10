@@ -1,0 +1,24 @@
+
+[ bondtypes ]
+;      i        j  func           b0           kb
+
+
+[ angletypes ]
+;      i        j        k  func       theta0       ktheta          ub0          kub
+   CG321    CG321    CLGA1     5   112.200000   594.128000   0.00000000         0.00
+
+
+[ dihedraltypes ]
+;      i        j        k        l  func         phi0         kphi  mult
+   NG301    CG321    CG321    CLGA1     9     0.000000     2.510400     1
+   NG301    CG321    CG321    CLGA1     9   180.000000     0.836800     2
+   NG301    CG321    CG321    CLGA1     9     0.000000     1.255200     3
+   CLGA1    CG321    CG321     HGA2     9     0.000000     1.222565     3
+   CG321    CG321    NG301   CG2R61     9   180.000000     1.840960     1
+   CG321    CG321    NG301   CG2R61     9     0.000000     0.125520     2
+   CG321    CG321    NG301   CG2R61     9     0.000000     0.041840     3
+
+
+[ dihedraltypes ]
+; 'improper' dihedrals 
+;      i        j        k        l  func         phi0         kphi
