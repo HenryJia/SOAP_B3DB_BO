@@ -16,8 +16,8 @@ def run_command(cmd):
     print('Running command: ', cmd)
     p = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
     output, err = p.communicate()
-    output = output.decode('utf-8')
-    err = err.decode('utf-8')
+    output = output.decode('ascii')
+    err = err.decode('ascii')
     print(output)
     print(err)
     return output
