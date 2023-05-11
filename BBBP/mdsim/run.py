@@ -33,8 +33,6 @@ parser.add_argument('--lam', type=int, help='Lambda value')
 parser.add_argument('--ntomp', type=int, help='Number of OpenMP threads per MPI rank to start')
 parser.add_argument('--ntmpi', type=int, help='Number of thread-MPI ranks to start')
 
-parser.add_argument('--gen_mol2', action='store_true', help='Generate mol2 files')
-parser.add_argument('--charmm2gmx', action='store_true', help='Run charmm2gmx to generate topology files')
 parser.add_argument('--gen_mdp', action='store_true', help='Generate mdp files')
 
 parser.add_argument('--solvate', action='store_true', help='Create the box and the solvation molecules')
@@ -64,49 +62,6 @@ md_dir = os.path.join(lambda_dir, 'md')
 if not os.path.exists(input_dir):
     os.makedirs(input_dir)
 
-
-
-# Generate mol2 files
-if args.gen_mol2:
-    # Write the SMILES to a file so we can feed it to obabel a bit later
-    with open(os.path.join(input_dir, args.mol_name + '.smi'), 'w') as f:
-        f.write(args.smiles)
-
-    # Now we need to generate a mol2 file from the SMILES
-    # For explanation of the syntax here, -ismi is the input format, -omol2 is the output format
-    # -O is the output file, and --gen3d is the flag to generate 3D coordinates
-    cmd = 'obabel -ismi \'' + os.path.join(input_dir, args.mol_name + '.smi') + '\' -omol2 -O \''
-    cmd += os.path.join(input_dir, args.mol_name + '.mol2') + '\' --gen3d'
-    run_command(cmd)
-
-    # Now we need to edit the mol2 file's residue name to match the name of the molecule
-    # By default, obabel names the residue '*****'
-    # Now, we could do this in a pythonic way, but I'm lazy and I don't want to deal with that
-    # So we'll just use sed
-    # Extra note: The residue name MUST be in all CAPS
-    cmd = 'sed -i \'s/\*\*\*\*\*/' + args.mol_name.upper() + '/g\' \'' + os.path.join(input_dir, args.mol_name + '.mol2') + '\''
-    run_command(cmd)
-
-    # After this, we need to use cgenff to generate a CHARMM force field parameter file
-    # This bit has to be done online. Annoyingly, I can't do this on my local machine here
-    # So I'll just link to the online version here in this comment for now: https://cgenff.umaryland.edu/
-
-# After this, we need to use charmm2gmx to generate topology files
-if args.charmm2gmx:
-    # There's probably a better way to run a python script from another python script
-    # But I'm lazy and I don't want to deal with that
-    # So we'll just use subprocess again
-    # Extra note: The residue name MUST be in all CAPS
-    cmd = 'python ./cgenff_charmm2gmx_py3_nx2.py ' + args.mol_name.upper() + ' ' + os.path.join(input_dir, args.mol_name + '.mol2')
-    cmd += ' ' + os.path.join(input_dir, args.mol_name + '.str') + ' ./charmm36-jul2021.ff'
-    run_command(cmd)
-
-    # Annoyingly, charmm2gmx just drops the output files in the current directory
-    # So we need to move them to the input directory
-    os.rename(args.mol_name + '.top', os.path.join(input_dir, args.mol_name + '.top'))
-    os.rename(args.mol_name + '.prm', os.path.join(input_dir, args.mol_name + '.prm'))
-    os.rename(args.mol_name + '.itp', os.path.join(input_dir, args.mol_name + '.itp'))
-    os.rename(args.mol_name + '_ini.pdb', os.path.join(input_dir, args.mol_name + '_ini.pdb'))
 
 # Generate mdp files
 if args.gen_mdp:
