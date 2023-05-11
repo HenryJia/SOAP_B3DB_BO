@@ -16,9 +16,11 @@ def run_command(cmd):
     print('Running command: ', cmd)
     p = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
     output, err = p.communicate()
+    output = output.decode('ascii')
+    err = err.decode('ascii')
     print(output)
     print(err)
-    return output.decode('utf-8')
+    return output
 
 # Set up argparse
 parser = argparse.ArgumentParser(description='Array job via SLURM')
@@ -48,25 +50,25 @@ for idx in range(args.start_idx, args.end_idx + 1):
     # Step 1: minimisation with steepest descent
     cmd = "sbatch steep.sbatch " + working_dir
     output = run_command(cmd)
-    job_id = output.split(' ')[-1]
+    job_id = output.split(' ')[-1][:-1]
 
     # Step 2: minimisation with l-bfgs
     cmd = "sbatch --dependency=afterok:" + job_id + " lbfgs.sbatch " + working_dir
     output = run_command(cmd)
-    job_id = output.split(' ')[-1]
+    job_id = output.split(' ')[-1][:-1]
 
     # Step 3: NVT equilibration
     cmd = "sbatch --dependency=afterok:" + job_id + " nvt.sbatch " + working_dir
     output = run_command(cmd)
-    job_id = output.split(' ')[-1]
+    job_id = output.split(' ')[-1][:-1]
 
     # Step 4: NPT equilibration
     cmd = "sbatch --dependency=afterok:" + job_id + " npt.sbatch " + working_dir
     output = run_command(cmd)
-    job_id = output.split(' ')[-1]
+    job_id = output.split(' ')[-1][:-1]
 
     # Step 5: Production run
     cmd = "sbatch --dependency=afterok:" + job_id + " prod.sbatch " + working_dir
-    output = run_command(cmd)
+    output = run_command(cmd)[:-1]
 
     print('Finished running SLURM for molecule ', data['Name'].iloc[idx], ' SMILES: ', data['Smiles'].iloc[idx])
