@@ -5,12 +5,9 @@
 import argparse
 import os
 import shutil
-import subprocess
 from subprocess import Popen, PIPE
 from distutils.dir_util import copy_tree
-import multiprocessing as mp
 
-import numpy as np
 
 def run_command(cmd):
     print('Running command: ', cmd)
