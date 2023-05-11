@@ -41,7 +41,7 @@ for idx in range(args.start_idx, args.end_idx + 1):
     # Yes, I know it's janky and bad practice to call a python script from a python script
     # But I'm lazy and I don't want to deal with cleaning up the solvate code for now
     # It's 3am and I'm tired. The directory structure is complicated and doing my head in
-    cmd = "python run.py --smiles --mol_name 'main' --working_dir " + working_dir + " --solvate --gen_mdp"
+    cmd = "python run.py --mol_name 'main' --working_dir " + working_dir + " --solvate --gen_mdp"
     run_command(cmd)
 
     # Now we start setting up the SLURM jobs
