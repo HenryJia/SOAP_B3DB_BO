@@ -18,7 +18,7 @@ def run_command(cmd):
     output, err = p.communicate()
     print(output)
     print(err)
-    return output
+    return output.decode('utf-8')
 
 # Set up argparse
 parser = argparse.ArgumentParser(description='Array job via SLURM')
