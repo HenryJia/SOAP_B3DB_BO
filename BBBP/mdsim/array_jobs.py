@@ -16,9 +16,11 @@ def run_command(cmd):
     print('Running command: ', cmd)
     p = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
     output, err = p.communicate()
+    output = output.decode('utf-8')
+    err = err.decode('utf-8')
     print(output)
     print(err)
-    return output.decode('utf-8')
+    return output
 
 # Set up argparse
 parser = argparse.ArgumentParser(description='Array job via SLURM')
