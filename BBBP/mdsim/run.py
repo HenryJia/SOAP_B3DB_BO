@@ -18,8 +18,6 @@ def run_command(cmd):
 parser = argparse.ArgumentParser()
 #parser.add_argument('--csv', type=str, help='CSV file containing the data')
 
-parser.add_argument('--smiles', type=str, help='SMILES')
-
 # IMPORTANT NOTE: All of our other files are hardcoded to use the name 'main' for the molecule/residue
 # Using a different name will almost certainly break things
 parser.add_argument('--mol_name', type=str, help='Molecule name', default='main')
