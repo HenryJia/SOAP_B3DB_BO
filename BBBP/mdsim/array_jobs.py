@@ -68,7 +68,7 @@ for idx in range(args.start_idx, args.end_idx + 1):
     job_id = output.split(' ')[-1][:-1]
 
     # Step 5: Production run
-    cmd = "sbatch --dependency=afterok:" + job_id + " prod.sbatch " + working_dir
+    cmd = "sbatch --dependency=afterok:" + job_id + " md.sbatch " + working_dir
     output = run_command(cmd)[:-1]
 
     print('Finished running SLURM for molecule ', data['Name'].iloc[idx], ' SMILES: ', data['Smiles'].iloc[idx])
