@@ -33,7 +33,7 @@ args = parser.parse_args()
 data = pd.read_csv(args.input_csv)
 
 for idx in range(args.start_idx, args.end_idx + 1):
-    print('Running SLURM for molecule ', data['Name'].iloc[idx], ' SMILES: ', data['Smiles'].iloc[idx])
+    print('Running gmx bar for molecule ', data['Name'].iloc[idx], ' SMILES: ', data['Smiles'].iloc[idx])
 
     working_dir = os.path.join(args.working_dir, str(data['Name'].iloc[idx]))
 

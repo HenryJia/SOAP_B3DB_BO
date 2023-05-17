@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=48 # We are wasting a small amount of resources here, Avon has 48 cores per node
-#SBATCH --cpus-per-task=1
+#SBATCH --ntasks-per-node=1 # We are wasting a small amount of resources here, Avon has 48 cores per node
+#SBATCH --cpus-per-task=48
 #SBATCH --time=1:00:00 # The production MD might take a while to run...
 #SBATCH --mem-per-cpu=3700 
 #SBATCH --mail-type=ALL
