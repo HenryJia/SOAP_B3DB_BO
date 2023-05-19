@@ -1,0 +1,5 @@
+Name,Smiles,Solubility,dG
+ABESIK,Clc1cc(Cl)c(-c2ccccc2)cc1Cl,-6.27,-3.82
+ACETPH,CC(=O)c1ccccc1,-1.28038684,-20.78
+DCBZDX20,Clc1ccc2c(c1)Oc1ccc(Cl)cc1O2,-7.8292,0
+DCLBPH,Clc1c(Cl)c(Cl)c(-c2c(Cl)c(Cl)c(Cl)c(Cl)c2Cl)c(Cl)c1Cl,-11.6,0
