@@ -1,0 +1,533 @@
+                :-) GROMACS - gmx bar, 2020-EasyBuild-4.7.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar      Christian Blau   Viacheslav Bolnykh     Kevin Boyd    
+ Aldert van Buuren   Rudi van Drunen     Anton Feenstra       Alan Gray     
+  Gerrit Groenhof     Anca Hamuraru    Vincent Hindriksen  M. Eric Irrgang  
+  Aleksei Iupinov   Christoph Junghans     Joe Jordan     Dimitrios Karkoulis
+    Peter Kasson        Jiri Kraus      Carsten Kutzner      Per Larsson    
+  Justin A. Lemkul    Viveca Lindahl    Magnus Lundborg     Erik Marklund   
+    Pascal Merz     Pieter Meulenhoff    Teemu Murtola       Szilard Pall   
+    Sander Pronk      Roland Schulz      Michael Shirts    Alexey Shvetsov  
+   Alfons Sijbers     Peter Tieleman      Jon Vincent      Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf      Artem Zhmurov   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2019, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx bar, version 2020-EasyBuild-4.7.1
+Executable:   /scrtp/avon/eb/software/GROMACS/2020-foss-2019b/bin/gmx
+Data prefix:  /scrtp/avon/eb/software/GROMACS/2020-foss-2019b
+Working dir:  /gpfs/home/rawsys/matgms/SOAP_GAS_TMS/BBBP/mdsim
+Command line:
+  gmx bar -f working_dir/9/output_files/0/md/main.xvg working_dir/9/output_files/1/md/main.xvg working_dir/9/output_files/10/md/main.xvg working_dir/9/output_files/11/md/main.xvg working_dir/9/output_files/12/md/main.xvg working_dir/9/output_files/13/md/main.xvg working_dir/9/output_files/14/md/main.xvg working_dir/9/output_files/15/md/main.xvg working_dir/9/output_files/16/md/main.xvg working_dir/9/output_files/17/md/main.xvg working_dir/9/output_files/18/md/main.xvg working_dir/9/output_files/19/md/main.xvg working_dir/9/output_files/2/md/main.xvg working_dir/9/output_files/20/md/main.xvg working_dir/9/output_files/21/md/main.xvg working_dir/9/output_files/22/md/main.xvg working_dir/9/output_files/23/md/main.xvg working_dir/9/output_files/24/md/main.xvg working_dir/9/output_files/25/md/main.xvg working_dir/9/output_files/26/md/main.xvg working_dir/9/output_files/27/md/main.xvg working_dir/9/output_files/28/md/main.xvg working_dir/9/output_files/29/md/main.xvg working_dir/9/output_files/3/md/main.xvg working_dir/9/output_files/30/md/main.xvg working_dir/9/output_files/31/md/main.xvg working_dir/9/output_files/4/md/main.xvg working_dir/9/output_files/5/md/main.xvg working_dir/9/output_files/6/md/main.xvg working_dir/9/output_files/7/md/main.xvg working_dir/9/output_files/8/md/main.xvg working_dir/9/output_files/9/md/main.xvg -o working_dir/9/output_files/bar.xvg -oi working_dir/9/output_files/barint.xvg -oh working_dir/9/output_files/barhist.xvg
+
+working_dir/9/output_files/0/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/0/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.063, 0, 0) (400001 pts)
+
+
+working_dir/9/output_files/1/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/1/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.063, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.063, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.125, 0, 0) (400001 pts)
+
+
+working_dir/9/output_files/10/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/10/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.625, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.563, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.625, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.688, 0, 0) (400001 pts)
+
+
+working_dir/9/output_files/11/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/11/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.688, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.625, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.688, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.75, 0, 0) (400001 pts)
+
+
+working_dir/9/output_files/12/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/12/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.75, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.688, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.75, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.813, 0, 0) (400001 pts)
+
+
+working_dir/9/output_files/13/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/13/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.813, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.75, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.813, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.875, 0, 0) (400001 pts)
+
+
+working_dir/9/output_files/14/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/14/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.875, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.813, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.875, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.938, 0, 0) (400001 pts)
+
+
+working_dir/9/output_files/15/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/15/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.938, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.875, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.938, 0, 0) (400001 pts)
+        delta H to (0, 0, 1, 0, 0) (400001 pts)
+
+
+working_dir/9/output_files/16/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/16/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.938, 0, 0) (400001 pts)
+        delta H to (0, 0, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.067, 1, 0, 0) (400001 pts)
+
+
+working_dir/9/output_files/17/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/17/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0.067, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.067, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.133, 1, 0, 0) (400001 pts)
+
+
+working_dir/9/output_files/18/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/18/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0.133, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0.067, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.133, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.2, 1, 0, 0) (400001 pts)
+
+
+working_dir/9/output_files/19/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/19/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0.2, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0.133, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.2, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.267, 1, 0, 0) (400001 pts)
+
+
+working_dir/9/output_files/2/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/2/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.125, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.063, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.125, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.188, 0, 0) (400001 pts)
+
+
+working_dir/9/output_files/20/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/20/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0.267, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0.2, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.267, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.333, 1, 0, 0) (400001 pts)
+
+
+working_dir/9/output_files/21/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/21/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0.333, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0.267, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.333, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.4, 1, 0, 0) (400001 pts)
+
+
+working_dir/9/output_files/22/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/22/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0.4, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0.333, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.4, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.467, 1, 0, 0) (400001 pts)
+
+
+working_dir/9/output_files/23/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/23/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0.467, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0.4, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.467, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.533, 1, 0, 0) (400001 pts)
+
+
+working_dir/9/output_files/24/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/24/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0.533, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0.467, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.533, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.6, 1, 0, 0) (400001 pts)
+
+
+working_dir/9/output_files/25/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/25/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0.6, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0.533, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.6, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.667, 1, 0, 0) (400001 pts)
+
+
+working_dir/9/output_files/26/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/26/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0.667, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0.6, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.667, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.733, 1, 0, 0) (400001 pts)
+
+
+working_dir/9/output_files/27/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/27/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0.733, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0.667, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.733, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.8, 1, 0, 0) (400001 pts)
+
+
+working_dir/9/output_files/28/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/28/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0.8, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0.733, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.8, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.867, 1, 0, 0) (400001 pts)
+
+
+working_dir/9/output_files/29/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/29/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0.867, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0.8, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.867, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.933, 1, 0, 0) (400001 pts)
+
+
+working_dir/9/output_files/3/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/3/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.188, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.125, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.188, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.25, 0, 0) (400001 pts)
+
+
+working_dir/9/output_files/30/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/30/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0.933, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0.867, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.933, 1, 0, 0) (400001 pts)
+        delta H to (0, 1, 1, 0, 0) (400001 pts)
+
+
+working_dir/9/output_files/31/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/31/md/main.xvg: 0.0 - 8000.0; lambda = (0, 1, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0.933, 1, 0, 0) (400001 pts)
+        delta H to (0, 1, 1, 0, 0) (400001 pts)
+
+
+working_dir/9/output_files/4/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/4/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.25, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.188, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.25, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.313, 0, 0) (400001 pts)
+
+
+working_dir/9/output_files/5/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/5/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.313, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.25, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.313, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.375, 0, 0) (400001 pts)
+
+
+working_dir/9/output_files/6/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/6/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.375, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.313, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.375, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.438, 0, 0) (400001 pts)
+
+
+working_dir/9/output_files/7/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/7/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.438, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.375, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.438, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.5, 0, 0) (400001 pts)
+
+
+working_dir/9/output_files/8/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/8/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.5, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.438, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.5, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.563, 0, 0) (400001 pts)
+
+
+working_dir/9/output_files/9/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+working_dir/9/output_files/9/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.563, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.5, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.563, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.625, 0, 0) (400001 pts)
+
+
+
+Writing histogram to working_dir/9/output_files/barhist.xvg
+
+Temperature: 300 K
+
+Detailed results in kT (see help for explanation):
+
+ lam_A  lam_B      DG   +/-     s_A   +/-     s_B   +/-   stdev   +/- 
+     0      1    1.20  0.01    0.20  0.00    0.21  0.00    0.65  0.00
+     1      2    4.46  0.01    0.56  0.01    0.61  0.01    1.09  0.00
+     2      3    7.10  0.02    1.79  0.02    2.12  0.04    2.19  0.01
+     3      4    5.45  0.07    4.40  0.03    3.39  0.06    3.66  0.03
+     4      5    2.39  0.01    3.17  0.02    2.06  0.01    2.55  0.01
+     5      6    0.91  0.01    1.92  0.02    1.35  0.01    1.90  0.01
+     6      7    0.15  0.00    1.47  0.02    1.08  0.01    1.65  0.01
+     7      8   -0.34  0.01    1.19  0.01    0.89  0.01    1.46  0.01
+     8      9   -0.66  0.01    1.01  0.00    0.76  0.00    1.34  0.00
+     9     10   -0.80  0.02    0.84  0.02    0.65  0.01    1.22  0.01
+    10     11   -0.84  0.03    0.76  0.02    0.59  0.01    1.17  0.00
+    11     12   -0.77  0.02    0.71  0.01    0.56  0.01    1.12  0.00
+    12     13   -0.69  0.03    0.70  0.01    0.56  0.01    1.12  0.00
+    13     14   -0.56  0.04    0.67  0.01    0.54  0.01    1.11  0.01
+    14     15   -0.42  0.06    0.69  0.01    0.56  0.01    1.13  0.00
+    15     16   -0.35  0.10    0.76  0.03    0.63  0.03    1.17  0.02
+    16     17  -10.36  0.18    0.02  0.07    0.04  0.07    0.65  0.03
+    17     18  -10.26  0.06    0.01  0.07    0.02  0.07    0.55  0.03
+    18     19  -11.21  0.00    0.77  0.00    0.77  0.00    0.91  0.00
+    19     20  -12.02  0.11    0.04  0.11    0.04  0.11    0.61  0.03
+    20     21  -12.16  0.10    0.28  0.11    0.27  0.11    0.66  0.07
+    21     22  -12.80  0.01    0.19  0.00    0.19  0.00    0.61  0.00
+    22     23  -13.20  0.01    0.21  0.00    0.21  0.00    0.65  0.00
+    23     24  -13.38  0.03    0.17  0.03    0.17  0.04    0.68  0.02
+    24     25  -13.73  0.15   -0.02  0.19   -0.03  0.19    0.82  0.03
+    25     26  -13.53  0.17   -0.17  0.17   -0.16  0.16    0.81  0.03
+    26     27  -14.15  0.01    0.98  0.01    0.99  0.01    1.14  0.01
+    27     28  -14.85  0.01   -0.52  0.01   -0.51  0.01    0.83  0.01
+    28     29  -14.58  0.01    0.24  0.02    0.25  0.02    0.72  0.01
+    29     30  -15.62  0.05    1.01  0.05    1.03  0.03    1.21  0.01
+    30     31  -16.86  0.20   -0.05  0.15   -0.06  0.15    0.88  0.03
+
+WARNING: Some of these results violate the Second Law of Thermodynamics: 
+         This is can be the result of severe undersampling, or (more likely)
+         there is something wrong with the simulations.
+
+
+Final results in kJ/mol:
+
+point      0 -      1,   DG  2.99 +/-  0.01
+point      1 -      2,   DG 11.12 +/-  0.02
+point      2 -      3,   DG 17.72 +/-  0.04
+point      3 -      4,   DG 13.60 +/-  0.18
+point      4 -      5,   DG  5.97 +/-  0.03
+point      5 -      6,   DG  2.27 +/-  0.03
+point      6 -      7,   DG  0.38 +/-  0.01
+
+GROMACS reminds you: "FORTRAN was the language of choice for the same reason that three-legged races are popular." (Ken Thompson)
+
+point      7 -      8,   DG -0.84 +/-  0.02
+point      8 -      9,   DG -1.65 +/-  0.02
+point      9 -     10,   DG -2.01 +/-  0.04
+point     10 -     11,   DG -2.10 +/-  0.07
+point     11 -     12,   DG -1.93 +/-  0.05
+point     12 -     13,   DG -1.73 +/-  0.07
+point     13 -     14,   DG -1.39 +/-  0.09
+point     14 -     15,   DG -1.06 +/-  0.16
+point     15 -     16,   DG -0.87 +/-  0.24
+point     16 -     17,   DG -25.84 +/-  0.44
+point     17 -     18,   DG -25.59 +/-  0.16
+point     18 -     19,   DG -27.95 +/-  0.01
+point     19 -     20,   DG -29.98 +/-  0.26
+point     20 -     21,   DG -30.33 +/-  0.25
+point     21 -     22,   DG -31.93 +/-  0.02
+point     22 -     23,   DG -32.93 +/-  0.01
+point     23 -     24,   DG -33.38 +/-  0.08
+point     24 -     25,   DG -34.25 +/-  0.39
+point     25 -     26,   DG -33.74 +/-  0.43
+point     26 -     27,   DG -35.29 +/-  0.02
+point     27 -     28,   DG -37.04 +/-  0.03
+point     28 -     29,   DG -36.37 +/-  0.03
+point     29 -     30,   DG -38.96 +/-  0.13
+point     30 -     31,   DG -42.04 +/-  0.51
+
+total      0 -     31,   DG -455.16 +/-  0.82
+

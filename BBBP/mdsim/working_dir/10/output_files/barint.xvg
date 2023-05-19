@@ -1,0 +1,49 @@
+# This file was created Wed May 17 18:33:49 2023
+# Created by:
+#                :-) GROMACS - gmx bar, 2020-EasyBuild-4.7.1 (-:
+# 
+# Executable:   /scrtp/avon/eb/software/GROMACS/2020-foss-2019b/bin/gmx
+# Data prefix:  /scrtp/avon/eb/software/GROMACS/2020-foss-2019b
+# Working dir:  /gpfs/home/rawsys/matgms/SOAP_GAS_TMS/BBBP/mdsim
+# Command line:
+#   gmx bar -f working_dir/10/output_files/0/md/main.xvg working_dir/10/output_files/1/md/main.xvg working_dir/10/output_files/10/md/main.xvg working_dir/10/output_files/11/md/main.xvg working_dir/10/output_files/12/md/main.xvg working_dir/10/output_files/13/md/main.xvg working_dir/10/output_files/14/md/main.xvg working_dir/10/output_files/15/md/main.xvg working_dir/10/output_files/16/md/main.xvg working_dir/10/output_files/17/md/main.xvg working_dir/10/output_files/18/md/main.xvg working_dir/10/output_files/19/md/main.xvg working_dir/10/output_files/2/md/main.xvg working_dir/10/output_files/20/md/main.xvg working_dir/10/output_files/21/md/main.xvg working_dir/10/output_files/22/md/main.xvg working_dir/10/output_files/23/md/main.xvg working_dir/10/output_files/24/md/main.xvg working_dir/10/output_files/25/md/main.xvg working_dir/10/output_files/26/md/main.xvg working_dir/10/output_files/27/md/main.xvg working_dir/10/output_files/28/md/main.xvg working_dir/10/output_files/29/md/main.xvg working_dir/10/output_files/3/md/main.xvg working_dir/10/output_files/30/md/main.xvg working_dir/10/output_files/31/md/main.xvg working_dir/10/output_files/4/md/main.xvg working_dir/10/output_files/5/md/main.xvg working_dir/10/output_files/6/md/main.xvg working_dir/10/output_files/7/md/main.xvg working_dir/10/output_files/8/md/main.xvg working_dir/10/output_files/9/md/main.xvg -o working_dir/10/output_files/bar.xvg -oi working_dir/10/output_files/barint.xvg -oh working_dir/10/output_files/barhist.xvg
+# gmx bar is part of G R O M A C S:
+#
+# GROningen Mixture of Alchemy and Childrens' Stories
+#
+@    title "Free energy integral"
+@    xaxis  label "\xl\f{}"
+@    yaxis  label "\xD\f{}G (kT)"
+@TYPE xy
+     0  0.00
+     1  0.69
+     2  2.75
+     3  5.93
+     4  8.75
+     5 10.15
+     6 10.61
+     7 10.59
+     8 10.27
+     9  9.75
+    10  9.13
+    11  8.45
+    12  7.75
+    13  7.04
+    14  6.34
+    15  5.64
+    16  4.97
+    17  8.18
+    18 10.67
+    19 12.55
+    20 13.83
+    21 14.53
+    22 14.70
+    23 14.28
+    24 13.26
+    25 11.57
+    26  9.17
+    27  6.08
+    28  2.18
+    29 -2.53
+    30 -7.98
+    31 -14.40

@@ -1,0 +1,48 @@
+# This file was created Wed May 17 18:28:44 2023
+# Created by:
+#                :-) GROMACS - gmx bar, 2020-EasyBuild-4.7.1 (-:
+# 
+# Executable:   /scrtp/avon/eb/software/GROMACS/2020-foss-2019b/bin/gmx
+# Data prefix:  /scrtp/avon/eb/software/GROMACS/2020-foss-2019b
+# Working dir:  /gpfs/home/rawsys/matgms/SOAP_GAS_TMS/BBBP/mdsim
+# Command line:
+#   gmx bar -f working_dir/3/output_files/0/md/main.xvg working_dir/3/output_files/1/md/main.xvg working_dir/3/output_files/10/md/main.xvg working_dir/3/output_files/11/md/main.xvg working_dir/3/output_files/12/md/main.xvg working_dir/3/output_files/13/md/main.xvg working_dir/3/output_files/14/md/main.xvg working_dir/3/output_files/15/md/main.xvg working_dir/3/output_files/16/md/main.xvg working_dir/3/output_files/17/md/main.xvg working_dir/3/output_files/18/md/main.xvg working_dir/3/output_files/19/md/main.xvg working_dir/3/output_files/2/md/main.xvg working_dir/3/output_files/20/md/main.xvg working_dir/3/output_files/21/md/main.xvg working_dir/3/output_files/22/md/main.xvg working_dir/3/output_files/23/md/main.xvg working_dir/3/output_files/24/md/main.xvg working_dir/3/output_files/25/md/main.xvg working_dir/3/output_files/26/md/main.xvg working_dir/3/output_files/27/md/main.xvg working_dir/3/output_files/28/md/main.xvg working_dir/3/output_files/29/md/main.xvg working_dir/3/output_files/3/md/main.xvg working_dir/3/output_files/30/md/main.xvg working_dir/3/output_files/31/md/main.xvg working_dir/3/output_files/4/md/main.xvg working_dir/3/output_files/5/md/main.xvg working_dir/3/output_files/6/md/main.xvg working_dir/3/output_files/7/md/main.xvg working_dir/3/output_files/8/md/main.xvg working_dir/3/output_files/9/md/main.xvg -o working_dir/3/output_files/bar.xvg -oi working_dir/3/output_files/barint.xvg -oh working_dir/3/output_files/barhist.xvg
+# gmx bar is part of G R O M A C S:
+#
+# God Rules Over Mankind, Animals, Cosmos and Such
+#
+@    title "Free energy differences"
+@    xaxis  label "\xl\f{}"
+@    yaxis  label "\xD\f{}G (kT)"
+@TYPE xydy
+ 0.500  1.04  0.01
+ 1.500  3.67  0.01
+ 2.500  5.74  0.02
+ 3.500  4.31  0.02
+ 4.500  1.62  0.01
+ 5.500  0.49  0.01
+ 6.500  0.04  0.01
+ 7.500 -0.00  0.02
+ 8.500  0.06  0.00
+ 9.500  0.11  0.00
+10.500  0.36  0.00
+11.500  0.31  0.01
+12.500  0.10  0.00
+13.500 -0.07  0.01
+14.500 -0.23  0.01
+15.500 -0.37  0.01
+16.500  8.81  0.01
+17.500  8.25  0.01
+18.500  8.00  0.00
+19.500  7.50  0.01
+20.500  6.92  0.01
+21.500  6.78  0.01
+22.500  6.46  0.00
+23.500  5.93  0.00
+24.500  5.56  0.01
+25.500  5.10  0.01
+26.500  4.55  0.01
+27.500  4.12  0.01
+28.500  3.61  0.02
+29.500  3.00  0.01
+30.500  2.49  0.03
