@@ -1,0 +1,529 @@
+                :-) GROMACS - gmx bar, 2020-EasyBuild-4.7.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar      Christian Blau   Viacheslav Bolnykh     Kevin Boyd    
+ Aldert van Buuren   Rudi van Drunen     Anton Feenstra       Alan Gray     
+  Gerrit Groenhof     Anca Hamuraru    Vincent Hindriksen  M. Eric Irrgang  
+  Aleksei Iupinov   Christoph Junghans     Joe Jordan     Dimitrios Karkoulis
+    Peter Kasson        Jiri Kraus      Carsten Kutzner      Per Larsson    
+  Justin A. Lemkul    Viveca Lindahl    Magnus Lundborg     Erik Marklund   
+    Pascal Merz     Pieter Meulenhoff    Teemu Murtola       Szilard Pall   
+    Sander Pronk      Roland Schulz      Michael Shirts    Alexey Shvetsov  
+   Alfons Sijbers     Peter Tieleman      Jon Vincent      Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf      Artem Zhmurov   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2019, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx bar, version 2020-EasyBuild-4.7.1
+Executable:   /scrtp/avon/eb/software/GROMACS/2020-foss-2019b/bin/gmx
+Data prefix:  /scrtp/avon/eb/software/GROMACS/2020-foss-2019b
+Working dir:  /gpfs/home/rawsys/matgms/SOAP_GAS_TMS/BBBP/mdsim
+Command line:
+  gmx bar -f test_steven_mols/DCLBPH/output_files/0/md/main.xvg test_steven_mols/DCLBPH/output_files/1/md/main.xvg test_steven_mols/DCLBPH/output_files/10/md/main.xvg test_steven_mols/DCLBPH/output_files/11/md/main.xvg test_steven_mols/DCLBPH/output_files/12/md/main.xvg test_steven_mols/DCLBPH/output_files/13/md/main.xvg test_steven_mols/DCLBPH/output_files/14/md/main.xvg test_steven_mols/DCLBPH/output_files/15/md/main.xvg test_steven_mols/DCLBPH/output_files/16/md/main.xvg test_steven_mols/DCLBPH/output_files/17/md/main.xvg test_steven_mols/DCLBPH/output_files/18/md/main.xvg test_steven_mols/DCLBPH/output_files/19/md/main.xvg test_steven_mols/DCLBPH/output_files/2/md/main.xvg test_steven_mols/DCLBPH/output_files/20/md/main.xvg test_steven_mols/DCLBPH/output_files/21/md/main.xvg test_steven_mols/DCLBPH/output_files/22/md/main.xvg test_steven_mols/DCLBPH/output_files/23/md/main.xvg test_steven_mols/DCLBPH/output_files/24/md/main.xvg test_steven_mols/DCLBPH/output_files/25/md/main.xvg test_steven_mols/DCLBPH/output_files/26/md/main.xvg test_steven_mols/DCLBPH/output_files/27/md/main.xvg test_steven_mols/DCLBPH/output_files/28/md/main.xvg test_steven_mols/DCLBPH/output_files/29/md/main.xvg test_steven_mols/DCLBPH/output_files/3/md/main.xvg test_steven_mols/DCLBPH/output_files/30/md/main.xvg test_steven_mols/DCLBPH/output_files/31/md/main.xvg test_steven_mols/DCLBPH/output_files/4/md/main.xvg test_steven_mols/DCLBPH/output_files/5/md/main.xvg test_steven_mols/DCLBPH/output_files/6/md/main.xvg test_steven_mols/DCLBPH/output_files/7/md/main.xvg test_steven_mols/DCLBPH/output_files/8/md/main.xvg test_steven_mols/DCLBPH/output_files/9/md/main.xvg -o test_steven_mols/DCLBPH/output_files/bar.xvg -oi test_steven_mols/DCLBPH/output_files/barint.xvg -oh test_steven_mols/DCLBPH/output_files/barhist.xvg
+
+test_steven_mols/DCLBPH/output_files/0/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/0/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.063, 0, 0) (400001 pts)
+
+
+test_steven_mols/DCLBPH/output_files/1/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/1/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.063, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.063, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.125, 0, 0) (400001 pts)
+
+
+test_steven_mols/DCLBPH/output_files/10/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/10/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.625, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.563, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.625, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.688, 0, 0) (400001 pts)
+
+
+test_steven_mols/DCLBPH/output_files/11/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/11/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.688, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.625, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.688, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.75, 0, 0) (400001 pts)
+
+
+test_steven_mols/DCLBPH/output_files/12/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/12/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.75, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.688, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.75, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.813, 0, 0) (400001 pts)
+
+
+test_steven_mols/DCLBPH/output_files/13/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/13/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.813, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.75, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.813, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.875, 0, 0) (400001 pts)
+
+
+test_steven_mols/DCLBPH/output_files/14/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/14/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.875, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.813, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.875, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.938, 0, 0) (400001 pts)
+
+
+test_steven_mols/DCLBPH/output_files/15/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/15/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.938, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.875, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.938, 0, 0) (400001 pts)
+        delta H to (0, 0, 1, 0, 0) (400001 pts)
+
+
+test_steven_mols/DCLBPH/output_files/16/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/16/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.938, 0, 0) (400001 pts)
+        delta H to (0, 0, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.067, 1, 0, 0) (400001 pts)
+
+
+test_steven_mols/DCLBPH/output_files/17/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/17/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0.067, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.067, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.133, 1, 0, 0) (400001 pts)
+
+
+test_steven_mols/DCLBPH/output_files/18/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/18/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0.133, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0.067, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.133, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.2, 1, 0, 0) (400001 pts)
+
+
+test_steven_mols/DCLBPH/output_files/19/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/19/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0.2, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0.133, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.2, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.267, 1, 0, 0) (400001 pts)
+
+
+test_steven_mols/DCLBPH/output_files/2/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/2/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.125, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.063, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.125, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.188, 0, 0) (400001 pts)
+
+
+test_steven_mols/DCLBPH/output_files/20/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/20/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0.267, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0.2, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.267, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.333, 1, 0, 0) (400001 pts)
+
+
+test_steven_mols/DCLBPH/output_files/21/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/21/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0.333, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0.267, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.333, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.4, 1, 0, 0) (400001 pts)
+
+
+test_steven_mols/DCLBPH/output_files/22/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/22/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0.4, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0.333, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.4, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.467, 1, 0, 0) (400001 pts)
+
+
+test_steven_mols/DCLBPH/output_files/23/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/23/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0.467, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0.4, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.467, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.533, 1, 0, 0) (400001 pts)
+
+
+test_steven_mols/DCLBPH/output_files/24/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/24/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0.533, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0.467, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.533, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.6, 1, 0, 0) (400001 pts)
+
+
+test_steven_mols/DCLBPH/output_files/25/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/25/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0.6, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0.533, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.6, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.667, 1, 0, 0) (400001 pts)
+
+
+test_steven_mols/DCLBPH/output_files/26/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/26/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0.667, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0.6, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.667, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.733, 1, 0, 0) (400001 pts)
+
+
+test_steven_mols/DCLBPH/output_files/27/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/27/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0.733, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0.667, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.733, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.8, 1, 0, 0) (400001 pts)
+
+
+test_steven_mols/DCLBPH/output_files/28/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/28/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0.8, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0.733, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.8, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.867, 1, 0, 0) (400001 pts)
+
+
+test_steven_mols/DCLBPH/output_files/29/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/29/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0.867, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0.8, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.867, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.933, 1, 0, 0) (400001 pts)
+
+
+test_steven_mols/DCLBPH/output_files/3/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/3/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.188, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.125, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.188, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.25, 0, 0) (400001 pts)
+
+
+test_steven_mols/DCLBPH/output_files/30/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/30/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0.933, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0.867, 1, 0, 0) (400001 pts)
+        delta H to (0, 0.933, 1, 0, 0) (400001 pts)
+        delta H to (0, 1, 1, 0, 0) (400001 pts)
+
+
+test_steven_mols/DCLBPH/output_files/31/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/31/md/main.xvg: 0.0 - 8000.0; lambda = (0, 1, 1, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0.933, 1, 0, 0) (400001 pts)
+        delta H to (0, 1, 1, 0, 0) (400001 pts)
+
+
+test_steven_mols/DCLBPH/output_files/4/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/4/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.25, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.188, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.25, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.313, 0, 0) (400001 pts)
+
+
+test_steven_mols/DCLBPH/output_files/5/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/5/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.313, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.25, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.313, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.375, 0, 0) (400001 pts)
+
+
+test_steven_mols/DCLBPH/output_files/6/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/6/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.375, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.313, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.375, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.438, 0, 0) (400001 pts)
+
+
+test_steven_mols/DCLBPH/output_files/7/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/7/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.438, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.375, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.438, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.5, 0, 0) (400001 pts)
+
+
+test_steven_mols/DCLBPH/output_files/8/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/8/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.5, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.438, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.5, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.563, 0, 0) (400001 pts)
+
+
+test_steven_mols/DCLBPH/output_files/9/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/DCLBPH/output_files/9/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.563, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.5, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.563, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.625, 0, 0) (400001 pts)
+
+
+
+Writing histogram to test_steven_mols/DCLBPH/output_files/barhist.xvg
+
+Temperature: 300 K
+
+Detailed results in kT (see help for explanation):
+
+ lam_A  lam_B      DG   +/-     s_A   +/-     s_B   +/-   stdev   +/- 
+     0      1    1.59  0.00    0.16  0.00    0.17  0.00    0.58  0.00
+     1      2    4.01  0.01    0.40  0.01    0.43  0.01    0.93  0.01
+     2      3    6.17  0.02    1.20  0.02    1.39  0.03    1.71  0.01
+     3      4    5.47  0.05    3.15  0.02    2.69  0.05    2.97  0.02
+     4      5    3.01  0.01    2.76  0.02    1.87  0.02    2.35  0.02
+     5      6    1.24  0.02    1.96  0.02    1.39  0.01    1.95  0.01
+     6      7   -0.07  0.01    1.41  0.03    0.95  0.01    1.55  0.01
+     7      8   -0.83  0.01    0.86  0.02    0.61  0.01    1.20  0.01
+     8      9   -1.27  0.01    0.64  0.01    0.47  0.01    1.04  0.01
+     9     10   -1.52  0.01    0.49  0.01    0.38  0.01    0.92  0.00
+    10     11   -1.74  0.00    0.41  0.00    0.32  0.00    0.84  0.00
+    11     12   -1.84  0.00    0.35  0.00    0.28  0.00    0.77  0.00
+    12     13   -1.98  0.00    0.31  0.00    0.25  0.00    0.74  0.00
+    13     14   -2.02  0.00    0.27  0.00    0.22  0.00    0.70  0.00
+    14     15   -2.12  0.00    0.26  0.00    0.21  0.00    0.68  0.00
+    15     16   -2.14  0.00    0.23  0.00    0.19  0.00    0.64  0.00
+    16     17   -0.97  0.00    0.04  0.00    0.04  0.00    0.27  0.00
+    17     18   -1.03  0.00    0.03  0.00    0.03  0.00    0.25  0.00
+    18     19   -1.11  0.00    0.03  0.00    0.03  0.00    0.25  0.00
+    19     20   -1.17  0.00    0.03  0.00    0.03  0.00    0.25  0.00
+    20     21   -1.21  0.00    0.03  0.00    0.03  0.00    0.24  0.00
+    21     22   -1.29  0.00    0.03  0.00    0.03  0.00    0.25  0.00
+    22     23   -1.35  0.00    0.03  0.00    0.03  0.00    0.25  0.00
+    23     24   -1.39  0.00    0.03  0.00    0.03  0.00    0.25  0.00
+    24     25   -1.47  0.00    0.03  0.00    0.03  0.00    0.25  0.00
+    25     26   -1.54  0.00    0.03  0.00    0.03  0.00    0.25  0.00
+    26     27   -1.58  0.00    0.03  0.00    0.03  0.00    0.25  0.00
+    27     28   -1.67  0.00    0.04  0.00    0.04  0.00    0.26  0.00
+    28     29   -1.74  0.00    0.03  0.00    0.04  0.00    0.27  0.00
+
+GROMACS reminds you: "As an adolescent I aspired to lasting fame, I craved factual certainty, and I thirsted for a meaningful vision of human life -- so I became a scientist. This is like becoming an archbishop so you can meet girls." (Matt Cartmill)
+
+    29     30   -1.79  0.00    0.04  0.00    0.04  0.00    0.27  0.00
+    30     31   -1.90  0.00    0.04  0.00    0.04  0.00    0.28  0.00
+
+
+Final results in kJ/mol:
+
+point      0 -      1,   DG  3.98 +/-  0.01
+point      1 -      2,   DG 10.00 +/-  0.02
+point      2 -      3,   DG 15.39 +/-  0.04
+point      3 -      4,   DG 13.64 +/-  0.13
+point      4 -      5,   DG  7.50 +/-  0.03
+point      5 -      6,   DG  3.09 +/-  0.05
+point      6 -      7,   DG -0.18 +/-  0.02
+point      7 -      8,   DG -2.06 +/-  0.02
+point      8 -      9,   DG -3.16 +/-  0.02
+point      9 -     10,   DG -3.79 +/-  0.01
+point     10 -     11,   DG -4.34 +/-  0.01
+point     11 -     12,   DG -4.60 +/-  0.01
+point     12 -     13,   DG -4.93 +/-  0.01
+point     13 -     14,   DG -5.05 +/-  0.00
+point     14 -     15,   DG -5.29 +/-  0.00
+point     15 -     16,   DG -5.33 +/-  0.01
+point     16 -     17,   DG -2.42 +/-  0.00
+point     17 -     18,   DG -2.56 +/-  0.00
+point     18 -     19,   DG -2.76 +/-  0.00
+point     19 -     20,   DG -2.91 +/-  0.00
+point     20 -     21,   DG -3.02 +/-  0.00
+point     21 -     22,   DG -3.22 +/-  0.00
+point     22 -     23,   DG -3.37 +/-  0.00
+point     23 -     24,   DG -3.47 +/-  0.00
+point     24 -     25,   DG -3.68 +/-  0.00
+point     25 -     26,   DG -3.84 +/-  0.00
+point     26 -     27,   DG -3.94 +/-  0.00
+point     27 -     28,   DG -4.17 +/-  0.00
+point     28 -     29,   DG -4.35 +/-  0.00
+point     29 -     30,   DG -4.46 +/-  0.00
+point     30 -     31,   DG -4.73 +/-  0.00
+
+total      0 -     31,   DG -38.04 +/-  0.21
+

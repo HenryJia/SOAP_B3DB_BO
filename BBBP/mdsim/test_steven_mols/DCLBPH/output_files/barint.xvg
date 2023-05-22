@@ -1,0 +1,49 @@
+# This file was created Mon May 22 03:16:31 2023
+# Created by:
+#                :-) GROMACS - gmx bar, 2020-EasyBuild-4.7.1 (-:
+# 
+# Executable:   /scrtp/avon/eb/software/GROMACS/2020-foss-2019b/bin/gmx
+# Data prefix:  /scrtp/avon/eb/software/GROMACS/2020-foss-2019b
+# Working dir:  /gpfs/home/rawsys/matgms/SOAP_GAS_TMS/BBBP/mdsim
+# Command line:
+#   gmx bar -f test_steven_mols/DCLBPH/output_files/0/md/main.xvg test_steven_mols/DCLBPH/output_files/1/md/main.xvg test_steven_mols/DCLBPH/output_files/10/md/main.xvg test_steven_mols/DCLBPH/output_files/11/md/main.xvg test_steven_mols/DCLBPH/output_files/12/md/main.xvg test_steven_mols/DCLBPH/output_files/13/md/main.xvg test_steven_mols/DCLBPH/output_files/14/md/main.xvg test_steven_mols/DCLBPH/output_files/15/md/main.xvg test_steven_mols/DCLBPH/output_files/16/md/main.xvg test_steven_mols/DCLBPH/output_files/17/md/main.xvg test_steven_mols/DCLBPH/output_files/18/md/main.xvg test_steven_mols/DCLBPH/output_files/19/md/main.xvg test_steven_mols/DCLBPH/output_files/2/md/main.xvg test_steven_mols/DCLBPH/output_files/20/md/main.xvg test_steven_mols/DCLBPH/output_files/21/md/main.xvg test_steven_mols/DCLBPH/output_files/22/md/main.xvg test_steven_mols/DCLBPH/output_files/23/md/main.xvg test_steven_mols/DCLBPH/output_files/24/md/main.xvg test_steven_mols/DCLBPH/output_files/25/md/main.xvg test_steven_mols/DCLBPH/output_files/26/md/main.xvg test_steven_mols/DCLBPH/output_files/27/md/main.xvg test_steven_mols/DCLBPH/output_files/28/md/main.xvg test_steven_mols/DCLBPH/output_files/29/md/main.xvg test_steven_mols/DCLBPH/output_files/3/md/main.xvg test_steven_mols/DCLBPH/output_files/30/md/main.xvg test_steven_mols/DCLBPH/output_files/31/md/main.xvg test_steven_mols/DCLBPH/output_files/4/md/main.xvg test_steven_mols/DCLBPH/output_files/5/md/main.xvg test_steven_mols/DCLBPH/output_files/6/md/main.xvg test_steven_mols/DCLBPH/output_files/7/md/main.xvg test_steven_mols/DCLBPH/output_files/8/md/main.xvg test_steven_mols/DCLBPH/output_files/9/md/main.xvg -o test_steven_mols/DCLBPH/output_files/bar.xvg -oi test_steven_mols/DCLBPH/output_files/barint.xvg -oh test_steven_mols/DCLBPH/output_files/barhist.xvg
+# gmx bar is part of G R O M A C S:
+#
+# Gyas ROwers Mature At Cryogenic Speed
+#
+@    title "Free energy integral"
+@    xaxis  label "\xl\f{}"
+@    yaxis  label "\xD\f{}G (kT)"
+@TYPE xy
+     0  0.00
+     1  1.59
+     2  5.60
+     3 11.77
+     4 17.24
+     5 20.25
+     6 21.49
+     7 21.42
+     8 20.59
+     9 19.32
+    10 17.80
+    11 16.07
+    12 14.22
+    13 12.24
+    14 10.22
+    15  8.10
+    16  5.96
+    17  4.99
+    18  3.96
+    19  2.86
+    20  1.69
+    21  0.48
+    22 -0.81
+    23 -2.16
+    24 -3.55
+    25 -5.03
+    26 -6.57
+    27 -8.15
+    28 -9.82
+    29 -11.56
+    30 -13.35
+    31 -15.25
