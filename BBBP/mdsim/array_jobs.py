@@ -85,5 +85,3 @@ while idx <= args.end_idx:
 
     # Final step: Get the results via gmx bar
     cmd = "sbatch --dependency=afterok:" + job_id + " bar.sbatch " + args.working_dir
-
-    print('Finished running SLURM for molecule ', data['Name'].iloc[idx], ' SMILES: ', data['Smiles'].iloc[idx])
