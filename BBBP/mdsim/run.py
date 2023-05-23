@@ -1,6 +1,6 @@
 # Example:
-# python run.py --smiles "CCC(=O)N(C1CCN(CC1)CCc2ccccc2)c3ccccc3" --mol_name 'main' --working_dir 'fentanyl/' --solvate --gen_mdp
-# python run.py --smiles "CCC(=O)N(C1CCN(CC1)CCc2ccccc2)c3ccccc3" --mol_name 'main' --working_dir 'fentanyl/' --em_steep --em_lbfgs --npt --nvt --md --lam 0 --ntomp 8 --ntmpi 1
+# python run.py --mol_name 'main' --working_dir 'fentanyl/' --solvate --gen_mdp
+# python run.py --mol_name 'main' --working_dir 'fentanyl/' --em_steep --em_lbfgs --npt --nvt --md --lam 0 --ntomp 8 --ntmpi 1
 
 import argparse
 import os
@@ -138,13 +138,13 @@ if args.solvate:
 
     # IMPORTANT: The CHARMM force field does not use the standard ion names from the periodic table
     # Instead, it uses SOD for sodium and CLA for chlorine. We need to use these names here
-    # Note: -conc 0.1 is the default value used PX923 and http://www.mdtutorials.com/gmx/umbrella/03_solvation.html
+    # Note: -conc 0.0 means we only add ions to neutralise the system if needed
     # Also note: -neutral is used to neutralize the system by adding the appropriate number of ions
     # This part is also interactive. So it cannot be run in parallel or headless for now
     # Also note that I don't know how to automate this better than echo the solvent group to replace with ions
     cmd = 'echo SOL | gmx genion -s ' + os.path.join(solvate_dir, args.mol_name + '_ions.tpr') + ' -o '
     cmd += os.path.join(solvate_dir, args.mol_name + '_ions.pdb') + ' -p ' + os.path.join(input_dir, args.mol_name + '.top')
-    cmd += ' -pname SOD -nname CLA -neutral -conc 0.1'
+    cmd += ' -pname SOD -nname CLA -neutral -conc 0.0'
     print('Running command: ', cmd)
     p = Popen(cmd, shell=True)
     p.wait()
