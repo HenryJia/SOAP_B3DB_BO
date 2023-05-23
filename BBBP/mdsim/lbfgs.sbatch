@@ -1,9 +1,10 @@
 #!/bin/bash
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=32 # We are wasting a small amount of resources here, Avon has 48 cores per node
+#SBATCH --ntasks-per-node=32
 #SBATCH --cpus-per-task=1
 #SBATCH --time=01:00:00 # We do not need a lot of time for each of this step. Asking for less time on the queue means we get scheduled faster
-#SBATCH --mem-per-cpu=3700 
+#SBATCH --mem-per-cpu=3850 
+#SBATCH --account=su007-gcs
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=h.jia.2@warwick.ac.uk
 

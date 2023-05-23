@@ -1,0 +1,49 @@
+# This file was created Tue May 23 05:04:36 2023
+# Created by:
+#                :-) GROMACS - gmx bar, 2020-EasyBuild-4.7.1 (-:
+# 
+# Executable:   /sulis/easybuild/software/GROMACS/2020-foss-2019b/bin/gmx
+# Data prefix:  /sulis/easybuild/software/GROMACS/2020-foss-2019b
+# Working dir:  /gpfs/home/m/matgms/SOAP_GAS_TMS/BBBP/mdsim
+# Command line:
+#   gmx bar -f test_steven_mols/ACETPH/output_files/0/md/main.xvg test_steven_mols/ACETPH/output_files/1/md/main.xvg test_steven_mols/ACETPH/output_files/10/md/main.xvg test_steven_mols/ACETPH/output_files/11/md/main.xvg test_steven_mols/ACETPH/output_files/12/md/main.xvg test_steven_mols/ACETPH/output_files/13/md/main.xvg test_steven_mols/ACETPH/output_files/14/md/main.xvg test_steven_mols/ACETPH/output_files/15/md/main.xvg test_steven_mols/ACETPH/output_files/16/md/main.xvg test_steven_mols/ACETPH/output_files/17/md/main.xvg test_steven_mols/ACETPH/output_files/18/md/main.xvg test_steven_mols/ACETPH/output_files/19/md/main.xvg test_steven_mols/ACETPH/output_files/2/md/main.xvg test_steven_mols/ACETPH/output_files/20/md/main.xvg test_steven_mols/ACETPH/output_files/21/md/main.xvg test_steven_mols/ACETPH/output_files/22/md/main.xvg test_steven_mols/ACETPH/output_files/23/md/main.xvg test_steven_mols/ACETPH/output_files/24/md/main.xvg test_steven_mols/ACETPH/output_files/25/md/main.xvg test_steven_mols/ACETPH/output_files/26/md/main.xvg test_steven_mols/ACETPH/output_files/27/md/main.xvg test_steven_mols/ACETPH/output_files/28/md/main.xvg test_steven_mols/ACETPH/output_files/29/md/main.xvg test_steven_mols/ACETPH/output_files/3/md/main.xvg test_steven_mols/ACETPH/output_files/30/md/main.xvg test_steven_mols/ACETPH/output_files/31/md/main.xvg test_steven_mols/ACETPH/output_files/4/md/main.xvg test_steven_mols/ACETPH/output_files/5/md/main.xvg test_steven_mols/ACETPH/output_files/6/md/main.xvg test_steven_mols/ACETPH/output_files/7/md/main.xvg test_steven_mols/ACETPH/output_files/8/md/main.xvg test_steven_mols/ACETPH/output_files/9/md/main.xvg -o test_steven_mols/ACETPH/output_files/bar.xvg -oi test_steven_mols/ACETPH/output_files/barint.xvg -oh test_steven_mols/ACETPH/output_files/barhist.xvg
+# gmx bar is part of G R O M A C S:
+#
+# Grunge ROck MAChoS
+#
+@    title "Free energy integral"
+@    xaxis  label "\xl\f{}"
+@    yaxis  label "\xD\f{}G (kT)"
+@TYPE xy
+     0  0.00
+     1  0.58
+     2  2.09
+     3  4.41
+     4  6.71
+     5  8.12
+     6  8.76
+     7  8.97
+     8  8.89
+     9  8.60
+    10  8.18
+    11  7.64
+    12  7.02
+    13  6.33
+    14  5.60
+    15  4.82
+    16  4.02
+    17  3.99
+    18  3.89
+    19  3.72
+    20  3.47
+    21  3.14
+    22  2.71
+    23  2.17
+    24  1.54
+    25  0.77
+    26 -0.13
+    27 -1.14
+    28 -2.32
+    29 -3.64
+    30 -5.09
+    31 -6.72
