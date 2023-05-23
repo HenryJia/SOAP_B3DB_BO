@@ -14,10 +14,10 @@ module load GCC/8.3.0 OpenMPI/3.1.4
 module load GROMACS/2020
 
 mkdir -p logs
-mkdir -p logs/$1
 
 for wd in "$@"
 do
+    mkdir -p logs/$wd
     for lam in {0..31}
     do
         # Note we need to specify --exact or Slurm will think we are asking for 32 tasks even though we explicitly specify --ntasks=1
