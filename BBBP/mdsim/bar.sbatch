@@ -17,3 +17,4 @@ for wd in "$@"
 do
     srun --ntasks=1 --exact gmx bar -f $(ls -v "$wd/output_files/*/md/main.xvg") -o "$wd/output_files/bar.xvg" -oi "$wd/output_files/barint.xvg" -oh "$wd/output_files/barhist.xvg" &> "$wd/output_files/bar.log"
 done
+wait
