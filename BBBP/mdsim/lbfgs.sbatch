@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=32
+#SBATCH --ntasks-per-node=128
 #SBATCH --cpus-per-task=1
 #SBATCH --time=01:00:00 # We do not need a lot of time for each of this step. Asking for less time on the queue means we get scheduled faster
 #SBATCH --mem-per-cpu=3850 
