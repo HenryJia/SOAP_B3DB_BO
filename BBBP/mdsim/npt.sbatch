@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=32
-#SBATCH --cpus-per-task=4
+#SBATCH --ntasks-per-node=128
+#SBATCH --cpus-per-task=1
 #SBATCH --time=12:00:00
 #SBATCH --mem-per-cpu=3850 
 #SBATCH --account=su007-gcs
@@ -16,11 +16,14 @@ module load GROMACS/2020
 mkdir -p logs
 mkdir -p logs/$1
 
-for lam in {0..31}
+for wd in "$@"
 do
-    # Note we need to specify --exact or Slurm will think we are asking for 32 tasks even though we explicitly specify --ntasks=1
-    # This took me too bloody long to figure out
-    # Slurm is a twat sometimes
-    srun --ntasks=1 --exact pipenv run python run.py --mol_name 'main' --working_dir "$1" --npt --lam $lam --ntomp 1 --ntmpi 4 &> logs/$1/npt_$lam.log &
+    for lam in {0..31}
+    do
+        # Note we need to specify --exact or Slurm will think we are asking for 32 tasks even though we explicitly specify --ntasks=1
+        # This took me too bloody long to figure out
+        # Slurm is a twat sometimes
+        srun --ntasks=1 --exact pipenv run python run.py --mol_name 'main' --working_dir "$wd" --npt --lam $lam --ntomp 1 --ntmpi 1 &> logs/$1/npt_$lam.log &
+    done
 done
 wait

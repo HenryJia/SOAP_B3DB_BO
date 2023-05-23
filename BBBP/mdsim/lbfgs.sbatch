@@ -16,11 +16,14 @@ module load GROMACS/2020
 mkdir -p logs
 mkdir -p logs/$1
 
-for lam in {0..31}
+for wd in "$@"
 do
-    # Note we need to specify --exact or Slurm will think we are asking for 32 tasks even though we explicitly specify --ntasks=1
-    # This took me too bloody long to figure out
-    # Slurm is a twat sometimes
-    srun --ntasks=1 --exact pipenv run python run.py --mol_name 'main' --working_dir "$1" --em_lbfgs --lam $lam --ntomp 1 --ntmpi 1 &> logs/$1/em_lbfgs_$lam.log &
+    for lam in {0..31}
+    do
+        # Note we need to specify --exact or Slurm will think we are asking for 32 tasks even though we explicitly specify --ntasks=1
+        # This took me too bloody long to figure out
+        # Slurm is a twat sometimes
+        srun --ntasks=1 --exact pipenv run python run.py --mol_name 'main' --working_dir "$wd" --em_lbfgs --lam $lam --ntomp 1 --ntmpi 1 &> logs/$1/em_lbfgs_$lam.log &
+    done
 done
 wait
