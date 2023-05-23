@@ -31,7 +31,7 @@ Executable:   /sulis/easybuild/software/GROMACS/2020-foss-2019b/bin/gmx
 Data prefix:  /sulis/easybuild/software/GROMACS/2020-foss-2019b
 Working dir:  /gpfs/home/m/matgms/SOAP_GAS_TMS/BBBP/mdsim
 Command line:
-  gmx bar -f test_steven_mols/ACETPH/output_files/0/md/main.xvg test_steven_mols/ACETPH/output_files/1/md/main.xvg test_steven_mols/ACETPH/output_files/10/md/main.xvg test_steven_mols/ACETPH/output_files/11/md/main.xvg test_steven_mols/ACETPH/output_files/12/md/main.xvg test_steven_mols/ACETPH/output_files/13/md/main.xvg test_steven_mols/ACETPH/output_files/14/md/main.xvg test_steven_mols/ACETPH/output_files/15/md/main.xvg test_steven_mols/ACETPH/output_files/16/md/main.xvg test_steven_mols/ACETPH/output_files/17/md/main.xvg test_steven_mols/ACETPH/output_files/18/md/main.xvg test_steven_mols/ACETPH/output_files/19/md/main.xvg test_steven_mols/ACETPH/output_files/2/md/main.xvg test_steven_mols/ACETPH/output_files/20/md/main.xvg test_steven_mols/ACETPH/output_files/21/md/main.xvg test_steven_mols/ACETPH/output_files/22/md/main.xvg test_steven_mols/ACETPH/output_files/23/md/main.xvg test_steven_mols/ACETPH/output_files/24/md/main.xvg test_steven_mols/ACETPH/output_files/25/md/main.xvg test_steven_mols/ACETPH/output_files/26/md/main.xvg test_steven_mols/ACETPH/output_files/27/md/main.xvg test_steven_mols/ACETPH/output_files/28/md/main.xvg test_steven_mols/ACETPH/output_files/29/md/main.xvg test_steven_mols/ACETPH/output_files/3/md/main.xvg test_steven_mols/ACETPH/output_files/30/md/main.xvg test_steven_mols/ACETPH/output_files/31/md/main.xvg test_steven_mols/ACETPH/output_files/4/md/main.xvg test_steven_mols/ACETPH/output_files/5/md/main.xvg test_steven_mols/ACETPH/output_files/6/md/main.xvg test_steven_mols/ACETPH/output_files/7/md/main.xvg test_steven_mols/ACETPH/output_files/8/md/main.xvg test_steven_mols/ACETPH/output_files/9/md/main.xvg -o test_steven_mols/ACETPH/output_files/bar.xvg -oi test_steven_mols/ACETPH/output_files/barint.xvg -oh test_steven_mols/ACETPH/output_files/barhist.xvg
+  gmx bar -f test_steven_mols/ACETPH/output_files/0/md/main.xvg test_steven_mols/ACETPH/output_files/1/md/main.xvg test_steven_mols/ACETPH/output_files/2/md/main.xvg test_steven_mols/ACETPH/output_files/3/md/main.xvg test_steven_mols/ACETPH/output_files/4/md/main.xvg test_steven_mols/ACETPH/output_files/5/md/main.xvg test_steven_mols/ACETPH/output_files/6/md/main.xvg test_steven_mols/ACETPH/output_files/7/md/main.xvg test_steven_mols/ACETPH/output_files/8/md/main.xvg test_steven_mols/ACETPH/output_files/9/md/main.xvg test_steven_mols/ACETPH/output_files/10/md/main.xvg test_steven_mols/ACETPH/output_files/11/md/main.xvg test_steven_mols/ACETPH/output_files/12/md/main.xvg test_steven_mols/ACETPH/output_files/13/md/main.xvg test_steven_mols/ACETPH/output_files/14/md/main.xvg test_steven_mols/ACETPH/output_files/15/md/main.xvg test_steven_mols/ACETPH/output_files/16/md/main.xvg test_steven_mols/ACETPH/output_files/17/md/main.xvg test_steven_mols/ACETPH/output_files/18/md/main.xvg test_steven_mols/ACETPH/output_files/19/md/main.xvg test_steven_mols/ACETPH/output_files/20/md/main.xvg test_steven_mols/ACETPH/output_files/21/md/main.xvg test_steven_mols/ACETPH/output_files/22/md/main.xvg test_steven_mols/ACETPH/output_files/23/md/main.xvg test_steven_mols/ACETPH/output_files/24/md/main.xvg test_steven_mols/ACETPH/output_files/25/md/main.xvg test_steven_mols/ACETPH/output_files/26/md/main.xvg test_steven_mols/ACETPH/output_files/27/md/main.xvg test_steven_mols/ACETPH/output_files/28/md/main.xvg test_steven_mols/ACETPH/output_files/29/md/main.xvg test_steven_mols/ACETPH/output_files/30/md/main.xvg test_steven_mols/ACETPH/output_files/31/md/main.xvg -o test_steven_mols/ACETPH/output_files/bar.xvg -oi test_steven_mols/ACETPH/output_files/barint.xvg -oh test_steven_mols/ACETPH/output_files/barhist.xvg
 
 test_steven_mols/ACETPH/output_files/0/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
 test_steven_mols/ACETPH/output_files/0/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0, 0, 0)
@@ -56,6 +56,110 @@ test_steven_mols/ACETPH/output_files/1/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0
         delta H to (0, 0, 0, 0, 0) (400001 pts)
         delta H to (0, 0, 0.063, 0, 0) (400001 pts)
         delta H to (0, 0, 0.125, 0, 0) (400001 pts)
+
+
+test_steven_mols/ACETPH/output_files/2/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/ACETPH/output_files/2/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.125, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.063, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.125, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.188, 0, 0) (400001 pts)
+
+
+test_steven_mols/ACETPH/output_files/3/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/ACETPH/output_files/3/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.188, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.125, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.188, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.25, 0, 0) (400001 pts)
+
+
+test_steven_mols/ACETPH/output_files/4/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/ACETPH/output_files/4/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.25, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.188, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.25, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.313, 0, 0) (400001 pts)
+
+
+test_steven_mols/ACETPH/output_files/5/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/ACETPH/output_files/5/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.313, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.25, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.313, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.375, 0, 0) (400001 pts)
+
+
+test_steven_mols/ACETPH/output_files/6/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/ACETPH/output_files/6/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.375, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.313, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.375, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.438, 0, 0) (400001 pts)
+
+
+test_steven_mols/ACETPH/output_files/7/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/ACETPH/output_files/7/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.438, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.375, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.438, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.5, 0, 0) (400001 pts)
+
+
+test_steven_mols/ACETPH/output_files/8/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/ACETPH/output_files/8/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.5, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.438, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.5, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.563, 0, 0) (400001 pts)
+
+
+test_steven_mols/ACETPH/output_files/9/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
+test_steven_mols/ACETPH/output_files/9/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.563, 0, 0)
+    dH/dl & foreign lambdas:
+        dH/dl (mass-lambda) (400001 pts)
+        dH/dl (coul-lambda) (400001 pts)
+        dH/dl (vdw-lambda) (400001 pts)
+        dH/dl (bonded-lambda) (400001 pts)
+        dH/dl (restraint-lambda) (400001 pts)
+        delta H to (0, 0, 0.5, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.563, 0, 0) (400001 pts)
+        delta H to (0, 0, 0.625, 0, 0) (400001 pts)
 
 
 test_steven_mols/ACETPH/output_files/10/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
@@ -188,19 +292,6 @@ test_steven_mols/ACETPH/output_files/19/md/main.xvg: 0.0 - 8000.0; lambda = (0, 
         delta H to (0, 0.267, 1, 0, 0) (400001 pts)
 
 
-test_steven_mols/ACETPH/output_files/2/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
-test_steven_mols/ACETPH/output_files/2/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.125, 0, 0)
-    dH/dl & foreign lambdas:
-        dH/dl (mass-lambda) (400001 pts)
-        dH/dl (coul-lambda) (400001 pts)
-        dH/dl (vdw-lambda) (400001 pts)
-        dH/dl (bonded-lambda) (400001 pts)
-        dH/dl (restraint-lambda) (400001 pts)
-        delta H to (0, 0, 0.063, 0, 0) (400001 pts)
-        delta H to (0, 0, 0.125, 0, 0) (400001 pts)
-        delta H to (0, 0, 0.188, 0, 0) (400001 pts)
-
-
 test_steven_mols/ACETPH/output_files/20/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
 test_steven_mols/ACETPH/output_files/20/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0.267, 1, 0, 0)
     dH/dl & foreign lambdas:
@@ -313,6 +404,12 @@ test_steven_mols/ACETPH/output_files/28/md/main.xvg: 0.0 - 8000.0; lambda = (0, 
         dH/dl (vdw-lambda) (400001 pts)
         dH/dl (bonded-lambda) (400001 pts)
         dH/dl (restraint-lambda) (400001 pts)
+
+Back Off! I just backed up test_steven_mols/ACETPH/output_files/barhist.xvg to test_steven_mols/ACETPH/output_files/#barhist.xvg.1#
+
+Back Off! I just backed up test_steven_mols/ACETPH/output_files/bar.xvg to test_steven_mols/ACETPH/output_files/#bar.xvg.1#
+
+Back Off! I just backed up test_steven_mols/ACETPH/output_files/barint.xvg to test_steven_mols/ACETPH/output_files/#barint.xvg.1#
         delta H to (0, 0.733, 1, 0, 0) (400001 pts)
         delta H to (0, 0.8, 1, 0, 0) (400001 pts)
         delta H to (0, 0.867, 1, 0, 0) (400001 pts)
@@ -329,19 +426,6 @@ test_steven_mols/ACETPH/output_files/29/md/main.xvg: 0.0 - 8000.0; lambda = (0, 
         delta H to (0, 0.8, 1, 0, 0) (400001 pts)
         delta H to (0, 0.867, 1, 0, 0) (400001 pts)
         delta H to (0, 0.933, 1, 0, 0) (400001 pts)
-
-
-test_steven_mols/ACETPH/output_files/3/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
-test_steven_mols/ACETPH/output_files/3/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.188, 0, 0)
-    dH/dl & foreign lambdas:
-        dH/dl (mass-lambda) (400001 pts)
-        dH/dl (coul-lambda) (400001 pts)
-        dH/dl (vdw-lambda) (400001 pts)
-        dH/dl (bonded-lambda) (400001 pts)
-        dH/dl (restraint-lambda) (400001 pts)
-        delta H to (0, 0, 0.125, 0, 0) (400001 pts)
-        delta H to (0, 0, 0.188, 0, 0) (400001 pts)
-        delta H to (0, 0, 0.25, 0, 0) (400001 pts)
 
 
 test_steven_mols/ACETPH/output_files/30/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
@@ -367,84 +451,6 @@ test_steven_mols/ACETPH/output_files/31/md/main.xvg: 0.0 - 8000.0; lambda = (0, 
         dH/dl (restraint-lambda) (400001 pts)
         delta H to (0, 0.933, 1, 0, 0) (400001 pts)
         delta H to (0, 1, 1, 0, 0) (400001 pts)
-
-
-test_steven_mols/ACETPH/output_files/4/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
-test_steven_mols/ACETPH/output_files/4/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.25, 0, 0)
-    dH/dl & foreign lambdas:
-        dH/dl (mass-lambda) (400001 pts)
-        dH/dl (coul-lambda) (400001 pts)
-        dH/dl (vdw-lambda) (400001 pts)
-        dH/dl (bonded-lambda) (400001 pts)
-        dH/dl (restraint-lambda) (400001 pts)
-        delta H to (0, 0, 0.188, 0, 0) (400001 pts)
-        delta H to (0, 0, 0.25, 0, 0) (400001 pts)
-        delta H to (0, 0, 0.313, 0, 0) (400001 pts)
-
-
-test_steven_mols/ACETPH/output_files/5/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
-test_steven_mols/ACETPH/output_files/5/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.313, 0, 0)
-    dH/dl & foreign lambdas:
-        dH/dl (mass-lambda) (400001 pts)
-        dH/dl (coul-lambda) (400001 pts)
-        dH/dl (vdw-lambda) (400001 pts)
-        dH/dl (bonded-lambda) (400001 pts)
-        dH/dl (restraint-lambda) (400001 pts)
-        delta H to (0, 0, 0.25, 0, 0) (400001 pts)
-        delta H to (0, 0, 0.313, 0, 0) (400001 pts)
-        delta H to (0, 0, 0.375, 0, 0) (400001 pts)
-
-
-test_steven_mols/ACETPH/output_files/6/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
-test_steven_mols/ACETPH/output_files/6/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.375, 0, 0)
-    dH/dl & foreign lambdas:
-        dH/dl (mass-lambda) (400001 pts)
-        dH/dl (coul-lambda) (400001 pts)
-        dH/dl (vdw-lambda) (400001 pts)
-        dH/dl (bonded-lambda) (400001 pts)
-        dH/dl (restraint-lambda) (400001 pts)
-        delta H to (0, 0, 0.313, 0, 0) (400001 pts)
-        delta H to (0, 0, 0.375, 0, 0) (400001 pts)
-        delta H to (0, 0, 0.438, 0, 0) (400001 pts)
-
-
-test_steven_mols/ACETPH/output_files/7/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
-test_steven_mols/ACETPH/output_files/7/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.438, 0, 0)
-    dH/dl & foreign lambdas:
-        dH/dl (mass-lambda) (400001 pts)
-        dH/dl (coul-lambda) (400001 pts)
-        dH/dl (vdw-lambda) (400001 pts)
-        dH/dl (bonded-lambda) (400001 pts)
-        dH/dl (restraint-lambda) (400001 pts)
-        delta H to (0, 0, 0.375, 0, 0) (400001 pts)
-        delta H to (0, 0, 0.438, 0, 0) (400001 pts)
-        delta H to (0, 0, 0.5, 0, 0) (400001 pts)
-
-
-test_steven_mols/ACETPH/output_files/8/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
-test_steven_mols/ACETPH/output_files/8/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.5, 0, 0)
-    dH/dl & foreign lambdas:
-        dH/dl (mass-lambda) (400001 pts)
-        dH/dl (coul-lambda) (400001 pts)
-        dH/dl (vdw-lambda) (400001 pts)
-        dH/dl (bonded-lambda) (400001 pts)
-        dH/dl (restraint-lambda) (400001 pts)
-        delta H to (0, 0, 0.438, 0, 0) (400001 pts)
-        delta H to (0, 0, 0.5, 0, 0) (400001 pts)
-        delta H to (0, 0, 0.563, 0, 0) (400001 pts)
-
-
-test_steven_mols/ACETPH/output_files/9/md/main.xvg: Ignoring set 'pV (kJ/mol)'.
-test_steven_mols/ACETPH/output_files/9/md/main.xvg: 0.0 - 8000.0; lambda = (0, 0, 0.563, 0, 0)
-    dH/dl & foreign lambdas:
-        dH/dl (mass-lambda) (400001 pts)
-        dH/dl (coul-lambda) (400001 pts)
-        dH/dl (vdw-lambda) (400001 pts)
-        dH/dl (bonded-lambda) (400001 pts)
-        dH/dl (restraint-lambda) (400001 pts)
-        delta H to (0, 0, 0.5, 0, 0) (400001 pts)
-        delta H to (0, 0, 0.563, 0, 0) (400001 pts)
-        delta H to (0, 0, 0.625, 0, 0) (400001 pts)
 
 
 
@@ -485,7 +491,7 @@ Detailed results in kT (see help for explanation):
     27     28   -1.17  0.00    0.07  0.00    0.08  0.00    0.38  0.00
     28     29   -1.32  0.00    0.07  0.00    0.08  0.00    0.39  0.00
 
-GROMACS reminds you: "Why is it that programmers always confuse Halloween with Christmas? Because 31 OCT = 25 DEC." (Anonymous)
+GROMACS reminds you: "There's no way you can rely on an experiment" (Gerrit Groenhof)
 
     29     30   -1.45  0.00    0.08  0.00    0.08  0.00    0.39  0.00
     30     31   -1.63  0.00    0.08  0.00    0.08  0.00    0.40  0.00
