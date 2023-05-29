@@ -25,6 +25,7 @@ parser.add_argument('--working_dir', type=str, help='Working directory')
 
 parser.add_argument('--lam', type=int, help='Lambda value')
 
+parser.add_argument('--nt', type=int, help='Number of threads to start')
 parser.add_argument('--ntomp', type=int, help='Number of OpenMP threads per MPI rank to start')
 parser.add_argument('--ntmpi', type=int, help='Number of thread-MPI ranks to start')
 
@@ -169,7 +170,14 @@ if args.em_steep:
 
     # Run mdrun
     # Note, we need to set -deffnm to the name of the tpr file without the extension
-    cmd = 'gmx mdrun -v -ntomp ' + str(args.ntomp) + ' -ntmpi ' + str(args.ntmpi) + ' -deffnm ' + os.path.join(em_steep_dir, args.mol_name) + ' -pin on'
+    cmd = 'gmx mdrun -v'
+    if args.nt:
+        cmd += ' -nt ' + str(args.nt)
+    if args.ntomp:
+        cmd += ' -ntomp ' + str(args.ntomp)
+    if args.ntmpi:
+        cmd += ' -ntmpi ' + str(args.ntmpi)
+    cmd += ' -deffnm ' + os.path.join(em_steep_dir, args.mol_name) + ' -pin on'
     run_command(cmd)
 
 if args.em_lbfgs:
@@ -209,7 +217,14 @@ if args.nvt:
 
     # Run mdrun
     # Note, we need to set -deffnm to the name of the tpr file without the extension
-    cmd = 'gmx mdrun -v -ntomp ' + str(args.ntomp) + ' -ntmpi ' + str(args.ntmpi) + ' -deffnm ' + os.path.join(nvt_dir, args.mol_name) + ' -pin on'
+    cmd = 'gmx mdrun -v'
+    if args.nt:
+        cmd += ' -nt ' + str(args.nt)
+    if args.ntomp:
+        cmd += ' -ntomp ' + str(args.ntomp)
+    if args.ntmpi:
+        cmd += ' -ntmpi ' + str(args.ntmpi)
+    cmd += ' -deffnm ' + os.path.join(nvt_dir, args.mol_name) + ' -pin on'
     run_command(cmd)
 
 if args.npt:
@@ -229,7 +244,14 @@ if args.npt:
 
     # Run mdrun
     # Note, we need to set -deffnm to the name of the tpr file without the extension
-    cmd = 'gmx mdrun -v -ntomp ' + str(args.ntomp) + ' -ntmpi ' + str(args.ntmpi) + ' -deffnm ' + os.path.join(npt_dir, args.mol_name) + ' -pin on'
+    cmd = 'gmx mdrun -v'
+    if args.nt:
+        cmd += ' -nt ' + str(args.nt)
+    if args.ntomp:
+        cmd += ' -ntomp ' + str(args.ntomp)
+    if args.ntmpi:
+        cmd += ' -ntmpi ' + str(args.ntmpi)
+    cmd += ' -deffnm ' + os.path.join(npt_dir, args.mol_name) + ' -pin on'
     run_command(cmd)
 
 if args.md:
@@ -249,5 +271,12 @@ if args.md:
 
     # Run mdrun
     # Note, we need to set -deffnm to the name of the tpr file without the extension
-    cmd = 'gmx mdrun -v -ntomp ' + str(args.ntomp) + ' -ntmpi ' + str(args.ntmpi) + ' -deffnm ' + os.path.join(md_dir, args.mol_name) + ' -pin on'
+    cmd = 'gmx mdrun -v'
+    if args.nt:
+        cmd += ' -nt ' + str(args.nt)
+    if args.ntomp:
+        cmd += ' -ntomp ' + str(args.ntomp)
+    if args.ntmpi:
+        cmd += ' -ntmpi ' + str(args.ntmpi)
+    cmd += ' -deffnm ' + os.path.join(md_dir, args.mol_name) + ' -pin on'
     run_command(cmd)
