@@ -26,7 +26,7 @@ def run_command(cmd):
 parser = argparse.ArgumentParser(description='Array job via SLURM')
 parser.add_argument('--input_csv', metavar='input', type=str, help='Path to input .csv file')
 parser.add_argument('--start_idx', metavar='start', type=int, help='Index of first molecule to fetch')
-parser.add_argument('--end_idx', metavar='end', type=int, help='Index of last molecule to fetch (inclusive)')
+parser.add_argument('--end_idx', metavar='end', type=int, help='Index of last molecule to fetch (exclusive)')
 parser.add_argument('--mols_per_job', metavar='mols', type=int, help='Number of molecules per job')
 parser.add_argument('--working_dir', metavar='working', type=str, help='Path to working directory')
 
@@ -46,8 +46,8 @@ for idx in range(args.start_idx, args.end_idx + 1):
 
 # Now we start setting up the SLURM jobs
 idx = args.start_idx
-while idx <= args.end_idx:
-    remaining = args.end_idx - idx + 1
+while idx < args.end_idx:
+    remaining = args.end_idx - idx
     batch_size = min(remaining, args.mols_per_job)
 
     working_dir = ''
@@ -85,3 +85,5 @@ while idx <= args.end_idx:
 
     # Final step: Get the results via gmx bar
     cmd = "sbatch --dependency=afterok:" + job_id + " bar.sbatch " + args.working_dir
+    output = run_command(cmd)[:-1]
+    job_id = output.split(' ')[-1][:-1]

@@ -25,7 +25,7 @@ parser = argparse.ArgumentParser(description='Fetch CGenFF parameters for molecu
 parser.add_argument('--input_csv', metavar='input', type=str, help='Path to input .csv file')
 parser.add_argument('--output_dir', metavar='output', type=str, help='Path to output directory')
 parser.add_argument('--start_idx', metavar='start', type=int, help='Index of first molecule to fetch')
-parser.add_argument('--end_idx', metavar='end', type=int, help='Index of last molecule to fetch (inclusive)')
+parser.add_argument('--end_idx', metavar='end', type=int, help='Index of last molecule to fetch (exclusive)')
 
 args = parser.parse_args()
 
@@ -36,7 +36,7 @@ data = pd.read_csv(args.input_csv)
 if not os.path.exists(args.output_dir):
     os.makedirs(args.output_dir)
  
-for idx in range(args.start_idx, args.end_idx + 1):
+for idx in range(args.start_idx, args.end_idx):
     print('Fetching ', data['Name'].iloc[idx], ' SMILES: ', data['Smiles'].iloc[idx])
     print('Generating Mol2 file...')
     output_dir = os.path.join(args.output_dir, str(data['Name'].iloc[idx]), 'input_files')
