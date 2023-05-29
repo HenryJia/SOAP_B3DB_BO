@@ -18,10 +18,9 @@
 
 [ system ]
 ; Name
-mol in water
+mol
 
 [ molecules ]
 ; Compound		  #mols
 MAIN			1
 
-SOL              1373
