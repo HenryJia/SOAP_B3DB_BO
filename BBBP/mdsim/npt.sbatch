@@ -23,7 +23,7 @@ do
         # Note we need to specify --exact or Slurm will think we are asking for 32 tasks even though we explicitly specify --ntasks=1
         # This took me too bloody long to figure out
         # Slurm is a twat sometimes
-        srun --ntasks=1 --exact pipenv run python run.py --mol_name 'main' --working_dir "$wd" --npt --lam $lam --ntomp 1 --ntmpi 1 &> logs/$wd/npt_$lam.log &
+        srun --ntasks=1 --exact pipenv run python run.py --mol_name 'main' --working_dir "$wd" --npt --lam $lam --ntomp 0 --ntmpi 0 &> logs/$wd/npt_$lam.log &
     done
 done
 wait
