@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=4
-#SBATCH --cpus-per-task=32
+#SBATCH --ntasks-per-node=2
+#SBATCH --cpus-per-task=64
 #SBATCH --time=00:30:00 # The gmx bar command is pretty fast
 #SBATCH --mem-per-cpu=3850 
 #SBATCH --account=su007-gcs

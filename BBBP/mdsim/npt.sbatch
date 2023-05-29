@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=128
-#SBATCH --cpus-per-task=1
+#SBATCH --ntasks-per-node=64
+#SBATCH --cpus-per-task=2
 #SBATCH --time=12:00:00
 #SBATCH --mem-per-cpu=3850 
 #SBATCH --account=su007-gcs
@@ -23,7 +23,7 @@ do
         # Note we need to specify --exact or Slurm will think we are asking for 32 tasks even though we explicitly specify --ntasks=1
         # This took me too bloody long to figure out
         # Slurm is a twat sometimes
-        srun --ntasks=1 --exact pipenv run python run.py --mol_name 'main' --working_dir "$wd" --npt --lam $lam --ntomp 0 --ntmpi 0 &> logs/$wd/npt_$lam.log &
+        srun --ntasks=1 --exact pipenv run python run.py --mol_name 'main' --working_dir "$wd" --npt --lam $lam --nt 2 &> logs/$wd/npt_$lam.log &
     done
 done
 wait
