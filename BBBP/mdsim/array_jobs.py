@@ -35,7 +35,7 @@ args = parser.parse_args()
 # Read in data
 data = pd.read_csv(args.input_csv)
 
-for idx in range(args.start_idx, args.end_idx + 1):
+for idx in range(args.start_idx, args.end_idx):
     working_dir = os.path.join(args.working_dir, str(data['Name'].iloc[idx]))
     # First, run gmx solvate to solvate the molecule and add ions
     # Yes, I know it's janky and bad practice to call a python script from a python script
