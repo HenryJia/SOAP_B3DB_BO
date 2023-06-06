@@ -84,6 +84,6 @@ while idx < args.end_idx:
     job_id = output.split(' ')[-1][:-1]
 
     # Final step: Get the results via gmx bar
-    cmd = "sbatch --dependency=afterok:" + job_id + " bar.sbatch " + args.working_dir
+    cmd = "sbatch --dependency=afterok:" + job_id + " bar.sbatch " + working_dir
     output = run_command(cmd)[:-1]
     job_id = output.split(' ')[-1][:-1]
