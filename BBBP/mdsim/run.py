@@ -117,7 +117,7 @@ if args.solvate:
     # I'm not sure what value to use for -d, so I'm just going to use 1.2 for now.
     # This is the same value used in the GROMACS tutorial for free energy of solvation for ethanol
     cmd = 'gmx editconf -f ' + os.path.join(input_dir, args.mol_name + '_ini.pdb') + ' -o '
-    cmd += os.path.join(solvate_dir, args.mol_name + '_box.pdb') + ' -bt cubic -d 1.2'
+    cmd += os.path.join(solvate_dir, args.mol_name + '_box.pdb') + ' -bt cubic -box 4 4 4'
     print('Running command: ', cmd)
     p = Popen(cmd, shell=True)
     p.wait()
