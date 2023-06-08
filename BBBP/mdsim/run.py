@@ -10,9 +10,7 @@ from distutils.dir_util import copy_tree
 
 
 def run_command(cmd):
-    print('Running command: ', cmd)
-    p = Popen(cmd, shell=True)
-    p.wait()
+    run_command(cmd)
 
 
 parser = argparse.ArgumentParser()
@@ -122,24 +120,18 @@ if args.solvate:
     # This is the same value used in the GROMACS tutorial for free energy of solvation for ethanol
     cmd = 'gmx editconf -f ' + os.path.join(input_dir, args.mol_name + '_ini.pdb') + ' -o '
     cmd += os.path.join(solvate_dir, args.mol_name + '_box.pdb') + ' -bt cubic -box 4 4 4'
-    print('Running command: ', cmd)
-    p = Popen(cmd, shell=True)
-    p.wait()
+    run_command(cmd)
 
     # Run solvate
     # NOTE: GROMACS will overwrite the topology file with the new one. But it will back it up
     cmd = 'gmx solvate -cp ' + os.path.join(solvate_dir, args.mol_name + '_box.pdb') + ' -cs -o '
     cmd += os.path.join(solvate_dir, args.mol_name + '_solvate.pdb') + ' -p ' + os.path.join(input_dir, args.mol_name + '.top')
-    print('Running command: ', cmd)
-    p = Popen(cmd, shell=True)
-    p.wait()
+    run_command(cmd)
 
     # Run grompp to setup genion and to generate the tpr file
     cmd = 'gmx grompp -f ./mdp/ions.mdp -c ' + os.path.join(solvate_dir, args.mol_name + '_solvate.pdb') + ' -p '
     cmd += os.path.join(input_dir, args.mol_name + '.top') + ' -o ' + os.path.join(solvate_dir, args.mol_name + '_ions.tpr')
-    print('Running command: ', cmd)
-    p = Popen(cmd, shell=True)
-    p.wait()
+    run_command(cmd)
 
     # IMPORTANT: The CHARMM force field does not use the standard ion names from the periodic table
     # Instead, it uses SOD for sodium and CLA for chlorine. We need to use these names here
@@ -150,9 +142,7 @@ if args.solvate:
     cmd = 'echo SOL | gmx genion -s ' + os.path.join(solvate_dir, args.mol_name + '_ions.tpr') + ' -o '
     cmd += os.path.join(solvate_dir, args.mol_name + '_ions.pdb') + ' -p ' + os.path.join(input_dir, args.mol_name + '.top')
     cmd += ' -pname SOD -nname CLA -neutral -conc 0.0'
-    print('Running command: ', cmd)
-    p = Popen(cmd, shell=True)
-    p.wait()
+    run_command(cmd)
 
 if args.em_steep:
     # Create directories for the lambda values
