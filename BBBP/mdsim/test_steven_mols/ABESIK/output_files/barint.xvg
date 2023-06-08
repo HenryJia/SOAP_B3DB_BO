@@ -1,4 +1,4 @@
-# This file was created Sun May 28 02:56:44 2023
+# This file was created Thu Jun  8 14:25:02 2023
 # Created by:
 #                :-) GROMACS - gmx bar, 2020-EasyBuild-4.7.1 (-:
 # 
@@ -6,7 +6,7 @@
 # Data prefix:  /sulis/easybuild/software/GROMACS/2020-foss-2019b
 # Working dir:  /gpfs/home/m/matgms/SOAP_GAS_TMS/BBBP/mdsim
 # Command line:
-#   gmx bar -f test_steven_mols/ABESIK/output_files/0/md/main.xvg test_steven_mols/ABESIK/output_files/1/md/main.xvg test_steven_mols/ABESIK/output_files/2/md/main.xvg test_steven_mols/ABESIK/output_files/3/md/main.xvg test_steven_mols/ABESIK/output_files/4/md/main.xvg test_steven_mols/ABESIK/output_files/5/md/main.xvg test_steven_mols/ABESIK/output_files/6/md/main.xvg test_steven_mols/ABESIK/output_files/7/md/main.xvg test_steven_mols/ABESIK/output_files/8/md/main.xvg test_steven_mols/ABESIK/output_files/9/md/main.xvg test_steven_mols/ABESIK/output_files/10/md/main.xvg test_steven_mols/ABESIK/output_files/11/md/main.xvg test_steven_mols/ABESIK/output_files/12/md/main.xvg test_steven_mols/ABESIK/output_files/13/md/main.xvg test_steven_mols/ABESIK/output_files/14/md/main.xvg test_steven_mols/ABESIK/output_files/15/md/main.xvg test_steven_mols/ABESIK/output_files/16/md/main.xvg test_steven_mols/ABESIK/output_files/17/md/main.xvg test_steven_mols/ABESIK/output_files/18/md/main.xvg test_steven_mols/ABESIK/output_files/19/md/main.xvg test_steven_mols/ABESIK/output_files/20/md/main.xvg test_steven_mols/ABESIK/output_files/21/md/main.xvg test_steven_mols/ABESIK/output_files/22/md/main.xvg test_steven_mols/ABESIK/output_files/23/md/main.xvg test_steven_mols/ABESIK/output_files/24/md/main.xvg test_steven_mols/ABESIK/output_files/25/md/main.xvg test_steven_mols/ABESIK/output_files/26/md/main.xvg test_steven_mols/ABESIK/output_files/27/md/main.xvg test_steven_mols/ABESIK/output_files/28/md/main.xvg test_steven_mols/ABESIK/output_files/29/md/main.xvg test_steven_mols/ABESIK/output_files/30/md/main.xvg test_steven_mols/ABESIK/output_files/31/md/main.xvg -o test_steven_mols/ABESIK/output_files/bar.xvg -oi test_steven_mols/ABESIK/output_files/barint.xvg -oh test_steven_mols/ABESIK/output_files/barhist.xvg
+#   gmx bar -b 500 -temp 300 -f test_steven_mols/ABESIK/output_files/0/md/main.xvg test_steven_mols/ABESIK/output_files/1/md/main.xvg test_steven_mols/ABESIK/output_files/2/md/main.xvg test_steven_mols/ABESIK/output_files/3/md/main.xvg test_steven_mols/ABESIK/output_files/4/md/main.xvg test_steven_mols/ABESIK/output_files/5/md/main.xvg test_steven_mols/ABESIK/output_files/6/md/main.xvg test_steven_mols/ABESIK/output_files/7/md/main.xvg test_steven_mols/ABESIK/output_files/8/md/main.xvg test_steven_mols/ABESIK/output_files/9/md/main.xvg test_steven_mols/ABESIK/output_files/10/md/main.xvg test_steven_mols/ABESIK/output_files/11/md/main.xvg test_steven_mols/ABESIK/output_files/12/md/main.xvg test_steven_mols/ABESIK/output_files/13/md/main.xvg test_steven_mols/ABESIK/output_files/14/md/main.xvg test_steven_mols/ABESIK/output_files/15/md/main.xvg test_steven_mols/ABESIK/output_files/16/md/main.xvg test_steven_mols/ABESIK/output_files/17/md/main.xvg test_steven_mols/ABESIK/output_files/18/md/main.xvg test_steven_mols/ABESIK/output_files/19/md/main.xvg test_steven_mols/ABESIK/output_files/20/md/main.xvg test_steven_mols/ABESIK/output_files/21/md/main.xvg test_steven_mols/ABESIK/output_files/22/md/main.xvg test_steven_mols/ABESIK/output_files/23/md/main.xvg test_steven_mols/ABESIK/output_files/24/md/main.xvg test_steven_mols/ABESIK/output_files/25/md/main.xvg test_steven_mols/ABESIK/output_files/26/md/main.xvg test_steven_mols/ABESIK/output_files/27/md/main.xvg test_steven_mols/ABESIK/output_files/28/md/main.xvg test_steven_mols/ABESIK/output_files/29/md/main.xvg test_steven_mols/ABESIK/output_files/30/md/main.xvg test_steven_mols/ABESIK/output_files/31/md/main.xvg -o test_steven_mols/ABESIK/output_files/bar.xvg -oi test_steven_mols/ABESIK/output_files/barint.xvg -oh test_steven_mols/ABESIK/output_files/barhist.xvg
 # gmx bar is part of G R O M A C S:
 #
 # Gromacs Runs One Microsecond At Cannonball Speeds
@@ -19,31 +19,31 @@
      1  0.98
      2  3.49
      3  7.37
-     4 10.96
-     5 12.81
-     6 13.46
-     7 13.46
-     8 13.01
-     9 12.28
-    10 11.37
-    11 10.31
-    12  9.17
-    13  7.92
-    14  6.64
-    15  5.28
-    16  3.90
-    17  3.88
-    18  3.82
-    19  3.72
-    20  3.57
-    21  3.37
-    22  3.12
-    23  2.82
-    24  2.47
-    25  2.07
-    26  1.61
-    27  1.10
-    28  0.52
-    29 -0.12
-    30 -0.81
-    31 -1.58
+     4 10.95
+     5 12.85
+     6 13.53
+     7 13.51
+     8 13.08
+     9 12.35
+    10 11.44
+    11 10.38
+    12  9.24
+    13  7.99
+    14  6.70
+    15  5.34
+    16  3.97
+    17  3.95
+    18  3.90
+    19  3.79
+    20  3.64
+    21  3.44
+    22  3.19
+    23  2.89
+    24  2.54
+    25  2.14
+    26  1.68
+    27  1.17
+    28  0.59
+    29 -0.05
+    30 -0.74
+    31 -1.50

@@ -1,4 +1,4 @@
-# This file was created Sun May 28 02:56:44 2023
+# This file was created Thu Jun  8 14:25:02 2023
 # Created by:
 #                :-) GROMACS - gmx bar, 2020-EasyBuild-4.7.1 (-:
 # 
@@ -6,28 +6,28 @@
 # Data prefix:  /sulis/easybuild/software/GROMACS/2020-foss-2019b
 # Working dir:  /gpfs/home/m/matgms/SOAP_GAS_TMS/BBBP/mdsim
 # Command line:
-#   gmx bar -f test_steven_mols/ABESIK/output_files/0/md/main.xvg test_steven_mols/ABESIK/output_files/1/md/main.xvg test_steven_mols/ABESIK/output_files/2/md/main.xvg test_steven_mols/ABESIK/output_files/3/md/main.xvg test_steven_mols/ABESIK/output_files/4/md/main.xvg test_steven_mols/ABESIK/output_files/5/md/main.xvg test_steven_mols/ABESIK/output_files/6/md/main.xvg test_steven_mols/ABESIK/output_files/7/md/main.xvg test_steven_mols/ABESIK/output_files/8/md/main.xvg test_steven_mols/ABESIK/output_files/9/md/main.xvg test_steven_mols/ABESIK/output_files/10/md/main.xvg test_steven_mols/ABESIK/output_files/11/md/main.xvg test_steven_mols/ABESIK/output_files/12/md/main.xvg test_steven_mols/ABESIK/output_files/13/md/main.xvg test_steven_mols/ABESIK/output_files/14/md/main.xvg test_steven_mols/ABESIK/output_files/15/md/main.xvg test_steven_mols/ABESIK/output_files/16/md/main.xvg test_steven_mols/ABESIK/output_files/17/md/main.xvg test_steven_mols/ABESIK/output_files/18/md/main.xvg test_steven_mols/ABESIK/output_files/19/md/main.xvg test_steven_mols/ABESIK/output_files/20/md/main.xvg test_steven_mols/ABESIK/output_files/21/md/main.xvg test_steven_mols/ABESIK/output_files/22/md/main.xvg test_steven_mols/ABESIK/output_files/23/md/main.xvg test_steven_mols/ABESIK/output_files/24/md/main.xvg test_steven_mols/ABESIK/output_files/25/md/main.xvg test_steven_mols/ABESIK/output_files/26/md/main.xvg test_steven_mols/ABESIK/output_files/27/md/main.xvg test_steven_mols/ABESIK/output_files/28/md/main.xvg test_steven_mols/ABESIK/output_files/29/md/main.xvg test_steven_mols/ABESIK/output_files/30/md/main.xvg test_steven_mols/ABESIK/output_files/31/md/main.xvg -o test_steven_mols/ABESIK/output_files/bar.xvg -oi test_steven_mols/ABESIK/output_files/barint.xvg -oh test_steven_mols/ABESIK/output_files/barhist.xvg
+#   gmx bar -b 500 -temp 300 -f test_steven_mols/ABESIK/output_files/0/md/main.xvg test_steven_mols/ABESIK/output_files/1/md/main.xvg test_steven_mols/ABESIK/output_files/2/md/main.xvg test_steven_mols/ABESIK/output_files/3/md/main.xvg test_steven_mols/ABESIK/output_files/4/md/main.xvg test_steven_mols/ABESIK/output_files/5/md/main.xvg test_steven_mols/ABESIK/output_files/6/md/main.xvg test_steven_mols/ABESIK/output_files/7/md/main.xvg test_steven_mols/ABESIK/output_files/8/md/main.xvg test_steven_mols/ABESIK/output_files/9/md/main.xvg test_steven_mols/ABESIK/output_files/10/md/main.xvg test_steven_mols/ABESIK/output_files/11/md/main.xvg test_steven_mols/ABESIK/output_files/12/md/main.xvg test_steven_mols/ABESIK/output_files/13/md/main.xvg test_steven_mols/ABESIK/output_files/14/md/main.xvg test_steven_mols/ABESIK/output_files/15/md/main.xvg test_steven_mols/ABESIK/output_files/16/md/main.xvg test_steven_mols/ABESIK/output_files/17/md/main.xvg test_steven_mols/ABESIK/output_files/18/md/main.xvg test_steven_mols/ABESIK/output_files/19/md/main.xvg test_steven_mols/ABESIK/output_files/20/md/main.xvg test_steven_mols/ABESIK/output_files/21/md/main.xvg test_steven_mols/ABESIK/output_files/22/md/main.xvg test_steven_mols/ABESIK/output_files/23/md/main.xvg test_steven_mols/ABESIK/output_files/24/md/main.xvg test_steven_mols/ABESIK/output_files/25/md/main.xvg test_steven_mols/ABESIK/output_files/26/md/main.xvg test_steven_mols/ABESIK/output_files/27/md/main.xvg test_steven_mols/ABESIK/output_files/28/md/main.xvg test_steven_mols/ABESIK/output_files/29/md/main.xvg test_steven_mols/ABESIK/output_files/30/md/main.xvg test_steven_mols/ABESIK/output_files/31/md/main.xvg -o test_steven_mols/ABESIK/output_files/bar.xvg -oi test_steven_mols/ABESIK/output_files/barint.xvg -oh test_steven_mols/ABESIK/output_files/barhist.xvg
 # gmx bar is part of G R O M A C S:
 #
-# Gallium Rubidium Oxygen Manganese Argon Carbon Silicon
+# Grunge ROck MAChoS
 #
 @    title "Free energy differences"
 @    xaxis  label "\xl\f{}"
 @    yaxis  label "\xD\f{}G (kT)"
 @TYPE xydy
  0.500  0.98  0.00
- 1.500  2.51  0.00
- 2.500  3.88  0.01
- 3.500  3.59  0.03
- 4.500  1.85  0.02
- 5.500  0.66  0.01
- 6.500 -0.01  0.01
- 7.500 -0.44  0.01
+ 1.500  2.51  0.01
+ 2.500  3.87  0.02
+ 3.500  3.59  0.04
+ 4.500  1.90  0.02
+ 5.500  0.67  0.02
+ 6.500 -0.02  0.01
+ 7.500 -0.43  0.01
  8.500 -0.73  0.01
  9.500 -0.91  0.00
 10.500 -1.06  0.00
 11.500 -1.15  0.00
-12.500 -1.24  0.00
+12.500 -1.25  0.00
 13.500 -1.29  0.00
 14.500 -1.36  0.00
 15.500 -1.38  0.00
@@ -45,4 +45,4 @@
 27.500 -0.58  0.00
 28.500 -0.64  0.00
 29.500 -0.69  0.00
-30.500 -0.77  0.00
+30.500 -0.76  0.00

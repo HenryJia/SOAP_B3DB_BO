@@ -1,4 +1,4 @@
-# This file was created Sun May 28 02:56:44 2023
+# This file was created Thu Jun  8 14:25:02 2023
 # Created by:
 #                :-) GROMACS - gmx bar, 2020-EasyBuild-4.7.1 (-:
 # 
@@ -6,10 +6,10 @@
 # Data prefix:  /sulis/easybuild/software/GROMACS/2020-foss-2019b
 # Working dir:  /gpfs/home/m/matgms/SOAP_GAS_TMS/BBBP/mdsim
 # Command line:
-#   gmx bar -f test_steven_mols/ACETPH/output_files/0/md/main.xvg test_steven_mols/ACETPH/output_files/1/md/main.xvg test_steven_mols/ACETPH/output_files/2/md/main.xvg test_steven_mols/ACETPH/output_files/3/md/main.xvg test_steven_mols/ACETPH/output_files/4/md/main.xvg test_steven_mols/ACETPH/output_files/5/md/main.xvg test_steven_mols/ACETPH/output_files/6/md/main.xvg test_steven_mols/ACETPH/output_files/7/md/main.xvg test_steven_mols/ACETPH/output_files/8/md/main.xvg test_steven_mols/ACETPH/output_files/9/md/main.xvg test_steven_mols/ACETPH/output_files/10/md/main.xvg test_steven_mols/ACETPH/output_files/11/md/main.xvg test_steven_mols/ACETPH/output_files/12/md/main.xvg test_steven_mols/ACETPH/output_files/13/md/main.xvg test_steven_mols/ACETPH/output_files/14/md/main.xvg test_steven_mols/ACETPH/output_files/15/md/main.xvg test_steven_mols/ACETPH/output_files/16/md/main.xvg test_steven_mols/ACETPH/output_files/17/md/main.xvg test_steven_mols/ACETPH/output_files/18/md/main.xvg test_steven_mols/ACETPH/output_files/19/md/main.xvg test_steven_mols/ACETPH/output_files/20/md/main.xvg test_steven_mols/ACETPH/output_files/21/md/main.xvg test_steven_mols/ACETPH/output_files/22/md/main.xvg test_steven_mols/ACETPH/output_files/23/md/main.xvg test_steven_mols/ACETPH/output_files/24/md/main.xvg test_steven_mols/ACETPH/output_files/25/md/main.xvg test_steven_mols/ACETPH/output_files/26/md/main.xvg test_steven_mols/ACETPH/output_files/27/md/main.xvg test_steven_mols/ACETPH/output_files/28/md/main.xvg test_steven_mols/ACETPH/output_files/29/md/main.xvg test_steven_mols/ACETPH/output_files/30/md/main.xvg test_steven_mols/ACETPH/output_files/31/md/main.xvg -o test_steven_mols/ACETPH/output_files/bar.xvg -oi test_steven_mols/ACETPH/output_files/barint.xvg -oh test_steven_mols/ACETPH/output_files/barhist.xvg
+#   gmx bar -b 500 -temp 300 -f test_steven_mols/ACETPH/output_files/0/md/main.xvg test_steven_mols/ACETPH/output_files/1/md/main.xvg test_steven_mols/ACETPH/output_files/2/md/main.xvg test_steven_mols/ACETPH/output_files/3/md/main.xvg test_steven_mols/ACETPH/output_files/4/md/main.xvg test_steven_mols/ACETPH/output_files/5/md/main.xvg test_steven_mols/ACETPH/output_files/6/md/main.xvg test_steven_mols/ACETPH/output_files/7/md/main.xvg test_steven_mols/ACETPH/output_files/8/md/main.xvg test_steven_mols/ACETPH/output_files/9/md/main.xvg test_steven_mols/ACETPH/output_files/10/md/main.xvg test_steven_mols/ACETPH/output_files/11/md/main.xvg test_steven_mols/ACETPH/output_files/12/md/main.xvg test_steven_mols/ACETPH/output_files/13/md/main.xvg test_steven_mols/ACETPH/output_files/14/md/main.xvg test_steven_mols/ACETPH/output_files/15/md/main.xvg test_steven_mols/ACETPH/output_files/16/md/main.xvg test_steven_mols/ACETPH/output_files/17/md/main.xvg test_steven_mols/ACETPH/output_files/18/md/main.xvg test_steven_mols/ACETPH/output_files/19/md/main.xvg test_steven_mols/ACETPH/output_files/20/md/main.xvg test_steven_mols/ACETPH/output_files/21/md/main.xvg test_steven_mols/ACETPH/output_files/22/md/main.xvg test_steven_mols/ACETPH/output_files/23/md/main.xvg test_steven_mols/ACETPH/output_files/24/md/main.xvg test_steven_mols/ACETPH/output_files/25/md/main.xvg test_steven_mols/ACETPH/output_files/26/md/main.xvg test_steven_mols/ACETPH/output_files/27/md/main.xvg test_steven_mols/ACETPH/output_files/28/md/main.xvg test_steven_mols/ACETPH/output_files/29/md/main.xvg test_steven_mols/ACETPH/output_files/30/md/main.xvg test_steven_mols/ACETPH/output_files/31/md/main.xvg -o test_steven_mols/ACETPH/output_files/bar.xvg -oi test_steven_mols/ACETPH/output_files/barint.xvg -oh test_steven_mols/ACETPH/output_files/barhist.xvg
 # gmx bar is part of G R O M A C S:
 #
-# Good ROcking Metal Altar for Chronical Sinners
+# GROningen Mixture of Alchemy and Childrens' Stories
 #
 @    title "Free energy integral"
 @    xaxis  label "\xl\f{}"
@@ -19,31 +19,31 @@
      1  0.58
      2  2.07
      3  4.39
-     4  6.64
-     5  8.00
-     6  8.62
-     7  8.83
-     8  8.74
-     9  8.45
-    10  8.03
-    11  7.48
+     4  6.66
+     5  8.03
+     6  8.64
+     7  8.84
+     8  8.75
+     9  8.46
+    10  8.02
+    11  7.47
     12  6.86
     13  6.17
-    14  5.44
-    15  4.66
+    14  5.43
+    15  4.65
     16  3.85
     17  3.82
     18  3.73
     19  3.55
-    20  3.31
+    20  3.30
     21  2.98
     22  2.55
-    23  2.02
+    23  2.01
     24  1.38
     25  0.62
-    26 -0.27
+    26 -0.28
     27 -1.29
     28 -2.46
     29 -3.78
     30 -5.23
-    31 -6.86
+    31 -6.85
