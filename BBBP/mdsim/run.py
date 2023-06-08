@@ -113,6 +113,10 @@ if args.solvate:
     if not os.path.exists(solvate_dir):
         os.makedirs(solvate_dir)
 
+    # Firstly, cgenff_charmm2gmx uses tip3p by default. We want tip4p, so change this via sed
+    cmd = 'sed -i s/tip3p/tip4p/ ' + os.path.join(input_dir, args.mol_name + '.top')
+    run_command(cmd)
+
     # Run editconf
     # I'm not sure what value to use for -d, so I'm just going to use 1.2 for now.
     # This is the same value used in the GROMACS tutorial for free energy of solvation for ethanol
