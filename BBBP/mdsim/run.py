@@ -10,8 +10,9 @@ from distutils.dir_util import copy_tree
 
 
 def run_command(cmd):
-    run_command(cmd)
-
+    print('Running command: ', cmd)
+    p = Popen(cmd, shell=True)
+    p.wait()
 
 parser = argparse.ArgumentParser()
 #parser.add_argument('--csv', type=str, help='CSV file containing the data')
