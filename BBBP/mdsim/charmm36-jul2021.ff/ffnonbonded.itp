@@ -767,8 +767,8 @@ OWSPCE     8    15.999400    0.000     A  0.316557000000  0.6506290  ; Oxygen fo
   HWT4     1     4.032000    0.000     A  0.000000000000  0.0000000  ; Hydrogen for TIP4P water model
   OWT4     8     7.936000    0.000     A  0.648520000000  0.6485200  ; Oxygen for TIP4P water model
 #else
-  HWT4     1     1.008000    0.000     A  0.000000000000  0.0000000  ; Hydrogen for TIP4P water model
-  OWT4     8    16.000000    0.000     A  0.648520000000  0.6485200  ; Oxygen for TIP4P water model
+  HWT4     1     1.0079      0.000     A  0.000000000000  0.0000000  ; Hydrogen for TIP4P water model
+  OWT4     8    15.9994      0.000     A  0.315890000000  0.7749000  ; Oxygen for TIP4P water model
 #endif
   MWT4     0     0.000000    0.000     A  0.000000000000  0.0000000  ; Virtual site of TIP4P water model
 ; TIP4P/Ew water model

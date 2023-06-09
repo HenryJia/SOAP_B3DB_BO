@@ -687,8 +687,8 @@ HWSPCE      1.00800 ; Hydrogen for SPC water model
   OWT5     16.00000 ; Oxygen for TIP5P water model
   HWT5      1.00800 ; Hydrogen for TIP5P water model
   MWT5      0.00000 ; Virtual site for TIP5P water model
-  OWT4     16.00000 ; Oxygen for TIP4P water model
-  HWT4      1.00800 ; Hydrogen for TIP4P water model
+  OWT4     15.9994  ; Oxygen for TIP4P water model
+  HWT4      1.0079  ; Hydrogen for TIP4P water model
   MWT4      0.00000 ; Virtual site of TIP4P water model
 OWT4EW     16.00000 ; Oxygen for TIP4P/Ew water model
 HWT4EW      1.00800 ; Hydrogen for TIP4P/Ew water model
