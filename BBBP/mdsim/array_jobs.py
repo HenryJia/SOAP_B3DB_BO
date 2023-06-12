@@ -63,22 +63,17 @@ while idx < args.end_idx:
     output = run_command(cmd)
     job_id = output.split(' ')[-1][:-1]
 
-    # Step 2: minimisation with l-bfgs
-    cmd = "sbatch --dependency=afterok:" + job_id + " lbfgs.sbatch " + working_dir
-    output = run_command(cmd)
-    job_id = output.split(' ')[-1][:-1]
-
-    # Step 3: NVT equilibration
+    # Step 2: NVT equilibration
     cmd = "sbatch --dependency=afterok:" + job_id + " nvt.sbatch " + working_dir
     output = run_command(cmd)
     job_id = output.split(' ')[-1][:-1]
 
-    # Step 4: NPT equilibration
+    # Step 3: NPT equilibration
     cmd = "sbatch --dependency=afterok:" + job_id + " npt.sbatch " + working_dir
     output = run_command(cmd)
     job_id = output.split(' ')[-1][:-1]
 
-    # Step 5: Production run
+    # Step 4: Production run
     cmd = "sbatch --dependency=afterok:" + job_id + " md.sbatch " + working_dir
     output = run_command(cmd)[:-1]
     job_id = output.split(' ')[-1][:-1]

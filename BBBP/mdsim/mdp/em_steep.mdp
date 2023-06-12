@@ -1,6 +1,6 @@
 ; Run control
 integrator               = steep
-nsteps                   = 200
+nsteps                   = 1000000
 nstxout                  = 2000
 init_step                = 0
 

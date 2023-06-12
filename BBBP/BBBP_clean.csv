@@ -58,7 +58,7 @@ Name,ChemName,Smiles,Class
 57,compound 36,CN(C)CC1=CC=C(CSCCNC2=C([N+](=O)[O-])C(CC3=CC=CC=C3)=CN2)O1,1
 58,19,CNC(=NC#N)NC1=CC=CC(C2=CSC(N=C(N)N)=N2)=C1,0
 59,Y-G 14,CNCCC1=CC=CC=N1,1
-61,sertraline,CN[C@H]1CC[C@@H](C2=CC=C(Cl)C(Cl)=C2)C2=CC=CC=C21.[H+],1
+61,sertraline,CN[C@H]1CC[C@@H](C2=CC=C(Cl)C(Cl)=C2)C2=CC=CC=C21,1
 62,22767,C/N=C(\NC#N)NCCSCC1=CSC(N=C(N)N)=N1,1
 64,vincristine,CC[C@]1(O)C[C@H]2CN(CCC3=C(NC4=CC=CC=C34)[C@@](C(=O)OC)(C3=CC4=C(C=C3OC)N(C=O)[C@H]3[C@@](O)(C(=O)OC)[C@H](OC(C)=O)[C@]5(CC)C=CCN6CC[C@]43[C@@H]65)C2)C1,1
 65,SB-222200,CCC(NC(=O)C1=C(C)C(C2=CC=CC=C2)=NC2=C1C=CC=C2)C1=CC=CC=C1,1
@@ -227,7 +227,7 @@ Name,ChemName,Smiles,Class
 229,Chloroquine,CCN(CC)CCCC(C)NC1=CC=NC2=CC(Cl)=CC=C12,1
 230,Cisapride,COC1=CC(N)=C(Cl)C=C1C(=O)NC1CCN(CCCOC2=CC=C(F)C=C2)CC1OC,1
 231,Cladribine,NC1=NC(Cl)=NC2=C1N=CN2[C@H]1C[C@H](O)[C@@H](CO)O1,1
-232,Clidiniumbromide,C[N+]12CCC(CC1)C(OC(=O)C(O)(C1=CC=CC=C1)C1=CC=CC=C1)C2,0
+232,Clidiniumbromide,C[N+]12CCC(CC1)C(OC(=O)C(O)(C1=CC=CC=C1)C1=CC=CC=C1)C2.[Br-],0
 233,estrone,C[C@]12CC[C@@H]3C4=CC=C(O)C=C4CC[C@H]3[C@@H]1CCC2=O,0
 234,Ethacrynic acid,C=C(CC)C(=O)C1=CC=C(OCC(=O)O)C(Cl)=C1Cl,0
 235,ethinylestradiol,C#C[C@]1(O)CC[C@H]2[C@@H]3CCC4=CC(O)=CC=C4[C@H]3CC[C@@]21C,0
@@ -237,7 +237,7 @@ Name,ChemName,Smiles,Class
 239,fluorouracil,O=C1NC=C(F)C(=O)N1,0
 240,furosemide,NS(=O)(=O)C1=CC(C(=O)O)=C(NCC2=CC=CO2)C=C1Cl,0
 241,ganciclovir,NC1=NC(=O)C2=C(N1)N(COC(CO)CO)C=N2,0
-242,glycopyrrolate,C[N+]1(C)CCC(OC(=O)C(O)(C2=CC=CC=C2)C2CCCC2)C1,0
+242,glycopyrrolate,C[N+]1(C)CCC(OC(=O)C(O)(C2=CC=CC=C2)C2CCCC2)C1.[Br-],0
 243,trifluperidol,O=C(CCCN1CCC(O)(C2=CC=CC(C(F)(F)F)=C2)CC1)C1=CC=C(F)C=C1,1
 244,triflupromazine,CN(C)CCCN1C2=CC=CC=C2SC2=CC=C(C(F)(F)F)C=C21,1
 245,trifluroperazine,CN1CCN(CCCN2C3=CC=CC=C3SC3=CC=C(C(F)(F)F)C=C32)CC1,1
@@ -253,7 +253,7 @@ Name,ChemName,Smiles,Class
 255,Cromoglicicacid,O=C(O)C1=CC(=O)C2=CC(OCC(O)COC3=CC=CC4=C3C(=O)C=C(C(=O)O)O4)=CC=C2O1,0
 256,Cycloserine,NC1CONC1=O,1
 257,Hydroxycarbamide,NC(=O)NO,1
-258,Ipratropiumbromide,CC(C)[N+]1(C)C2CCC1CC(OC(=O)C(CO)C1=CC=CC=C1)C2,0
+258,Ipratropiumbromide,CC(C)[N+]1(C)C2CCC1CC(OC(=O)C(CO)C1=CC=CC=C1)C2.[Br-],0
 259,guanabenz,NC(N)=N/N=C/C1=C(Cl)C=CC=C1Cl,0
 260,guanethidinesulfate,NC(N)=NCCN1CCCCCCC1,0
 261,homatropine,CN1C2CCC1CC(OC(=O)C(O)C1=CC=CC=C1)C2,0
@@ -292,13 +292,13 @@ Name,ChemName,Smiles,Class
 294,Mifepristone,CC#C[C@]1(O)CC[C@H]2[C@@H]3CCC4=CC(=O)CCC4=C3[C@@H](C3=CC=C(N(C)C)C=C3)C[C@@]21C,0
 295,Minocycline,CN(C)C1=C2C[C@H]3C[C@H]4[C@H](N(C)C)C(O)=C(C(N)=O)C(=O)[C@@]4(O)C(O)=C3C(=O)C2=C(O)C=C1,1
 296,Moclobemide,O=C(NCCN1CCOCC1)C1=CC=C(Cl)C=C1,1
-297,Propanthelinebromide,CC(C)[N+](C)(CCOC(=O)C1C2=CC=CC=C2OC2=CC=CC=C21)C(C)C,0
+297,Propanthelinebromide,CC(C)[N+](C)(CCOC(=O)C1C2=CC=CC=C2OC2=CC=CC=C21)C(C)C.[Br-],0
 298,Pyrazinamide,NC(=O)C1=CN=CC=N1,1
-299,Pyridostigminebromide,CN(C)C(=O)OC1=CC=C[N+](C)=C1,1
+299,Pyridostigminebromide,CN(C)C(=O)OC1=CC=C[N+](C)=C1.[Br-],1
 300,Pyrimethamine,CCC1=NC(N)=NC(N)=C1C1=CC=C(Cl)C=C1,1
 301,Quinine,C=C[C@H]1CN2CC[C@@H]1C[C@H]2[C@H](O)C1=CC=NC2=CC=C(OC)C=C12,0
 302,melphalan,NC(CC1=CC=C(N(CCCl)CCCl)C=C1)C(=O)O,0
-303,mepenzolatebromide,C[N+]1(C)CCCC(OC(=O)C(O)(C2=CC=CC=C2)C2=CC=CC=C2)C1,0
+303,mepenzolatebromide,C[N+]1(C)CCCC(OC(=O)C(O)(C2=CC=CC=C2)C2=CC=CC=C2)C1.[Br-],0
 304,mepiramine,COC1=CC=C(CN(CCN(C)C)C2=CC=CC=N2)C=C1,0
 305,mequitazine,C1=CC=C2C(=C1)SC1=CC=CC=C1N2CC1CN2CCC1CC2,0
 306,mestranol,C#C[C@]1(O)CC[C@H]2[C@@H]3CCC4=CC(OC)=CC=C4[C@H]3CC[C@@]21C,0
@@ -346,7 +346,7 @@ Name,ChemName,Smiles,Class
 348,Zalcitabine,NC1=NC(=O)N([C@H]2CC[C@@H](CO)O2)C=C1,1
 349,Zonisamide,NS(=O)(=O)CC1=NOC2=CC=CC=C12,1
 350,AmphotericinB,C[C@@H]1[C@H](O)[C@@H](C)/C=C\C=C/C=C\C=C/C=C\C=C/C=C\[C@H](O[C@@H]2O[C@H](C)[C@@H](O)[C@H](N)[C@@H]2O)C[C@@H]2O[C@](O)(C[C@@H](O)C[C@@H](O)[C@H](O)CC[C@@H](O)C[C@@H](O)CC(=O)O[C@H]1C)C[C@H](O)[C@H]2C(=O)O,0
-351,Calcium-folinate,NC1=NC(=O)C2=C(NCC(CNC3=CC=C(C(=O)N[C@@H](CCC(=O)[O-])C(=O)[O-])C=C3)N2C=O)N1,1
+351,Calcium-folinate,NC1=NC(=O)C2=C(NCC(CNC3=CC=C(C(=O)N[C@@H](CCC(=O)[O-])C(=O)[O-])C=C3)N2C=O)N1.[Ca+2],1
 352,oxytetracycline,CN(C)[C@@H]1C(=O)/C(=C(\N)O)C(=O)[C@@]2(O)C(=O)C3=C(O)C4=C(O)C=CC=C4[C@@](C)(O)[C@H]3[C@H](O)[C@@H]12,0
 353,papaverine,COC1=CC=C(CC2=NC=CC3=CC(OC)=C(OC)C=C23)C=C1OC,0
 354,penicillin G,CC1(C)S[C@@H]2[C@H](NC(=O)CC3=CC=CC=C3)C(=O)N2[C@H]1C(=O)O,0
