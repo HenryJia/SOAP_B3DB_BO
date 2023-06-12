@@ -1,6 +1,6 @@
 # Example:
 # python run.py --mol_name 'main' --working_dir 'fentanyl/' --solvate --gen_mdp
-# python run.py --mol_name 'main' --working_dir 'fentanyl/' --em_steep --em_lbfgs --npt --nvt --md --lam 0 --ntomp 8 --ntmpi 1
+# python run.py --mol_name 'main' --working_dir 'fentanyl/' --em_steep --npt --nvt --md --lam 0 --ntomp 8 --ntmpi 1
 
 import argparse
 import os
@@ -32,7 +32,6 @@ parser.add_argument('--gen_mdp', action='store_true', help='Generate mdp files')
 
 parser.add_argument('--solvate', action='store_true', help='Create the box and the solvation molecules')
 parser.add_argument('--em_steep', action='store_true', help='Run em_steep')
-parser.add_argument('--em_lbfgs', action='store_true', help='Run em_lbfgs')
 parser.add_argument('--nvt', action='store_true', help='Run nvt equilibration')
 parser.add_argument('--npt', action='store_true', help='Run npt equilibration')
 parser.add_argument('--md', action='store_true', help='Run the production MD')
@@ -48,7 +47,6 @@ solvate_dir = os.path.join(output_dir, 'solvate')
 lambda_dir = os.path.join(output_dir, str(args.lam))
 
 em_steep_dir = os.path.join(lambda_dir, 'em_steep')
-em_lbfgs_dir = os.path.join(lambda_dir, 'em_l-bfgs')
 nvt_dir = os.path.join(lambda_dir, 'nvt')
 npt_dir = os.path.join(lambda_dir, 'npt')
 md_dir = os.path.join(lambda_dir, 'md')
@@ -175,27 +173,6 @@ if args.em_steep:
     cmd += ' -deffnm ' + os.path.join(em_steep_dir, args.mol_name) + ' -pin on'
     run_command(cmd)
 
-if args.em_lbfgs:
-    # Prepare to run the energy minimization 2: l-bfgs
-    # First, make the directory for it
-    if not os.path.exists(em_lbfgs_dir):
-        os.makedirs(em_lbfgs_dir)
-
-    # Run grompp
-    # Note: Our input gro file is the output gro file from the previous step
-    cmd = 'gmx grompp -f ' + os.path.join(output_dir, 'mdp', 'EM_l-bfgs', 'em_l-bfgs_' + str(args.lam) +'.mdp')
-    cmd += ' -c ' + os.path.join(em_steep_dir, args.mol_name + '.gro')
-    cmd += ' -p ' + os.path.join(input_dir, args.mol_name + '.top')
-    cmd += ' -o ' + os.path.join(em_lbfgs_dir, args.mol_name + '.tpr')
-    cmd += ' -maxwarn 1' # Everyone seems to use this, even though I'm personally hesistant when it comes ignoring warnings
-    run_command(cmd)
-
-    # Run mdrun
-    # Note, we need to set -deffnm to the name of the tpr file without the extension
-    # Also note, lbfgs cannot be run in parallel, so we need to set -nt to 1
-    cmd = 'gmx mdrun -nt 1 -v -deffnm ' + os.path.join(em_lbfgs_dir, args.mol_name) + ' -pin on'
-    run_command(cmd)
-
 if args.nvt:
     # Prepare to run the NVT equilibration
     # First, make the directory for it
@@ -205,7 +182,7 @@ if args.nvt:
     # Run grompp
     # Note: Our input gro file is the output gro file from the previous step
     cmd = 'gmx grompp -f ' + os.path.join(output_dir, 'mdp', 'NVT', 'nvt_' + str(args.lam) + '.mdp')
-    cmd += ' -c ' + os.path.join(em_lbfgs_dir, args.mol_name + '.gro')
+    cmd += ' -c ' + os.path.join(em_steep_dir, args.mol_name + '.gro')
     cmd += ' -p ' + os.path.join(input_dir, args.mol_name + '.top')
     cmd += ' -o ' + os.path.join(nvt_dir, args.mol_name + '.tpr')
     run_command(cmd)
