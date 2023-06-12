@@ -70,8 +70,6 @@ if args.gen_mdp:
         os.makedirs(os.path.join(output_dir, 'mdp'))
     if not os.path.exists(os.path.join(output_dir, 'mdp', 'EM_steep')):
         os.makedirs(os.path.join(output_dir, 'mdp', 'EM_steep'))
-    if not os.path.exists(os.path.join(output_dir, 'mdp', 'EM_l-bfgs')):
-        os.makedirs(os.path.join(output_dir, 'mdp', 'EM_l-bfgs'))
     if not os.path.exists(os.path.join(output_dir, 'mdp', 'NVT')):
         os.makedirs(os.path.join(output_dir, 'mdp', 'NVT'))
     if not os.path.exists(os.path.join(output_dir, 'mdp', 'NPT')):
@@ -80,7 +78,6 @@ if args.gen_mdp:
         os.makedirs(os.path.join(output_dir, 'mdp', 'MD'))
 
     shutil.copy('./mdp/em_steep.mdp', os.path.join(output_dir, 'mdp', 'EM_steep', 'em_steep.mdp'))
-    shutil.copy('./mdp/em_l-bfgs.mdp', os.path.join(output_dir, 'mdp', 'EM_l-bfgs', 'em_l-bfgs.mdp'))
     shutil.copy('./mdp/nvt.mdp', os.path.join(output_dir, 'mdp', 'NVT', 'nvt.mdp'))
     shutil.copy('./mdp/npt.mdp', os.path.join(output_dir, 'mdp', 'NPT', 'npt.mdp'))
     shutil.copy('./mdp/md.mdp', os.path.join(output_dir, 'mdp', 'MD', 'md.mdp'))
@@ -89,8 +86,6 @@ if args.gen_mdp:
     # Note the perl scripy doesn't like it if we start our directory path with a './'
     fn = output_dir if output_dir[0] != '.' else output_dir[2:]
     cmd = 'perl write_mdp.pl ' + os.path.join(fn, 'mdp', 'EM_steep', 'em_steep.mdp')
-    run_command(cmd)
-    cmd = 'perl write_mdp.pl ' + os.path.join(fn, 'mdp', 'EM_l-bfgs', 'em_l-bfgs.mdp')
     run_command(cmd)
     cmd = 'perl write_mdp.pl ' + os.path.join(fn, 'mdp', 'NVT', 'nvt.mdp')
     run_command(cmd)
