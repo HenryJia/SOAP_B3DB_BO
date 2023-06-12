@@ -125,7 +125,7 @@ if args.solvate:
 
     # Run solvate
     # NOTE: GROMACS will overwrite the topology file with the new one. But it will back it up
-    cmd = 'gmx solvate -cp ' + os.path.join(solvate_dir, args.mol_name + '_box.pdb') + ' -cs -o '
+    cmd = 'gmx solvate -cp ' + os.path.join(solvate_dir, args.mol_name + '_box.pdb') + ' -cs tip4p.gro -o '
     cmd += os.path.join(solvate_dir, args.mol_name + '_solvate.pdb') + ' -p ' + os.path.join(input_dir, args.mol_name + '.top')
     run_command(cmd)
 
