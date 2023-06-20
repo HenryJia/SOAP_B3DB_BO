@@ -30,7 +30,7 @@ parser.add_argument('--ntmpi', type=int, help='Number of thread-MPI ranks to sta
 
 parser.add_argument('--gen_mdp', action='store_true', help='Generate mdp files')
 
-parser.add_argument('--tip4p', action='store_true', help='Use TIP4P water model instead of TIP3P')
+parser.add_argument('--tip4p', action='store_true', help='Use TIP4P/2005 water model instead of TIP3P')
 
 parser.add_argument('--solvate', action='store_true', help='Create the box and the solvation molecules')
 parser.add_argument('--em_steep', action='store_true', help='Run em_steep')

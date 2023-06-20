@@ -30,6 +30,8 @@ parser.add_argument('--end_idx', metavar='end', type=int, help='Index of last mo
 parser.add_argument('--mols_per_job', metavar='mols', type=int, help='Number of molecules per job')
 parser.add_argument('--working_dir', metavar='working', type=str, help='Path to working directory')
 
+parser.add_argument('--tip4p', action='store_true', help='Use TIP4P/2005 water model instead of TIP3P')
+
 args = parser.parse_args()
 
 # Read in data
@@ -42,6 +44,8 @@ for idx in range(args.start_idx, args.end_idx):
     # But I'm lazy and I don't want to deal with cleaning up the solvate code for now
     # It's 3am and I'm tired. The directory structure is complicated and doing my head in
     cmd = "python run.py --mol_name 'main' --working_dir " + working_dir + " --solvate --gen_mdp"
+    if args.tip4p:
+        cmd += " --tip4p"
     run_command(cmd)
 
 # Now we start setting up the SLURM jobs
