@@ -1,0 +1,20 @@
+
+[ bondtypes ]
+;      i        j  func           b0           kb
+
+
+[ angletypes ]
+;      i        j        k  func       theta0       ktheta          ub0          kub
+   CG311    CG301    CLGA3     5   111.200000   811.696000   0.00000000         0.00
+   CG301    CG311    CLGA1     5   111.200000   736.384000   0.00000000         0.00
+
+
+[ dihedraltypes ]
+;      i        j        k        l  func         phi0         kphi  mult
+   CLGA3    CG301    CG311    CLGA1     9     0.000000     0.418400     3
+   CLGA3    CG301    CG311     HGA1     9     0.000000     1.129680     3
+
+
+[ dihedraltypes ]
+; 'improper' dihedrals 
+;      i        j        k        l  func         phi0         kphi

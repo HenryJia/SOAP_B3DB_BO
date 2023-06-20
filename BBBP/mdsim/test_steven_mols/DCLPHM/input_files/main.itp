@@ -1,0 +1,150 @@
+; Created by cgenff_charmm2gmx.py
+
+[ moleculetype ]
+; Name			   nrexcl
+MAIN				 3
+
+[ atoms ]
+;	 nr		  type	resnr residue  atom   cgnr	   charge		mass  typeB    chargeB		massB
+; residue	 1 MAIN rtp MAIN q	qsum
+     1      OG311      1   MAIN      O      1     -0.532     15.999   ;
+     2     CG2R61      1   MAIN     C1      2     -0.045     12.011   ;
+     3     CG2R61      1   MAIN     C2      3     -0.112     12.011   ;
+     4     CG2R61      1   MAIN     C3      4     -0.097     12.011   ;
+     5     CG2R61      1   MAIN     C4      5      0.086     12.011   ;
+     6      CLGR1      1   MAIN    CL1      6     -0.189     35.453   ;
+     7     CG2R61      1   MAIN     C5      7      0.087     12.011   ;
+     8      CLGR1      1   MAIN    CL2      8     -0.189     35.453   ;
+     9     CG2R61      1   MAIN     C6      9      0.056     12.011   ;
+    10       HGP1      1   MAIN     H1     10      0.420      1.008   ;
+    11      HGR61      1   MAIN     H2     11      0.115      1.008   ;
+    12      HGR62      1   MAIN     H3     12      0.150      1.008   ;
+    13      HGR62      1   MAIN     H4     13      0.150      1.008   ;
+    14        LPH      1   MAIN    LP1     14      0.050      0.000   ;
+    15        LPH      1   MAIN    LP2     15      0.050      0.000   ;
+
+[ bonds ]
+;	ai	  aj funct			  c0			c1			  c2			c3
+    1     2	 1 ;       OG311     CG2R61
+    1    10	 1 ;       OG311       HGP1
+    2     3	 1 ;      CG2R61     CG2R61
+    2     9	 1 ;      CG2R61     CG2R61
+    3     4	 1 ;      CG2R61     CG2R61
+    3    11	 1 ;      CG2R61      HGR61
+    4     5	 1 ;      CG2R61     CG2R61
+    4    12	 1 ;      CG2R61      HGR62
+    5     6	 1 ;      CG2R61      CLGR1
+    5     7	 1 ;      CG2R61     CG2R61
+    7     8	 1 ;      CG2R61      CLGR1
+    7     9	 1 ;      CG2R61     CG2R61
+    9    13	 1 ;      CG2R61      HGR62
+
+[ pairs ]
+;	ai	  aj funct			  c0			c1			  c2			c3
+    1     4	 1
+    1    11	 1
+    1     7	 1
+    1    13	 1
+    2     5	 1
+    2    12	 1
+    2     8	 1
+   15     2	 1
+    3    10	 1
+    3     7	 1
+    3    13	 1
+    3     6	 1
+   14     3	 1
+    4     9	 1
+    4     8	 1
+   15     4	 1
+    5    11	 1
+    5    13	 1
+    6    12	 1
+   14    12	 1
+    6     8	 1
+   14     8	 1
+   15     6	 1
+    6     9	 1
+   14     9	 1
+    7    12	 1
+    8    13	 1
+   15    13	 1
+    9    10	 1
+    9    11	 1
+   11    12	 1
+
+[ angles ]
+;	ai	  aj	ak funct			c0			  c1			c2			  c3
+    2     1    10	5 ;     CG2R61      OG311       HGP1
+    1     2     3	5 ;      OG311     CG2R61     CG2R61
+    1     2     9	5 ;      OG311     CG2R61     CG2R61
+    3     2     9	5 ;     CG2R61     CG2R61     CG2R61
+    2     3     4	5 ;     CG2R61     CG2R61     CG2R61
+    2     3    11	5 ;     CG2R61     CG2R61      HGR61
+    4     3    11	5 ;     CG2R61     CG2R61      HGR61
+    3     4     5	5 ;     CG2R61     CG2R61     CG2R61
+    3     4    12	5 ;     CG2R61     CG2R61      HGR62
+    5     4    12	5 ;     CG2R61     CG2R61      HGR62
+    4     5     6	5 ;     CG2R61     CG2R61      CLGR1
+    4     5     7	5 ;     CG2R61     CG2R61     CG2R61
+    6     5     7	5 ;      CLGR1     CG2R61     CG2R61
+    5     7     8	5 ;     CG2R61     CG2R61      CLGR1
+    5     7     9	5 ;     CG2R61     CG2R61     CG2R61
+    8     7     9	5 ;      CLGR1     CG2R61     CG2R61
+    7     9     2	5 ;     CG2R61     CG2R61     CG2R61
+    7     9    13	5 ;     CG2R61     CG2R61      HGR62
+    2     9    13	5 ;     CG2R61     CG2R61      HGR62
+
+[ dihedrals ]
+;	ai	  aj	ak	  al funct			  c0			c1			  c2			c3			  c4			c5
+   10     1     2     3	 9 ;       HGP1      OG311     CG2R61     CG2R61
+   10     1     2     9	 9 ;       HGP1      OG311     CG2R61     CG2R61
+    1     2     3     4	 9 ;      OG311     CG2R61     CG2R61     CG2R61
+    1     2     3    11	 9 ;      OG311     CG2R61     CG2R61      HGR61
+    9     2     3     4	 9 ;     CG2R61     CG2R61     CG2R61     CG2R61
+    9     2     3    11	 9 ;     CG2R61     CG2R61     CG2R61      HGR61
+    1     2     9     7	 9 ;      OG311     CG2R61     CG2R61     CG2R61
+    1     2     9    13	 9 ;      OG311     CG2R61     CG2R61      HGR62
+    3     2     9     7	 9 ;     CG2R61     CG2R61     CG2R61     CG2R61
+    3     2     9    13	 9 ;     CG2R61     CG2R61     CG2R61      HGR62
+    2     3     4     5	 9 ;     CG2R61     CG2R61     CG2R61     CG2R61
+    2     3     4    12	 9 ;     CG2R61     CG2R61     CG2R61      HGR62
+   11     3     4     5	 9 ;      HGR61     CG2R61     CG2R61     CG2R61
+   11     3     4    12	 9 ;      HGR61     CG2R61     CG2R61      HGR62
+    3     4     5     6	 9 ;     CG2R61     CG2R61     CG2R61      CLGR1
+    3     4     5     7	 9 ;     CG2R61     CG2R61     CG2R61     CG2R61
+   12     4     5     6	 9 ;      HGR62     CG2R61     CG2R61      CLGR1
+   12     4     5     7	 9 ;      HGR62     CG2R61     CG2R61     CG2R61
+    4     5     7     8	 9 ;     CG2R61     CG2R61     CG2R61      CLGR1
+    4     5     7     9	 9 ;     CG2R61     CG2R61     CG2R61     CG2R61
+    6     5     7     8	 9 ;      CLGR1     CG2R61     CG2R61      CLGR1
+    6     5     7     9	 9 ;      CLGR1     CG2R61     CG2R61     CG2R61
+    5     7     9     2	 9 ;     CG2R61     CG2R61     CG2R61     CG2R61
+    5     7     9    13	 9 ;     CG2R61     CG2R61     CG2R61      HGR62
+    8     7     9     2	 9 ;      CLGR1     CG2R61     CG2R61     CG2R61
+    8     7     9    13	 9 ;      CLGR1     CG2R61     CG2R61      HGR62
+
+[ virtual_sites2 ]
+; Site   from				funct a
+   14     6     5     2   -0.164
+   15     8     7     2   -0.164
+
+[ exclusions ]
+;	ai	  aj
+    6    14	 1
+    8    15	 1
+   14     5	 1
+   15     7	 1
+   14     4	 1
+   14     7	 1
+   15     5	 1
+   15     9	 1
+   15     2	 1
+   14     3	 1
+   15     4	 1
+   14    12	 1
+   14     8	 1
+   15     6	 1
+   14     9	 1
+   15    13	 1
+
