@@ -30,6 +30,8 @@ parser.add_argument('--ntmpi', type=int, help='Number of thread-MPI ranks to sta
 
 parser.add_argument('--gen_mdp', action='store_true', help='Generate mdp files')
 
+parser.add_argument('--tip4p', action='store_true', help='Use TIP4P water model instead of TIP3P')
+
 parser.add_argument('--solvate', action='store_true', help='Create the box and the solvation molecules')
 parser.add_argument('--em_steep', action='store_true', help='Run em_steep')
 parser.add_argument('--nvt', action='store_true', help='Run nvt equilibration')
@@ -106,8 +108,9 @@ if args.solvate:
         os.makedirs(solvate_dir)
 
     # Firstly, cgenff_charmm2gmx uses tip3p by default. We want tip4p, so change this via sed
-    cmd = 'sed -i s/tip3p/tip4p/ ' + os.path.join(input_dir, args.mol_name + '.top')
-    run_command(cmd)
+    if args.tip4p:
+        cmd = 'sed -i s/tip3p/tip4p/ ' + os.path.join(input_dir, args.mol_name + '.top')
+        run_command(cmd)
 
     # Run editconf
     # I'm not sure what value to use for -d, so I'm just going to use 1.2 for now.
@@ -118,8 +121,12 @@ if args.solvate:
 
     # Run solvate
     # NOTE: GROMACS will overwrite the topology file with the new one. But it will back it up
-    cmd = 'gmx solvate -cp ' + os.path.join(solvate_dir, args.mol_name + '_box.pdb') + ' -cs tip4p.gro -o '
-    cmd += os.path.join(solvate_dir, args.mol_name + '_solvate.pdb') + ' -p ' + os.path.join(input_dir, args.mol_name + '.top')
+    cmd = 'gmx solvate -cp ' + os.path.join(solvate_dir, args.mol_name + '_box.pdb')
+    if args.tip4p:
+        cmd += ' -cs tip4p.gro'
+    else:
+        cmd += ' -cs tip3p.gro'
+    cmd += ' -o ' + os.path.join(solvate_dir, args.mol_name + '_solvate.pdb') + ' -p ' + os.path.join(input_dir, args.mol_name + '.top')
     run_command(cmd)
 
     # Run grompp to setup genion and to generate the tpr file
