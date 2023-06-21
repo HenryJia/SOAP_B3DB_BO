@@ -125,7 +125,7 @@ if args.solvate:
     if args.tip4p:
         cmd += ' -cs tip4p.gro'
     else:
-        cmd += ' -cs tip3p.gro'
+        cmd += ' -cs'
     cmd += ' -o ' + os.path.join(solvate_dir, args.mol_name + '_solvate.pdb') + ' -p ' + os.path.join(input_dir, args.mol_name + '.top')
     run_command(cmd)
 
