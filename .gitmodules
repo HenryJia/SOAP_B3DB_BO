@@ -1,0 +1,3 @@
+[submodule "BBBP/mdsim/B3DB"]
+	path = BBBP/mdsim/B3DB
+	url = git@github.com:theochem/B3DB.git
