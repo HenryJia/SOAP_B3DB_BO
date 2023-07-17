@@ -35,6 +35,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--csv', type=str, help='Path to the csv file')
     parser.add_argument('--xyz', type=str, help='Path to the xyz files')
+
+    parser.add_argument('--moleculenet', help='use moleculenet', default=False, action='store_true')
+    parser.add_argument('--b3db', help='use b3db', default=False, action='store_true')
+
     parser.add_argument('--n_fold', help='number of folds for kfold cross validation', default=5 ,type=int)
     parser.add_argument('--n_repeats', help='maximum number of repeats to run our experiments', default=10 ,type=int)
     parser.add_argument('--smote', help='use smote', default=False, action='store_true')
@@ -82,38 +86,6 @@ if __name__ == '__main__':
     df['SOAP'] = soap_worker(df, [soap_string])
 
     X, y = np.stack(df['SOAP'].to_numpy(), axis=0), df['Class'].to_numpy()
-
-    if args.umap:
-        print("Plotting UMAP...")
-        reducer = umap.UMAP()
-        embed = reducer.fit_transform(X)
-
-        embed = pd.DataFrame(embed, columns=['x', 'y'])
-        embed['Class'] = [['BBBP-', 'BBBP+'][i] for i in y]
-        embed['Name'] = df.Name
-        embed['Mol'] = [m.get_chemical_formula() for m in df.Mol]
-
-        fig = px.scatter(
-            embed, x='x', y='y', color='Class', color_discrete_map={'BBBP-': 'red', 'BBBP+': 'green'},
-            hover_data=['Name', 'Mol'], title='UMAP Projection of SOAP Descriptor'
-        )
-        fig.write_html(args.name + '_umap.html')
-
-    if args.tsne:
-        print("Plotting TSNE...")
-        reducer = TSNE()
-        embed = reducer.fit_transform(X)
-
-        embed = pd.DataFrame(embed, columns=['x', 'y'])
-        embed['Class'] = [['BBBP-', 'BBBP+'][i] for i in y]
-        embed['Name'] = df.Name
-        embed['Mol'] = [m.get_chemical_formula() for m in df.Mol]
-
-        fig = px.scatter(
-            embed, x='x', y='y', color='Class', color_discrete_map={'BBBP-': 'red', 'BBBP+': 'green'},
-            hover_data=['Name', 'Mol'], title='tSNE Projection of SOAP Descriptor'
-        )
-        fig.write_html(args.name + '_tsne.html')
 
     kf = RepeatedKFold(n_splits=args.n_fold, n_repeats=args.n_repeats, random_state=42)
     cm = np.zeros((2, 2))

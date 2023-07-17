@@ -13,27 +13,34 @@ from tqdm import tqdm
 
 parser = ArgumentParser(description='Convert smiles to xyz')
 parser.add_argument('--input', help='input file containing smiles and molecule names')
+parser.add_argument('--moleculenet', help='use moleculenet', default=False, action='store_true')
+parser.add_argument('--b3db', help='use b3db', default=False, action='store_true')
 parser.add_argument('--output', help='output directory')
 parser.add_argument('--output_df', help='output dataframe')
 
 args = parser.parse_args()
 
-df = pd.read_csv(args.input)
-df_out = pd.DataFrame(columns=['Name', 'ChemName', 'Smiles', 'Class'])
+# Clean either moleculenet or B3DB but not both at the same time
+assert args.moleculenet != args.b3db, 'Please choose either moleculenet or B3DB'
+
+if args.moleculenet:
+    df = pd.read_csv(args.input)
+else:
+    df = pd.read_csv(args.input, sep='\t')
+
+
 print(df.head())
 
-remover = SaltRemover(defnData="[Cl,Na,O,Br,Ca]")
-
+failed = []
+remover = SaltRemover(defnData="[Cl,Na,O,Br,Ca,H]")
 for i, row in tqdm(df.iterrows(), total=df.shape[0]):
-    #if row['num'] != 61:
-        #continue
     try:
-        mol = Chem.MolFromSmiles(row['smiles'])
-        #print('Before remover', mol)
-        mol = remover.StripMol(mol)
-        #print('After remover', mol)
+        smiles = row['smiles'] if args.moleculenet else row['SMILES']
+        num = row['num'] if args.moleculenet else row['NO.']
 
-        smiles = Chem.MolToSmiles(mol, isomericSmiles=True, canonical=True, kekuleSmiles=True)
+        mol = Chem.MolFromSmiles(smiles)
+        mol = remover.StripMol(mol)
+
         mol = Chem.AddHs(mol)
         success = AllChem.EmbedMolecule(mol, randomSeed=0xf00d)
         out = Chem.MolToXYZBlock(mol)
@@ -41,13 +48,17 @@ for i, row in tqdm(df.iterrows(), total=df.shape[0]):
         if success != 0:
             raise
 
-        with open(os.path.join(args.output, str(row['num']) + '.xyz'), 'w') as f:
+        with open(os.path.join(args.output, str(num) + '.xyz'), 'w') as f:
             f.write(out)
 
-        row_out = pd.DataFrame({'Name': row['num'], 'ChemName': row['name'], 'Smiles': smiles, 'Class': row['p_np']}, index=[0])
-        df_out = pd.concat([df_out, row_out])
     except Exception as e:
-        print('Embedding failed for {} {}'.format(row['name'], row['smiles']))
+        print('Embedding failed for {} {}'.format(num, smiles))
         print(e)
+        failed += [i]
 
-df_out.to_csv(args.output_df, index=False)
+for i in failed:
+    smiles = df.iloc[i]['smiles'] if args.moleculenet else df.iloc[i]['SMILES']
+    num = df.iloc[i]['num'] if args.moleculenet else df.iloc[i]['NO.']
+    print('Failed to generate XYZ coordinates for {} {}'.format(num, smiles))
+
+df = df.drop(failed)
