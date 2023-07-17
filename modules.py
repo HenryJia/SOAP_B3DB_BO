@@ -61,9 +61,10 @@ class SimpleResNetBlock(nn.Module):
         return self.block(x) + x
 
 class SimpleResNet(LightningModule):
-    def __init__(self, depth, layer_size, input_dim, lr=3e-4) -> None:
+    def __init__(self, depth, layer_size, input_dim, lr=3e-4, regression=False) -> None:
         super().__init__()
         self.lr = lr
+        self.regression = regression
 
         self.layers = nn.Sequential()
         self.layers.append(nn.BatchNorm1d(input_dim))
@@ -72,7 +73,8 @@ class SimpleResNet(LightningModule):
             self.layers.append(SimpleResNetBlock(layer_size))
 
         self.layers.append(nn.Linear(layer_size, 1))
-        self.layers.append(nn.Sigmoid())
+        if regression:
+            self.layers.append(nn.Sigmoid())
 
     def forward(self, x):
         return self.layers(x)
@@ -80,7 +82,10 @@ class SimpleResNet(LightningModule):
     def _common_step(self, batch, batch_idx, stage):
         x, y = batch
         y_hat = self(x)
-        loss = F.binary_cross_entropy(y_hat, y)
+        if self.regression:
+            loss = F.binary_cross_entropy(y_hat, y)
+        else:
+            loss = F.mse_loss(y_hat, y)
         self.log(stage + '_loss', loss, on_step=True)
         return loss
 

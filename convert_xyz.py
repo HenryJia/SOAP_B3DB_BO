@@ -62,3 +62,4 @@ for i in failed:
     print('Failed to generate XYZ coordinates for {} {}'.format(num, smiles))
 
 df = df.drop(failed)
+df.to_csv(args.output_df, index=False)
