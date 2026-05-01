@@ -204,10 +204,12 @@ class Individual:
         Checks if other is an Individual created from the same gene parameters
     """
 
-    def __init__(self, gene_set_list, df):
+    def __init__(self, gene_set_list, df, regression=False, dataset='b3db'):
         self.gene_set_list = gene_set_list
 
         self.df = df.copy()
+        self.regression = regression
+        self.dataset = dataset
 
         self.score = 0
         self.soap_string_list = [gene_set.get_soap_string() for gene_set in
@@ -269,7 +271,7 @@ class Individual:
         for train_index, val_test_index in cv.split(np.arange(len(self.df))):
             val_index, test_index = train_test_split(val_test_index, test_size=0.5, random_state=random_state)
 
-            results = type(self).get_model_score(self.df, train_index, val_index, test_index)
+            results = self.get_model_score(self.df, train_index, val_index, test_index)
 
             for k in results:
                 self.results_dictionary[k].append(results[k])
@@ -277,7 +279,7 @@ class Individual:
         self.score = np.mean(self.results_dictionary["val_scores"])
 
     @abstractmethod
-    def get_model_score(df, train_index, test_index):
+    def get_model_score(self, df, train_index, test_index):
         """Calculates the score of the model on the training and test set
 
         This is a static method since the model should be same for all

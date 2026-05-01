@@ -6,36 +6,37 @@ import numpy as np
 import pandas as pd
 
 from sklearn.model_selection import RepeatedKFold
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.metrics import matthews_corrcoef, roc_auc_score, r2_score, mean_squared_error
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from imblearn.over_sampling import SMOTE
 
-import umap
-from sklearn.manifold import TSNE
-
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
-import torch.optim as optim
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import DataLoader
 
 import pytorch_lightning as pl
 from pytorch_lightning import Trainer, callbacks
 
 import ase
-from data import read_molecules, soap_worker
 from genetic_algorithm import Individual, Population, GeneParameters
-from modules import MLP, SimpleResNetBlock, SimpleResNet
+from modules import SimpleResNet
+
+import wandb
 
 import matplotlib.pyplot as plt
 import plotly.express as px
 
 
 class NNIndividual(Individual):
-    def get_model_score(df, train_index, val_index, test_index):
-        X, y = np.stack(df['SOAP'], axis=0), df['Class'].to_numpy()
-        X = X.astype(np.float32)
+    def get_model_score(self, df, train_index, val_index, test_index):
+        X = np.stack(df['SOAP'], axis=0).astype(np.float32)
+        if self.dataset == 'moleculenet':
+            y = df['p_np'].to_numpy()
+        elif self.dataset == 'b3db':
+            if self.regression:
+                y = df['logBB'].to_numpy().astype(np.float32)
+            else:
+                y = (data.BBB == 'BBB+').to_numpy().astype(int)
 
         X_train = X[train_index]
         X_val = X[val_index]
@@ -43,9 +44,6 @@ class NNIndividual(Individual):
         y_train = y[train_index]
         y_val = y[val_index]
         y_test = y[test_index]
-
-        #sm = SMOTE(random_state=42)
-        #X_train, y_train = sm.fit_resample(X_train, y_train)
 
         train_dataset = torch.utils.data.TensorDataset(
             torch.Tensor(X_train), torch.Tensor(y_train[:, None]))
@@ -61,7 +59,7 @@ class NNIndividual(Individual):
 
         model = SimpleResNet(input_dim=X.shape[-1], depth=4, layer_size=64)
         trainer = Trainer(
-            max_epochs=100,
+            max_epochs=20,
             accelerator='gpu',
             devices=[0],
             callbacks=[callbacks.EarlyStopping(monitor='val_loss', patience=5)],
@@ -79,46 +77,99 @@ class NNIndividual(Individual):
         pred_val = model(torch.Tensor(X_val)).detach().numpy().squeeze()
         pred_test = model(torch.Tensor(X_test)).detach().numpy().squeeze()
 
-        #mcc_train = matthews_corrcoef(y_train, pred_train > 0.5)
-        #mcc_test = matthews_corrcoef(y_test, pred_test > 0.5)
+        if self.regression:
+            r2_train = r2_score(y_train, pred_train)
+            r2_val = r2_score(y_val, pred_val)
+            r2_test = r2_score(y_test, pred_test)
+            rmse_train = mean_squared_error(y_train, pred_train, squared=False)
+            rmse_val = mean_squared_error(y_val, pred_val, squared=False)
+            rmse_test = mean_squared_error(y_test, pred_test, squared=False)
 
-        # Gabriele likes MCC but most other papers use AUC
-        # So we will use AUC for comparison's sake
-        auc_train = roc_auc_score(y_train, pred_train)
-        auc_val = roc_auc_score(y_val, pred_val)
-        auc_test = roc_auc_score(y_test, pred_test)
+            return {
+                'train_scores': r2_train, 'val_scores': r2_val, 'test_scores': r2_test,
+                'train_rmse': rmse_train, 'val_rmse': rmse_val, 'test_rmse': rmse_test}
+        else:
+            #mcc_train = matthews_corrcoef(y_train, pred_train > 0.5)
+            #mcc_test = matthews_corrcoef(y_test, pred_test > 0.5)
 
-        train_cm = confusion_matrix(y_train, pred_train > 0.5, normalize='true')
-        val_cm = confusion_matrix(y_val, pred_val > 0.5, normalize='true')
-        test_cm = confusion_matrix(y_test, pred_test > 0.5, normalize='true')
+            # Gabriele likes MCC but most other papers use AUC
+            # So we will use AUC for comparison's sake
+            auc_train = roc_auc_score(y_train, pred_train)
+            auc_val = roc_auc_score(y_val, pred_val)
+            auc_test = roc_auc_score(y_test, pred_test)
 
-        return {
-            'train_scores': auc_train, 'val_scores': auc_val, 'test_scores': auc_test,
-            'train_tp': train_cm[1, 1], 'train_tn': train_cm[0, 0],
-            'val_tp': val_cm[1, 1], 'val_tn': val_cm[0, 0],
-            'test_tp': test_cm[1, 1], 'test_tn': test_cm[0, 0]}
+            train_cm = confusion_matrix(y_train, np.round(pred_train), normalize='true')
+            val_cm = confusion_matrix(y_val, np.round(pred_val), normalize='true')
+            test_cm = confusion_matrix(y_test, np.round(pred_test), normalize='true')
+
+            return {
+                'train_scores': auc_train, 'val_scores': auc_val, 'test_scores': auc_test,
+                'train_tp': train_cm[1, 1], 'train_tn': train_cm[0, 0],
+                'val_tp': val_cm[1, 1], 'val_tn': val_cm[0, 0],
+                'test_tp': test_cm[1, 1], 'test_tn': test_cm[0, 0]}
 
 class RFIndividual(Individual):
-    def get_model_score(df, train_idx, test_idx):
-        X, y = np.stack(df['SOAP'], axis=0), df['Class'].to_numpy()
+    def get_model_score(self, df, train_index, val_index, test_index):
+        X = np.stack(df['SOAP'], axis=0).astype(np.float32)
+        if self.dataset == 'moleculenet':
+            y = df['p_np'].to_numpy()
+        elif self.dataset == 'b3db':
+            if self.regression:
+                y = df['logBB'].to_numpy().astype(np.float32)
+            else:
+                y = (data.BBB == 'BBB+').to_numpy().astype(int)
 
-        clf = RandomForestClassifier(
-            n_estimators=100, max_depth=7, random_state=0)
-        clf.fit(X[train_idx], y[train_idx])
+        X_train = X[train_index]
+        X_val = X[val_index]
+        X_test = X[test_index]
+        y_train = y[train_index]
+        y_val = y[val_index]
+        y_test = y[test_index]
 
-        #pred_train = clf.predict(X[train_idx])
-        #pred_test = clf.predict(X[test_idx])
+        if self.regression:
+            model = RandomForestRegressor(
+                n_estimators=100, max_depth=7, random_state=0)
+        else:
+            model = RandomForestClassifier(
+                n_estimators=100, max_depth=7, random_state=0)
+        model.fit(X_train, y_train)
 
-        #mcc_train = matthews_corrcoef(y[train_idx], pred_train)
-        #mcc_test = matthews_corrcoef(y[test_idx], pred_test)
+        if self.regression:
+            pred_train = model.predict(X_train)
+            pred_val = model.predict(X_val)
+            pred_test = model.predict(X_test)
 
-        pred_train = clf.predict_proba(X[train_idx])[:, 1]
-        pred_test = clf.predict_proba(X[test_idx])[:, 1]
+            r2_train = r2_score(y_train, pred_train)
+            r2_val = r2_score(y_val, pred_val)
+            r2_test = r2_score(y_test, pred_test)
+            rmse_train = mean_squared_error(y_train, pred_train, squared=False)
+            rmse_val = mean_squared_error(y_val, pred_val, squared=False)
+            rmse_test = mean_squared_error(y_test, pred_test, squared=False)
 
-        auc_train = roc_auc_score(y[train_idx], pred_train)
-        auc_test = roc_auc_score(y[test_idx], pred_test)
+            return {
+                'train_scores': r2_train, 'val_scores': r2_val, 'test_scores': r2_test,
+                'train_rmse': rmse_train, 'val_rmse': rmse_val, 'test_rmse': rmse_test}
+        else:
+            pred_train = model.predict_proba(X_train)[:, 1]
+            pred_val = model.predict_proba(X_val)[:, 1]
+            pred_test = model.predict_proba(X_test)[:, 1]
 
-        return {'train_scores': auc_train, 'test_scores': auc_test}
+            # Gabriele likes MCC but most other papers use AUC
+            # So we will use AUC for comparison's sake
+            auc_train = roc_auc_score(y_train, pred_train)
+            auc_val = roc_auc_score(y_val, pred_val)
+            auc_test = roc_auc_score(y_test, pred_test)
+
+            train_cm = confusion_matrix(y_train, np.round(pred_train), normalize='true')
+            val_cm = confusion_matrix(y_val, np.round(pred_val), normalize='true')
+            test_cm = confusion_matrix(y_test, np.round(pred_test), normalize='true')
+
+            return {
+                'train_scores': auc_train, 'val_scores': auc_val, 'test_scores': auc_test,
+                'train_tp': train_cm[1, 1], 'train_tn': train_cm[0, 0],
+                'val_tp': val_cm[1, 1], 'val_tn': val_cm[0, 0],
+                'test_tp': test_cm[1, 1], 'test_tn': test_cm[0, 0]}
+
 
 if __name__ == '__main__':
 
@@ -135,7 +186,8 @@ if __name__ == '__main__':
     parser.add_argument('--n_estimators', help='number of estimators for random forest', default=100, type=int)
     parser.add_argument('--max_depth', help='maximum depth of random forest', default=None, type=int)
     parser.add_argument('--verbose', help='verbosity of random forest', default=0, type=int)
-    parser.add_argument('--name', help='name of the experiment', default='test', type=str)
+    parser.add_argument('--wandb_group', type=str, help='Wandb group to use', required=True)
+    parser.add_argument('--wandb_name', type=str, help='Wandb name to use', required=False)
 
     ga_params = parser.add_argument_group('Genetic Algorithm Parameters')
     ga_params.add_argument('--lower', type=int, help='Lower bound of the SOAP', default=2)
@@ -158,17 +210,21 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
+    wandb.init(
+        # set the wandb project where this run will be logged
+        project="SOAP-GAS-TMS",
+        group=args.wandb_group,
+        name=args.wandb_name if args.wandb_name else None,
+        config = vars(args)
+    )
+
     regression = False
     data = pd.read_csv(args.csv)
 
-    if args.moleculenet:
-        y = data.p_np.to_numpy().astype(int)
-    elif args.b3db: # Note that B3DB data is tab separated
+    if args.b3db: # Note that B3DB data is tab separated
         if 'regression' in args.csv:
             regression = True
             assert not args.smote, 'Cannot use SMOTE with regression, only classification'
-    else:
-        raise ValueError('Must specify either moleculenet or b3db')
 
     mol = []
     for idx, row in data.iterrows():
@@ -178,91 +234,121 @@ if __name__ == '__main__':
 
     print(data.head())
 
-    # Set up the SOAP descriptor
-    num_centres = len(args.centres)
-    num_neighbours = len(args.neighbours)
+    # This is a tad inefficient, but it's fine
+    gene_args = {
+        'lower': args.lower,
+        'upper': args.upper,
+        'centres': args.centres,
+        'neighbours': args.neighbours,
+        'nu_R': args.nu_R,
+        'nu_S': args.nu_S,
+        'mutation_chance': args.mutation_chance,
+        'min_cutoff': args.min_cutoff,
+        'max_cutoff': args.max_cutoff,
+        'min_sigma': args.min_sigma,
+        'max_sigma': args.max_sigma,
+        'message_steps': args.message_steps
+    }
 
-    centres_string = '{' + ', '.join([str(c) for c in args.centres]) + '}'
-    neighbours_string = '{' + ', '.join([str(n) for n in args.neighbours]) + '}'
+    gene_parameters = [GeneParameters(**gene_args)]
 
-    soap_string = "soap average cutoff={} l_max={} n_max={} atom_sigma={} n_Z={} Z={} n_species={} species_Z={} n_R={} n_S={}".format(
-        args.cutoff, args.l_max, args.n_max, args.atom_sigma, num_centres, centres_string, num_neighbours, neighbours_string, args.nu_R, args.nu_S
-    )
+    pop = Population(
+        lambda gene_set: RFIndividual( #NNIndividual(
+            gene_set, data, regression=regression, dataset='moleculenet' if args.moleculenet else 'b3db'),
+        args.population_size, args.best_sample, args.lucky_few, args.num_children,
+        gene_parameters, maximise_scores=True, verbose=True)
 
-    print("SOAP string:", soap_string)
+    pop.initialise_population()
+    pop.print_population()
 
-    # Compute the soap descriptors
-    data['SOAP'] = soap_worker(data, [soap_string])
+    history_train = [[np.mean(ind.results_dictionary['train_scores']) for ind in pop.population]]
+    history_val = [[np.mean(ind.results_dictionary['val_scores']) for ind in pop.population]]
+    history_test = [[np.mean(ind.results_dictionary['test_scores']) for ind in pop.population]]
+    for gen in range(1, args.num_generations+1):
+        print(f"Generation {gen}")
+        pop.next_generation()
 
-    X = np.stack(data['SOAP'].to_numpy(), axis=0)
-    if args.moleculenet:
-        y = data['p_np'].to_numpy().astype(int)
-    elif args.b3db:
+        ind_str = []
         if regression:
-            y = data['logBB'].to_numpy().astype(float)
+            train_r2 = []
+            val_r2 = []
+            test_r2 = []
+            train_rmse = []
+            val_rmse = []
+            test_rmse = []
+            for ind in pop.population:
+                train_r2.append(np.mean(ind.results_dictionary['train_scores']))
+                val_r2.append(np.mean(ind.results_dictionary['val_scores']))
+                test_r2.append(np.mean(ind.results_dictionary['test_scores']))
+                train_rmse.append(np.mean(ind.results_dictionary['train_rmse']))
+                val_rmse.append(np.mean(ind.results_dictionary['val_rmse']))
+                test_rmse.append(np.mean(ind.results_dictionary['test_rmse']))
+
+                ind_str.append(str(ind))
+
+            history_train.append(train_r2)
+            history_val.append(val_r2)
+            history_test.append(test_r2)
         else:
-            y = (data['BBB'] == 'BBB+').to_numpy().astype(int)    
+            train_auc = []
+            val_auc = []
+            test_auc = []
+            train_tn = []
+            train_tp = []
+            val_tn = []
+            val_tp = []
+            test_tn = []
+            test_tp = []
 
-    kf = RepeatedKFold(n_splits=args.n_fold, n_repeats=args.n_repeats, random_state=42)
-    if regression:
-        r2 = 0
-        rmse = 0
-    else:
-        cm = np.zeros((2, 2))
-        mcc = 0
-        auc = 0
+            for ind in pop.population:
+                train_auc.append(np.mean(ind.results_dictionary['train_scores']))
+                val_auc.append(np.mean(ind.results_dictionary['val_scores']))
+                test_auc.append(np.mean(ind.results_dictionary['test_scores']))
 
-    for i, (train_index, test_index) in enumerate(kf.split(X)):
-        X_train, X_test = X[train_index], X[test_index]
-        y_train, y_test = y[train_index], y[test_index]
+                train_tn.append(np.mean(ind.results_dictionary['train_tn']))
+                train_tp.append(np.mean(ind.results_dictionary['train_tp']))
+                test_tn.append(np.mean(ind.results_dictionary['test_tn']))
+                test_tp.append(np.mean(ind.results_dictionary['test_tp']))
 
-        if args.smote:
-            sm = SMOTE(random_state=42)
-            X_train, y_train = sm.fit_resample(X_train, y_train)
+                ind_str.append(str(ind))
 
-        print("Fold:", i, "of ", args.n_fold * args.n_repeats, "(", len(y_train), "training, ", len(y_test), "testing)")
+            history_train.append(train_auc)
+            history_val.append(val_auc)
+            history_test.append(test_auc)
 
-        train_dataset = torch.utils.data.TensorDataset(
-            torch.Tensor(X_train), torch.Tensor(y_train[:, None]))
-        test_dataset = torch.utils.data.TensorDataset(
-            torch.Tensor(X_test), torch.Tensor(y_test[:, None]))
-
-        train_loader = DataLoader(train_dataset, batch_size=128, shuffle=True, num_workers=0)
-        test_loader = DataLoader(test_dataset, batch_size=128, shuffle=False, num_workers=0)
-
-        model = SimpleResNet(input_dim=X.shape[-1], depth=4, layer_size=64, regression=regression)
-        trainer = Trainer(
-            max_epochs=100,
-            accelerator='gpu',
-            devices=[0],
-            callbacks=[callbacks.EarlyStopping(monitor='val_loss', patience=5)],
-            enable_checkpointing=False,
-            check_val_every_n_epoch=1,
-            logger=False,
-            enable_progress_bar=False,
-            enable_model_summary=False,
-        )
-        trainer.fit(model, train_loader, test_loader)
-
-        model.eval()
-        y_out = model(torch.Tensor(X_test)).detach().numpy().squeeze()
-        if regression:
-            r2 += r2_score(y_test, y_out) / (args.n_fold * args.n_repeats)
-            rmse += mean_squared_error(y_test, y_out, squared=False) / (args.n_fold * args.n_repeats)
-        else:
-            y_pred = np.round(y_out)
-
-            mcc += matthews_corrcoef(y_test, y_pred) / (args.n_fold * args.n_repeats)
-            auc += roc_auc_score(y_test, y_out) / (args.n_fold * args.n_repeats)
-            cm += confusion_matrix(y_test, y_pred, normalize='true') / (args.n_fold * args.n_repeats)
+            print(f"Best {ind_str[np.argmax(val_auc)]} has a train, val and test AUC and score of:",
+                train_auc[np.argmax(val_auc)], np.max(val_auc), test_auc[np.argmax(val_auc)])
+            wandb.log({
+                'SOAP String': ind_str,
+                'Test AUC': auc,
+                'Train AUC': score,
+                'Train TN': train_tn,
+                'Train TP': train_tp,
+                'Test TN': test_tn,
+                'Test TP': test_tp,
+                'Best SOAP String': ind_str[np.argmax(auc)],
+                'Best SOAP Train AUC': train_auc[np.argmax(val_auc)],
+                'Best SOAP Val AUC': np.max(val_auc),
+                'Best SOAP Test AUC': test_auc[np.argmax(val_auc)],
+                'Best SOAP Train TN': train_tn[np.argmax(auc)],
+                'Best SOAP Train TP': train_tp[np.argmax(auc)],
+                'Best SOAP Test TN': test_tn[np.argmax(auc)],
+                'Best SOAP Test TP': test_tp[np.argmax(auc)],
+                'Generation': gen
+                })
 
     if regression:
-        print("Overall R2:", r2)
-        print("Overall RMSE:", rmse)
+        train_table = wandb.Table(data=[[i, s] for i, scores in enumerate(history_train) for s in scores], columns=["Generation", "Train R2"])
+        val_table = wandb.Table(data=[[i, s] for i, scores in enumerate(history_val) for s in scores], columns=["Generation", "Validation R2"])
+        test_table = wandb.Table(data=[[i, m] for i, aucs in enumerate(history_test) for m in aucs], columns=["Generation", "Test R2"])
+        wandb.log({"Individual Train R2": wandb.plot.scatter(train_table, "Generation", "Train R2", title="Genetic Algorithm Train R2")})
+        wandb.log({"Individual Validation R2": wandb.plot.scatter(val_table, "Generation", "Validation R2", title="Genetic Algorithm Validation R2")})
+        wandb.log({"Individual Test R2": wandb.plot.scatter(test_table, "Generation", "Test R2", title="Genetic Algorithm Test R2")})
     else:
-        print("Overall AUC:", auc)
-        print("Overall MCC:", mcc)
-        plt.figure()
-        disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=['BBBP-', 'BBBP+'])
-        disp.plot(cmap='Blues')
-        plt.savefig(args.name + '_cm.png')
+        train_table = wandb.Table(data=[[i, s] for i, scores in enumerate(history_train) for s in scores], columns=["Generation", "Train AUC"])
+        val_table = wandb.Table(data=[[i, s] for i, scores in enumerate(history_val) for s in scores], columns=["Generation", "Validation AUC"])
+        test_table = wandb.Table(data=[[i, m] for i, aucs in enumerate(history_test) for m in aucs], columns=["Generation", "Test AUC"])
+        wandb.log({"Individual Train AUC": wandb.plot.scatter(train_table, "Generation", "Train AUC", title="Genetic Algorithm Train AUC")})
+        wandb.log({"Individual Validation AUC": wandb.plot.scatter(val_table, "Generation", "Validation AUC", title="Genetic Algorithm Validation AUC")})
+        wandb.log({"Individual Test AUC": wandb.plot.scatter(test_table, "Generation", "Test AUC", title="Genetic Algorithm Test AUC")})
+    print('Finished')
