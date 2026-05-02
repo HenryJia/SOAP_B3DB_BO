@@ -4,8 +4,8 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-numpy = ">=1.24.3"
-pandas = ">=2.0.1"
+numpy = "==1.24.3"
+pandas = "==2.0.1"
 ase = "~=3.22.1"
 # quippy-ase = "0.9.12" # We will install this manually later
 notebook = "*"
@@ -20,6 +20,7 @@ setuptools = "~=65.6.3"
 umap-learn = "*"
 plotly = "*"
 rdkit = "~=2022.9.3"
+bayesian-optimization = "*"
 
 [dev-packages]
 
