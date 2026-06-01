@@ -4,25 +4,24 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-numpy = "==1.24.3"
-pandas = "==2.0.1"
-ase = "~=3.22.1"
-# quippy-ase = "0.9.12" # We will install this manually later
+pylib-openblas = "*"
+numpy = "*" #"==1.24.3"
+pandas = "*" #"==2.0.1"
+ase = "==3.28.0" # "==3.22.1"
+quippy-ase = "0.10.3" # "==0.9.12" # We will install this manually later
 notebook = "*"
 scikit-learn = "*"
 tqdm = "*"
 pyqt5 = "*"
-torch = "*"
-pytorch-lightning = "1.9.2"
-imbalanced-learn = "~=0.10.0"
-wandb = "~=0.13.10"
-setuptools = "~=65.6.3"
+#torch = "*"
+imbalanced-learn = "*" # "~=0.10.0"
+#setuptools = "~=65.6.3"
 umap-learn = "*"
 plotly = "*"
-rdkit = "~=2022.9.3"
+rdkit = "==2026.3.1" # "~=2022.9.3"
 bayesian-optimization = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.9"
+python_version = "3.12"
